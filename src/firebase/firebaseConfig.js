@@ -6,8 +6,8 @@ const firebaseConfig = {
   authDomain: "shophub-f4dfe.firebaseapp.com",
   projectId: "shophub-f4dfe",
   storageBucket: "shophub-f4dfe.firebasestorage.app",
-  messagingSenderId: "1:833568434080:web:25737f033ba21c419926c5",
-  appId: "YOUR_APP_ID",
+  messagingSenderId: "833568434080",
+  appId: "1:833568434080:web:25737f033ba21c419926c5",
 };
 
 const app = initializeApp(firebaseConfig);
