@@ -1,6 +1,8 @@
+// src/Screens/Home/HomeScreens.tsx
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import SearchBar from "./SearchBar";
 
 export default function HomeScreens() {
   const [query, setQuery] = useState("");
@@ -21,20 +23,11 @@ export default function HomeScreens() {
         </View>
       </View>
 
-      {/* Search */}
-      <View style={styles.searchWrap}>
-        <Ionicons name="search" size={18} color="#9CA3AF" />
-        <TextInput
-          placeholder="Search products..."
-          value={query}
-          onChangeText={setQuery}
-          placeholderTextColor="#9CA3AF"
-          style={styles.searchInput}
-        />
-        <TouchableOpacity style={styles.filterChip} activeOpacity={0.8}>
-          <Ionicons name="options" size={18} color="#4B5563" />
-        </TouchableOpacity>
-      </View>
+      {/* Search (without FilterIcon now) */}
+      <SearchBar
+        query={query}
+        onChangeQuery={setQuery}
+      />
 
       {/* Content area (empty for now) */}
       <View style={styles.emptyArea}>
@@ -74,32 +67,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  /* Search */
-  searchWrap: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: "#E5E7EB",
-    marginBottom: 12,
-  },
-  searchInput: { flex: 1, fontSize: 16, color: "#111827", paddingVertical: 2 },
-  filterChip: {
-    height: 36,
-    width: 36,
-    borderRadius: 12,
-    backgroundColor: "#F3F4F6",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  /* Empty content placeholder */
   emptyArea: {
     flex: 1,
-    // add future content here
   },
 });
