@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import SearchBar from "./SearchBar";
+import FilterIcon from "../../Navigation/Filter";
 
 export default function HomeScreens() {
   const [query, setQuery] = useState("");
@@ -23,10 +24,11 @@ export default function HomeScreens() {
         </View>
       </View>
 
-      {/* Search (without FilterIcon now) */}
+      {/* Search + Filter */}
       <SearchBar
         query={query}
         onChangeQuery={setQuery}
+        RightElement={<FilterIcon />}
       />
 
       {/* Content area (empty for now) */}
@@ -67,6 +69,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
+  /* Empty content placeholder */
   emptyArea: {
     flex: 1,
   },
