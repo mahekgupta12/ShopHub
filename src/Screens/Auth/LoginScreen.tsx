@@ -52,9 +52,7 @@ export default function LoginScreen() {
           case "auth/invalid-email":
             message = "Please enter a valid email address.";
             break;
-          case "auth/user-not-found":
-            message = "Email is not registered. Please sign up first.";
-            break;
+          
           case "auth/invalid-credential":
             message = "Incorrect credentials. Please provide valid email and password.";
             break;

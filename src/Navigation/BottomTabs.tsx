@@ -5,7 +5,7 @@ import type { BottomTabParamList } from "./types";
 import HomeScreen from "../Screens/Home/HomeScreens";
 import CartScreen from "../Screens/Cart/CartScreen";
 import OrdersScreen from "../Screens/Orders/OrdersScreens";
-import ProfileScreen from "../Screens/Profile/ProfileScreens"; // <-- lowercase p matches your file
+import ProfileScreen from "../Screens/Profile/ProfileScreens"; 
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
