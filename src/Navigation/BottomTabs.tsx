@@ -6,8 +6,8 @@ import type { BottomTabParamList } from "./types";
 
 import HomeScreens from "../Screens/Home/HomeScreens";
 import CartScreen from "../Screens/Cart/CartScreen";
-import OrdersScreens from "../Screens/Orders/OrdersScreens";
-import ProfileScreens from "../Screens/Profile/ProfileScreens";
+import OrdersScreen from "../Screens/Orders/OrdersScreens";
+import ProfileScreen from "../Screens/Profile/ProfileScreens"; 
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
