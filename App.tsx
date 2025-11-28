@@ -1,14 +1,15 @@
 import React from "react";
-import { StatusBar } from "react-native";
+import { Provider } from "react-redux";
+import { cartStore } from "./src/Screens/Cart/cartStore";
 import { NavigationContainer } from "@react-navigation/native";
-import RootStack from "./src/Navigation/RootStack"; // <-- capital N
+import RootStack from "./src/Navigation/RootStack";
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <StatusBar barStyle="dark-content" />
-      <RootStack />
-    </NavigationContainer>
+    <Provider store={cartStore}>
+      <NavigationContainer>
+        <RootStack />
+      </NavigationContainer>
+    </Provider>
   );
 }
-

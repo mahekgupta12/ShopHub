@@ -10,7 +10,8 @@ import {
   ActivityIndicator,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-
+import { addItem } from "../Cart/cartSlice";
+import { useDispatch } from "react-redux";
 import SearchBar from "./SearchBar";
 import FilterIcon from "../../Navigation/Filter";
 import { useProducts, Product } from "./Api";
@@ -19,11 +20,13 @@ export default function HomeScreens() {
   const [query, setQuery] = useState("");
   const { products, loading, error } = useProducts();
 
+  const dispatch = useDispatch();
+
   const filteredProducts = products.filter((p) =>
     p.title.toLowerCase().includes(query.toLowerCase())
   );
 
-  const renderItem = ({ item }: { item: Product }) => (
+const renderItem = ({ item }: { item: Product }) => (
     <View style={styles.card}>
       <Image source={{ uri: item.thumbnail }} style={styles.productImage} />
 
@@ -44,8 +47,10 @@ export default function HomeScreens() {
             ${item.price ? item.price.toFixed(2) : "0.00"}
           </Text>
 
-          <TouchableOpacity style={styles.addButton} activeOpacity={0.85}>
-            <Ionicons name="add" size={16} color="#FFFFFF" />
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => dispatch(addItem(item))}
+          >
             <Text style={styles.addButtonText}>Add</Text>
           </TouchableOpacity>
         </View>
