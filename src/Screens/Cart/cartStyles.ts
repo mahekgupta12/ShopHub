@@ -6,7 +6,6 @@ export default StyleSheet.create({
     backgroundColor: "#F8FAFC",
     paddingHorizontal: 16,
     paddingTop: 10, 
-    marginTop: 30,
   },
 
   headerRow: {
@@ -19,6 +18,7 @@ export default StyleSheet.create({
     fontSize: 26,
     fontWeight: "800",
     color: "#111827",
+    marginTop: 40,
   },
 
   headerCount: {
@@ -26,7 +26,7 @@ export default StyleSheet.create({
     fontWeight: "600",
     marginLeft: 6,
     color: "#4B5563",
-    marginTop: 3,
+    marginTop: 40,
   },
 
   emptyContainer: {
@@ -49,7 +49,7 @@ export default StyleSheet.create({
     textAlign: "center",
     lineHeight: 22,
   },
-  
+
   card: {
     flexDirection: 'row',
     backgroundColor: '#FFF',
