@@ -40,7 +40,12 @@ const cartSlice = createSlice({
 
     decreaseQty: (state, action: PayloadAction<number>) => {
       const item = state.items.find((i) => i.id === action.payload);
-      if (item && item.quantity > 1) item.quantity--;
+      if (!item) return;
+      if (item.quantity > 1) {
+        item.quantity--;
+      } else if (item.quantity === 1) {
+        state.items = state.items.filter((i) => i.id !== action.payload);
+      }
     },
 
     removeItem: (state, action: PayloadAction<number>) => {

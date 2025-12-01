@@ -1,4 +1,3 @@
-// src/Screens/Home/HomeScreens.tsx
 import React, { useState } from "react";
 import {
   View,
