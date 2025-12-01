@@ -1,12 +1,14 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import styles from './loginStyles';
-import { ActivityIndicator } from 'react-native';
+import React from "react";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import styles from "./loginStyles";
+import { ActivityIndicator } from "react-native";
 
 type Props = {
-  activeTab: string;
+  activeTab: "login" | "signup";
+  fullName: string;
   email: string;
   password: string;
+  setFullName: (val: string) => void;
   setEmail: (val: string) => void;
   setPassword: (val: string) => void;
   handleSubmit: () => void;
@@ -15,8 +17,10 @@ type Props = {
 
 export default function Form({
   activeTab,
+  fullName,
   email,
   password,
+  setFullName,
   setEmail,
   setPassword,
   handleSubmit,
@@ -24,20 +28,25 @@ export default function Form({
 }: Props) {
   return (
     <View style={styles.formBox}>
-      {activeTab === 'signup' ? (
+      {activeTab === "signup" ? (
         <Text style={styles.title}>Create Account</Text>
       ) : (
         <Text style={styles.title}>Welcome Back! We missed you.</Text>
       )}
 
       <Text style={styles.subtitle}>
-        {activeTab === 'signup'
-          ? 'Sign up to start shopping'
-          : 'Login to continue'}
+        {activeTab === "signup"
+          ? "Sign up to start shopping"
+          : "Login to continue"}
       </Text>
 
-      {activeTab === 'signup' && (
-        <TextInput placeholder="Full Name" style={styles.input} />
+      {activeTab === "signup" && (
+        <TextInput
+          placeholder="Full Name"
+          style={styles.input}
+          value={fullName}                // 👈 controlled
+          onChangeText={setFullName}      // 👈 update state
+        />
       )}
 
       <TextInput
@@ -65,7 +74,7 @@ export default function Form({
       ) : (
         <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit}>
           <Text style={styles.submitText}>
-            {activeTab === 'signup' ? 'Sign Up' : 'Login'}
+            {activeTab === "signup" ? "Sign Up" : "Login"}
           </Text>
         </TouchableOpacity>
       )}
