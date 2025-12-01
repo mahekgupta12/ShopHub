@@ -3,9 +3,11 @@ import { auth } from "../../firebase/firebaseConfig";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,        
 } from "firebase/auth";
 
 type Props = {
+  fullName?: string;
   email: string;
   password: string;
   activeTab: "login" | "signup";
@@ -14,33 +16,45 @@ type Props = {
 };
 
 export const handleSubmit = async ({
+  fullName,
   email,
   password,
   activeTab,
   navigation,
   setLoading,
 }: Props) => {
-  if (!email || !password) {
-    Alert.alert("Missing Details", "Email and Password are required.");
+
+  if (!email || !password || (activeTab === "signup" && !fullName?.trim())) {
+    const msg =
+      activeTab === "signup"
+        ? "Full name, email and password are required."
+        : "Email and Password are required.";
+    Alert.alert("Missing Details", msg);
     return;
   }
 
   try {
-    setLoading(true); // 🔹 SHOW LOADER
+    setLoading(true);
 
     if (activeTab === "signup") {
-      await createUserWithEmailAndPassword(auth, email, password);
-      setLoading(false); // 🔹 HIDE LOADER
+
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+
+      await updateProfile(cred.user, {
+        displayName: fullName!.trim(),
+      });
+
+      setLoading(false);
       Alert.alert("Success", "Account created successfully!");
     } else {
       await signInWithEmailAndPassword(auth, email, password);
-      setLoading(false); // 🔹 HIDE LOADER
+      setLoading(false);
       Alert.alert("Welcome!", "Logged in successfully!");
     }
 
     navigation.navigate("MainTabs");
   } catch (error: any) {
-    setLoading(false); // 🔹 HIDE LOADER WHEN ERROR
+    setLoading(false);
 
     let message = "Something went wrong. Please try again.";
 
