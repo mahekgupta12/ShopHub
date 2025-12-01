@@ -18,20 +18,19 @@ export default function BottomTabs() {
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={({ route }) => ({
-        headerShown: false,               // ⬅️ remove top title/header
+        headerShown: false,               
         tabBarHideOnKeyboard: true,
         tabBarActiveTintColor: "#2563EB",
         tabBarInactiveTintColor: "#6B7280",
         tabBarLabelStyle: { fontSize: 12 },
 
-        // Let safe-area drive padding so it won't be cut by rounded corners
         tabBarStyle: {
           backgroundColor: "#fff",
           borderTopWidth: 0.5,
           borderTopColor: "#E5E7EB",
           paddingTop: 6,
-          paddingBottom: Math.max(8, insets.bottom), // key line
-          // no fixed height!
+          paddingBottom: Math.max(8, insets.bottom), 
+         
         },
 
         // eslint-disable-next-line react/no-unstable-nested-components

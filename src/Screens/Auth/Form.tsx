@@ -60,6 +60,7 @@ export default function Form({
         <ActivityIndicator
           size="large"
           color="#4169E1"
+          // eslint-disable-next-line react-native/no-inline-styles
           style={{ marginTop: 15 }}
         />
       ) : (
