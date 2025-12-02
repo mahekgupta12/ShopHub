@@ -2,6 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import type { BottomTabParamList } from "./types";
 
 import HomeScreens from "../Screens/Home/HomeScreens";
@@ -29,7 +30,6 @@ function getIconName(routeName: keyof BottomTabParamList, focused: boolean) {
 }
 
 function createTabBarIcon(routeName: keyof BottomTabParamList) {
-
   return ({ focused, color, size }: IconArgs) => {
     const s = Math.max(size, 22);
     const name = getIconName(routeName, focused);
@@ -40,6 +40,14 @@ function createTabBarIcon(routeName: keyof BottomTabParamList) {
 export default function BottomTabs() {
   const insets = useSafeAreaInsets();
 
+  const baseTabBarStyle = {
+    backgroundColor: "#fff",
+    borderTopWidth: 0.5,
+    borderTopColor: "#E5E7EB",
+    paddingTop: 6,
+    paddingBottom: Math.max(8, insets.bottom),
+  };
+
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -49,22 +57,34 @@ export default function BottomTabs() {
         tabBarActiveTintColor: "#2563EB",
         tabBarInactiveTintColor: "#6B7280",
         tabBarLabelStyle: { fontSize: 12 },
-        tabBarStyle: {
-          backgroundColor: "#fff",
-          borderTopWidth: 0.5,
-          borderTopColor: "#E5E7EB",
-          paddingTop: 6,
-          paddingBottom: Math.max(8, insets.bottom),
-        },
         tabBarIcon: createTabBarIcon(route.name as keyof BottomTabParamList),
+        tabBarStyle: baseTabBarStyle,
       })}
     >
       <Tab.Screen name="Home" component={HomeScreens} />
-      <Tab.Screen name="Cart" component={CartStack} />
+
+      <Tab.Screen
+        name="Cart"
+        component={CartStack}
+        options={({ route }) => {
+
+          const nestedRouteName =
+            getFocusedRouteNameFromRoute(route) ?? "CartMain";
+
+          const isOrderConfirmation = nestedRouteName === "OrderConfirmation";
+
+          return {
+            headerShown: false,
+
+            tabBarStyle: isOrderConfirmation
+              ? { display: "none" }
+              : baseTabBarStyle,
+          };
+        }}
+      />
+
       <Tab.Screen name="Orders" component={OrdersScreens} />
       <Tab.Screen name="Profile" component={ProfileScreens} />
     </Tab.Navigator>
   );
 }
-
-

@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./cartStore";
 
 import styles from "./checkoutStyles";
@@ -18,11 +18,13 @@ import {
   PaymentMethodCard,
   OrderSummaryCard,
 } from "./CheckoutSections";
+import { clearCart } from "./cartSlice";
 
 export type PaymentMethod = "card" | "upi" | "cod";
 
 export default function CheckoutScreen() {
   const navigation = useNavigation<any>();
+  const dispatch = useDispatch();
   const { items } = useSelector((state: RootState) => state.cart);
 
   const [fullName, setFullName] = useState("");
@@ -67,17 +69,17 @@ export default function CheckoutScreen() {
       return;
     }
 
-    Alert.alert(
-      "Order Placed",
-      `Your order of $${total} will be paid via ${
-        paymentMethod === "card"
-          ? "Credit/Debit Card"
-          : paymentMethod === "upi"
-          ? "UPI"
-          : "Cash on Delivery"
-      }.`
-    );
+    const orderId = `ORD-${Date.now()}`;
+    const today = new Date();
+    const date = today.toISOString().slice(0, 10);
 
+    dispatch(clearCart());
+
+    navigation.navigate("OrderConfirmation", {
+      orderId,
+      total,
+      date,
+    });
   };
 
   return (
@@ -97,7 +99,6 @@ export default function CheckoutScreen() {
 
           <View style={styles.headerRightSpacer} />
         </View>
-
 
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -124,6 +125,7 @@ export default function CheckoutScreen() {
           <OrderSummaryCard items={items} total={total} />
         </ScrollView>
 
+        {/* Footer */}
         <View style={styles.footer}>
           <TouchableOpacity
             style={styles.placeOrderBtn}

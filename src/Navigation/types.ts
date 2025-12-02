@@ -13,4 +13,9 @@ export type BottomTabParamList = {
 export type CartStackParamList = {
   CartMain: undefined;
   Checkout: undefined;
+  OrderConfirmation: {
+    orderId: string;
+    total: string;
+    date: string;
+  };
 };
