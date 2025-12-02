@@ -5,11 +5,37 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { BottomTabParamList } from "./types";
 
 import HomeScreens from "../Screens/Home/HomeScreens";
-import CartScreen from "../Screens/Cart/CartScreen";
+import CartStack from "./CartStack";
 import OrdersScreens from "../Screens/Orders/OrdersScreens";
-import ProfileScreens from "../Screens/Profile/ProfileScreens"; 
+import ProfileScreens from "../Screens/Profile/ProfileScreens";
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
+
+type IconArgs = { focused: boolean; color: string; size: number };
+
+function getIconName(routeName: keyof BottomTabParamList, focused: boolean) {
+  switch (routeName) {
+    case "Home":
+      return focused ? "home" : "home-outline";
+    case "Cart":
+      return focused ? "cart" : "cart-outline";
+    case "Orders":
+      return focused ? "cube" : "cube-outline";
+    case "Profile":
+      return focused ? "person" : "person-outline";
+    default:
+      return "ellipse-outline";
+  }
+}
+
+function createTabBarIcon(routeName: keyof BottomTabParamList) {
+
+  return ({ focused, color, size }: IconArgs) => {
+    const s = Math.max(size, 22);
+    const name = getIconName(routeName, focused);
+    return <Ionicons name={name} size={s} color={color} />;
+  };
+}
 
 export default function BottomTabs() {
   const insets = useSafeAreaInsets();
@@ -18,40 +44,27 @@ export default function BottomTabs() {
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={({ route }) => ({
-        headerShown: false,               
+        headerShown: false,
         tabBarHideOnKeyboard: true,
         tabBarActiveTintColor: "#2563EB",
         tabBarInactiveTintColor: "#6B7280",
         tabBarLabelStyle: { fontSize: 12 },
-
         tabBarStyle: {
           backgroundColor: "#fff",
           borderTopWidth: 0.5,
           borderTopColor: "#E5E7EB",
           paddingTop: 6,
-          paddingBottom: Math.max(8, insets.bottom), 
-         
+          paddingBottom: Math.max(8, insets.bottom),
         },
-
-        // eslint-disable-next-line react/no-unstable-nested-components
-        tabBarIcon: ({ focused, color, size }) => {
-          const s = Math.max(size, 22);
-          let name: string;
-          switch (route.name) {
-            case "Home":    name = focused ? "home" : "home-outline"; break;
-            case "Cart":    name = focused ? "cart" : "cart-outline"; break;
-            case "Orders":  name = focused ? "cube" : "cube-outline"; break;
-            case "Profile": name = focused ? "person" : "person-outline"; break;
-            default:        name = "ellipse-outline";
-          }
-          return <Ionicons name={name} size={s} color={color} />;
-        },
+        tabBarIcon: createTabBarIcon(route.name as keyof BottomTabParamList),
       })}
     >
       <Tab.Screen name="Home" component={HomeScreens} />
-      <Tab.Screen name="Cart" component={CartScreen} />
+      <Tab.Screen name="Cart" component={CartStack} />
       <Tab.Screen name="Orders" component={OrdersScreens} />
       <Tab.Screen name="Profile" component={ProfileScreens} />
     </Tab.Navigator>
   );
 }
+
+
