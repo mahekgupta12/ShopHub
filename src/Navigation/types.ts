@@ -1,6 +1,6 @@
 export type RootStackParamList = {
   Login: undefined;
-  MainTabs: undefined; // wraps the bottom tab navigator
+  MainTabs: undefined;
 };
 
 export type BottomTabParamList = {
@@ -8,4 +8,9 @@ export type BottomTabParamList = {
   Cart: undefined;
   Orders: undefined;
   Profile: undefined;
+};
+
+export type CartStackParamList = {
+  CartMain: undefined;
+  Checkout: undefined;
 };

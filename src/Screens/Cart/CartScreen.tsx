@@ -12,13 +12,11 @@ export default function CartScreen() {
   return (
     <View style={styles.container}>
 
-      {/* Header */}
       <View style={styles.headerRow}>
         <Text style={styles.headerTitle}>Cart</Text>
         <Text style={styles.headerCount}>({items.length})</Text>
       </View>
 
-      {/* Empty Cart Message */}
       {items.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyTitle}>Hey, it feels so light! 🎒</Text>
