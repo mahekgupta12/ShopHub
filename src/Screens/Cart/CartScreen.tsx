@@ -3,15 +3,19 @@ import { View, Text, FlatList } from "react-native";
 import { useSelector } from "react-redux";
 import CartItem from "./CartItem";
 import CartFooter from "./CartFooter";
-import styles from "./cartStyles";
 import { RootState } from "./cartStore";
+
+import makeCartStyles from "./cartStyles";
+import { getProfileTheme } from "../Profile/profileTheme";
 
 export default function CartScreen() {
   const { items } = useSelector((state: RootState) => state.cart);
+  const mode = useSelector((state: RootState) => state.theme.mode);
+  const colors = getProfileTheme(mode);
+  const styles = makeCartStyles(colors);
 
   return (
     <View style={styles.container}>
-
       <View style={styles.headerRow}>
         <Text style={styles.headerTitle}>Cart</Text>
         <Text style={styles.headerCount}>({items.length})</Text>
@@ -29,13 +33,12 @@ export default function CartScreen() {
           data={items}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => <CartItem item={item} />}
-          // eslint-disable-next-line react-native/no-inline-styles
           contentContainerStyle={{ paddingBottom: 30 }}
           showsVerticalScrollIndicator={false}
         />
       )}
 
-      {items.length > 0 && <CartFooter />} 
+      {items.length > 0 && <CartFooter />}
     </View>
   );
 }

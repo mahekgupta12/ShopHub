@@ -10,6 +10,9 @@ import CartStack from "./CartStack";
 import OrdersScreens from "../Screens/Orders/OrdersScreens";
 import ProfileScreens from "../Screens/Profile/ProfileScreens";
 
+import { useAppSelector } from "../Screens/Cart/cartStore";
+import { getProfileTheme } from "../Screens/Profile/profileTheme";
+
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 type IconArgs = { focused: boolean; color: string; size: number };
@@ -40,10 +43,13 @@ function createTabBarIcon(routeName: keyof BottomTabParamList) {
 export default function BottomTabs() {
   const insets = useSafeAreaInsets();
 
+  const mode = useAppSelector((state) => state.theme.mode);
+  const colors = getProfileTheme(mode);
+
   const baseTabBarStyle = {
-    backgroundColor: "#fff",
+    backgroundColor: colors.tabBar,
     borderTopWidth: 0.5,
-    borderTopColor: "#E5E7EB",
+    borderTopColor: colors.border,
     paddingTop: 6,
     paddingBottom: Math.max(8, insets.bottom),
   };
@@ -54,8 +60,8 @@ export default function BottomTabs() {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarHideOnKeyboard: true,
-        tabBarActiveTintColor: "#2563EB",
-        tabBarInactiveTintColor: "#6B7280",
+        tabBarActiveTintColor: colors.tabActive,
+        tabBarInactiveTintColor: colors.tabInactive,
         tabBarLabelStyle: { fontSize: 12 },
         tabBarIcon: createTabBarIcon(route.name as keyof BottomTabParamList),
         tabBarStyle: baseTabBarStyle,
@@ -67,17 +73,14 @@ export default function BottomTabs() {
         name="Cart"
         component={CartStack}
         options={({ route }) => {
-
           const nestedRouteName =
             getFocusedRouteNameFromRoute(route) ?? "CartMain";
-
           const isOrderConfirmation = nestedRouteName === "OrderConfirmation";
 
           return {
             headerShown: false,
-
             tabBarStyle: isOrderConfirmation
-              ? { display: "none" }
+              ? { ...baseTabBarStyle, display: "none" }
               : baseTabBarStyle,
           };
         }}

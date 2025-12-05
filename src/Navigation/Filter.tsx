@@ -1,4 +1,3 @@
-// src/Navigation/filter.tsx
 import React from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";

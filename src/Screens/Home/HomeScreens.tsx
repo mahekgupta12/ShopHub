@@ -13,11 +13,19 @@ import FilterIcon from "../../Navigation/Filter";
 import { useProducts } from "./Api";
 import ProductView from "./ProductView";
 
+import { useSelector } from "react-redux";
+import { RootState } from "../Cart/cartStore";
+import { getProfileTheme, type AppTheme } from "../Profile/profileTheme";
+
 export default function HomeScreens() {
   const [query, setQuery] = useState("");
   const [viewType, setViewType] = useState<"list" | "grid">("list");
 
   const { products, loading, error } = useProducts();
+
+  const mode = useSelector((state: RootState) => state.theme.mode);
+  const colors = getProfileTheme(mode);
+  const styles = makeStyles(colors);
 
   const filteredProducts = products.filter((p) =>
     p.title.toLowerCase().includes(query.toLowerCase())
@@ -41,7 +49,11 @@ export default function HomeScreens() {
             ]}
             onPress={() => setViewType("list")}
           >
-            <Ionicons name="list" size={18} color="#4B5563" />
+            <Ionicons
+              name="list"
+              size={18}
+              color={viewType === "list" ? "#FFFFFF" : colors.textSecondary}
+            />
           </TouchableOpacity>
 
           {/* Grid View Button */}
@@ -52,7 +64,11 @@ export default function HomeScreens() {
             ]}
             onPress={() => setViewType("grid")}
           >
-            <Ionicons name="grid" size={18} color="#4B5563" />
+            <Ionicons
+              name="grid"
+              size={18}
+              color={viewType === "grid" ? "#FFFFFF" : colors.textSecondary}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -80,14 +96,13 @@ export default function HomeScreens() {
       ) : (
         <FlatList
           data={filteredProducts}
-          key={viewType} // re-render flatlist
+          key={viewType}
           numColumns={viewType === "grid" ? 2 : 1}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <ProductView item={item} viewType={viewType} />
           )}
           columnWrapperStyle={
-            // eslint-disable-next-line react-native/no-inline-styles
             viewType === "grid" ? { justifyContent: "space-between" } : undefined
           }
           showsVerticalScrollIndicator={false}
@@ -98,44 +113,48 @@ export default function HomeScreens() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F8FAFC",
-    paddingHorizontal: 16,
-    paddingTop: 60,
-  },
-  headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 12,
-    alignItems: "center",
-  },
-  brand: {
-    fontSize: 28,
-    fontWeight: "800",
-  },
-  headerActions: { flexDirection: "row", gap: 10 },
+const makeStyles = (colors: AppTheme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+      paddingHorizontal: 16,
+      paddingTop: 60,
+    },
+    headerRow: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginBottom: 12,
+      alignItems: "center",
+    },
+    brand: {
+      fontSize: 28,
+      fontWeight: "800",
+      color: colors.text,
+    },
+    headerActions: { flexDirection: "row", gap: 10 },
 
-  iconChip: {
-    height: 36,
-    width: 36,
-    borderRadius: 12,
-    backgroundColor: "#F3F4F6",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  activeChip: {
-    backgroundColor: "#DBEAFE",
-  },
+    iconChip: {
+      height: 36,
+      width: 36,
+      borderRadius: 12,
+      backgroundColor: colors.card,
+      alignItems: "center",
+      justifyContent: "center",
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    activeChip: {
+      backgroundColor: colors.primary,
+    },
 
-  listContent: { paddingBottom: 20 },
+    listContent: { paddingBottom: 20 },
 
-  stateWrapper: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  errorText: { color: "#B91C1C" },
-  emptyText: { color: "#6B7280" },
-});
+    stateWrapper: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    errorText: { color: colors.danger },
+    emptyText: { color: colors.textSecondary },
+  });

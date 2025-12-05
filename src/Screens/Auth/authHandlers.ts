@@ -15,6 +15,7 @@ type Props = {
   setLoading: (value: boolean) => void;
 };
 
+
 export const handleSubmit = async ({
   fullName,
   email,

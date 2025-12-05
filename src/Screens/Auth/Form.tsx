@@ -1,7 +1,16 @@
 import React from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import styles from "./loginStyles";
-import { ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
+
+import { useSelector } from "react-redux";
+import { RootState } from "../Cart/cartStore";
+import { getProfileTheme } from "../Profile/profileTheme";
+import makeLoginStyles from "./loginStyles";
 
 type Props = {
   activeTab: "login" | "signup";
@@ -26,6 +35,10 @@ export default function Form({
   handleSubmit,
   loading,
 }: Props) {
+  const mode = useSelector((state: RootState) => state.theme.mode);
+  const colors = getProfileTheme(mode);
+  const styles = makeLoginStyles(colors);
+
   return (
     <View style={styles.formBox}>
       {activeTab === "signup" ? (
@@ -44,8 +57,9 @@ export default function Form({
         <TextInput
           placeholder="Full Name"
           style={styles.input}
-          value={fullName}                // 👈 controlled
-          onChangeText={setFullName}      // 👈 update state
+          value={fullName}
+          onChangeText={setFullName}
+          placeholderTextColor={colors.textSecondary}
         />
       )}
 
@@ -55,6 +69,7 @@ export default function Form({
         style={styles.input}
         value={email}
         onChangeText={setEmail}
+        placeholderTextColor={colors.textSecondary}
       />
 
       <TextInput
@@ -63,13 +78,13 @@ export default function Form({
         style={styles.input}
         value={password}
         onChangeText={setPassword}
+        placeholderTextColor={colors.textSecondary}
       />
 
       {loading ? (
         <ActivityIndicator
           size="large"
-          color="#4169E1"
-          // eslint-disable-next-line react-native/no-inline-styles
+          color={colors.primary}
           style={{ marginTop: 15 }}
         />
       ) : (

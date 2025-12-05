@@ -1,12 +1,19 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { increaseQty, decreaseQty, removeItem } from "./cartSlice";
-import styles from "./cartStyles";
+
+import makeCartStyles from "./cartStyles";
+import { RootState } from "./cartStore";
+import { getProfileTheme } from "../Profile/profileTheme";
 
 export default function CartItem({ item }: any) {
   const dispatch = useDispatch();
+
+  const mode = useSelector((state: RootState) => state.theme.mode);
+  const colors = getProfileTheme(mode);
+  const styles = makeCartStyles(colors);
 
   return (
     <View style={styles.card}>
@@ -21,7 +28,7 @@ export default function CartItem({ item }: any) {
             style={styles.circleBtn}
             onPress={() => dispatch(decreaseQty(item.id))}
           >
-            <Ionicons name="remove" size={16} color="#374151" />
+            <Ionicons name="remove" size={16} color={colors.text} />
           </TouchableOpacity>
 
           <Text style={styles.qty}>{item.quantity}</Text>
@@ -30,7 +37,7 @@ export default function CartItem({ item }: any) {
             style={styles.circleBtn}
             onPress={() => dispatch(increaseQty(item.id))}
           >
-            <Ionicons name="add" size={16} color="#374151" />
+            <Ionicons name="add" size={16} color={colors.text} />
           </TouchableOpacity>
 
           <TouchableOpacity

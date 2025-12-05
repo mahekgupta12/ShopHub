@@ -6,8 +6,12 @@ import Header from "./Header";
 import Tabs from "./Tabs";
 import Form from "./Form";
 
-import styles from "./loginStyles";
 import { handleSubmit as authHandleSubmit } from "./authHandlers";
+
+import { useSelector } from "react-redux";
+import { RootState } from "../Cart/cartStore";
+import { getProfileTheme } from "../Profile/profileTheme";
+import makeLoginStyles from "./loginStyles";
 
 export default function LoginScreen() {
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
@@ -17,6 +21,11 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
 
   const navigation = useNavigation<any>();
+
+  // 👇 Redux theme
+  const mode = useSelector((state: RootState) => state.theme.mode);
+  const colors = getProfileTheme(mode);
+  const styles = makeLoginStyles(colors);
 
   const onSubmit = () =>
     authHandleSubmit({
@@ -31,15 +40,13 @@ export default function LoginScreen() {
   return (
     <View style={styles.container}>
       <Header />
-
       <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
-
       <Form
         activeTab={activeTab}
-        fullName={fullName}          // 👈 NEW
+        fullName={fullName}
         email={email}
         password={password}
-        setFullName={setFullName}    // 👈 NEW
+        setFullName={setFullName}
         setEmail={setEmail}
         setPassword={setPassword}
         handleSubmit={onSubmit}
