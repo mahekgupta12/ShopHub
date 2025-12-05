@@ -16,6 +16,8 @@ import { clearCart } from "../Cart/cartSlice";
 import { addOrder } from "../Orders/ordersSlice";
 
 import { auth } from "../../firebase/firebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "../../firebase/firebaseConfig";
 
 import styles from "./checkoutStyles";
 import {
@@ -45,42 +47,42 @@ export default function CheckoutScreen() {
   const sanitizeText = (text: string, pattern: RegExp) =>
     text.replace(pattern, "");
 
-  const handlePlaceOrder = () => {
-    if (!fullName || !phone || !street || !city || !zip) {
-      Alert.alert("Missing Details", "Please fill all address fields.");
-      return;
-    }
+  const handlePlaceOrder = async () => {
+  if (!fullName || !phone || !street || !city || !zip) {
+    Alert.alert("Missing Details", "Please fill all address fields.");
+    return;
+  }
 
-    const userId = auth.currentUser?.uid;
-    if (!userId) {
-      Alert.alert("Login Required", "Please login to place an order.");
-      return;
-    }
+  const userId = auth.currentUser?.uid;
+  if (!userId) {
+    Alert.alert("Login Required", "Please login to place an order.");
+    return;
+  }
 
-    const orderId = `ORD-${Date.now()}`;
-    const date = new Date().toISOString().slice(0, 10);
+  const orderId = `ORD-${Date.now()}`;
+  const timestamp = Date.now(); 
+  const date = new Date().toISOString().slice(0, 10);
 
-    // Save order in Redux (user-specific)
-        dispatch(
-          addOrder({
-            orderId,
-            userId,
-            items,
-            total,
-            date,
-            paymentMethod,
-          })
-        );
-
-    dispatch(clearCart());
-
-   
-    navigation.navigate("OrderConfirmation", {
-      orderId,
-      total,
-      date,
-    });
+  const orderData = {
+    orderId,
+    userId,
+    items,
+    total,
+    date,
+    timestamp,   
+    paymentMethod,
   };
+
+  dispatch(addOrder(orderData));
+  dispatch(clearCart());
+
+  await setDoc(
+    doc(db, "orders", userId, "userOrders", orderId),
+    orderData
+  );
+
+  navigation.navigate("OrderConfirmation", { orderId, total, date });
+};
 
   return (
     <SafeAreaView style={styles.safe}>
