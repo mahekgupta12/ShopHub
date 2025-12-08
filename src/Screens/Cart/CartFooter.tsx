@@ -1,13 +1,19 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native"; 
+import { useNavigation } from "@react-navigation/native";
 import { RootState } from "./cartStore";
-import styles from "./cartStyles";
+
+import makeCartStyles from "./cartStyles";
+import { getProfileTheme } from "../Profile/profileTheme";
 
 export default function CartFooter() {
   const { items } = useSelector((state: RootState) => state.cart);
-  const navigation = useNavigation<any>();         
+  const navigation = useNavigation<any>();
+
+  const mode = useSelector((state: RootState) => state.theme.mode);
+  const colors = getProfileTheme(mode);
+  const styles = makeCartStyles(colors);
 
   const total = items
     .reduce((sum, item) => sum + item.price * item.quantity, 0)
@@ -29,5 +35,3 @@ export default function CartFooter() {
     </View>
   );
 }
-
-

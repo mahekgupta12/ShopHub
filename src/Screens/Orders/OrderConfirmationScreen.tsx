@@ -8,7 +8,11 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import styles from "./orderConfirmationStyles";
+import { useSelector } from "react-redux";
+import { RootState } from "../Cart/cartStore";
+import { getProfileTheme } from "../Profile/profileTheme";
+
+import makeOrderConfirmationStyles from "./orderConfirmationStyles";
 import OrderInfoBox from "./OrderInfoBox";
 
 type RouteParams = {
@@ -21,6 +25,10 @@ export default function OrderConfirmationScreen() {
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
   const { orderId, total, date } = route.params as RouteParams;
+
+  const mode = useSelector((state: RootState) => state.theme.mode);
+  const colors = getProfileTheme(mode);
+  const styles = makeOrderConfirmationStyles(colors);
 
   const resetCartStackToMain = () => {
     navigation.popToTop();

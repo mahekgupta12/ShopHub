@@ -1,8 +1,12 @@
 import React from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import styles from "./checkoutStyles";
+import makeCheckoutStyles from "./checkoutStyles";
 import type { PaymentMethod } from "./CheckoutScreen";
 import type { CartItem } from "./cartSlice";
+
+import { useSelector } from "react-redux";
+import { RootState } from "./cartStore";
+import { getProfileTheme } from "../Profile/profileTheme";
 
 type AddressProps = {
   fullName: string;
@@ -17,18 +21,24 @@ type AddressProps = {
   onChangeZip: (t: string) => void;
 };
 
-export function DeliveryAddressCard({
-  fullName,
-  phone,
-  street,
-  city,
-  zip,
-  onChangeFullName,
-  onChangePhone,
-  onChangeStreet,
-  onChangeCity,
-  onChangeZip,
-}: AddressProps) {
+export function DeliveryAddressCard(props: AddressProps) {
+  const mode = useSelector((state: RootState) => state.theme.mode);
+  const colors = getProfileTheme(mode);
+  const styles = makeCheckoutStyles(colors);
+
+  const {
+    fullName,
+    phone,
+    street,
+    city,
+    zip,
+    onChangeFullName,
+    onChangePhone,
+    onChangeStreet,
+    onChangeCity,
+    onChangeZip,
+  } = props;
+
   return (
     <View style={styles.card}>
       <Text style={styles.cardTitle}>Delivery Address</Text>
@@ -39,6 +49,7 @@ export function DeliveryAddressCard({
         onChangeText={onChangeFullName}
         placeholder="John Doe"
         style={styles.input}
+        placeholderTextColor={colors.textSecondary}
       />
 
       <Text style={styles.label}>Phone Number</Text>
@@ -48,6 +59,7 @@ export function DeliveryAddressCard({
         placeholder="+1 234 567 8900"
         keyboardType="phone-pad"
         style={styles.input}
+        placeholderTextColor={colors.textSecondary}
       />
 
       <Text style={styles.label}>Street Address</Text>
@@ -56,6 +68,7 @@ export function DeliveryAddressCard({
         onChangeText={onChangeStreet}
         placeholder="123 Main St"
         style={styles.input}
+        placeholderTextColor={colors.textSecondary}
       />
 
       <View style={styles.row}>
@@ -66,6 +79,7 @@ export function DeliveryAddressCard({
             onChangeText={onChangeCity}
             placeholder="New York"
             style={styles.input}
+            placeholderTextColor={colors.textSecondary}
           />
         </View>
 
@@ -79,6 +93,7 @@ export function DeliveryAddressCard({
             placeholder="10001"
             keyboardType="numeric"
             style={styles.input}
+            placeholderTextColor={colors.textSecondary}
           />
         </View>
       </View>
@@ -92,6 +107,10 @@ type PaymentProps = {
 };
 
 export function PaymentMethodCard({ paymentMethod, onChange }: PaymentProps) {
+  const mode = useSelector((state: RootState) => state.theme.mode);
+  const colors = getProfileTheme(mode);
+  const styles = makeCheckoutStyles(colors);
+
   const options: { key: PaymentMethod; label: string }[] = [
     { key: "card", label: "Credit/Debit Card" },
     { key: "upi", label: "UPI" },
@@ -125,6 +144,10 @@ type SummaryProps = {
 };
 
 export function OrderSummaryCard({ items, total }: SummaryProps) {
+  const mode = useSelector((state: RootState) => state.theme.mode);
+  const colors = getProfileTheme(mode);
+  const styles = makeCheckoutStyles(colors);
+
   return (
     <View style={styles.card}>
       <Text style={styles.cardTitle}>Order Summary</Text>

@@ -12,13 +12,14 @@ import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./cartStore";
 
-import styles from "./checkoutStyles";
+import makeCheckoutStyles from "./checkoutStyles";
 import {
   DeliveryAddressCard,
   PaymentMethodCard,
   OrderSummaryCard,
 } from "./CheckoutSections";
 import { clearCart } from "./cartSlice";
+import { getProfileTheme } from "../Profile/profileTheme";
 
 export type PaymentMethod = "card" | "upi" | "cod";
 
@@ -26,6 +27,10 @@ export default function CheckoutScreen() {
   const navigation = useNavigation<any>();
   const dispatch = useDispatch();
   const { items } = useSelector((state: RootState) => state.cart);
+
+  const mode = useSelector((state: RootState) => state.theme.mode);
+  const colors = getProfileTheme(mode);
+  const styles = makeCheckoutStyles(colors);
 
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
@@ -85,14 +90,13 @@ export default function CheckoutScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
-
         <View style={styles.headerRow}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={styles.backBtn}
             activeOpacity={0.8}
           >
-            <Ionicons name="chevron-back" size={22} color="#111827" />
+            <Ionicons name="chevron-back" size={22} color={colors.text} />
           </TouchableOpacity>
 
           <Text style={styles.headerTitle}>Checkout</Text>
@@ -125,7 +129,6 @@ export default function CheckoutScreen() {
           <OrderSummaryCard items={items} total={total} />
         </ScrollView>
 
-        {/* Footer */}
         <View style={styles.footer}>
           <TouchableOpacity
             style={styles.placeOrderBtn}

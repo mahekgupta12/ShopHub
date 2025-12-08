@@ -1,104 +1,119 @@
 import { StyleSheet } from "react-native";
+import type { AppTheme } from "../Profile/profileTheme";
 
-export default StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f6f4f5ff", padding: 20 },
+const makeLoginStyles = (colors: AppTheme) =>
+  StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background, padding: 20 },
 
-  headerContainer: {
-    alignItems: "center",
-    marginTop: 50
-  },
+    headerContainer: {
+      alignItems: "center",
+      marginTop: 50,
+    },
 
-  logo: {
-    backgroundColor: "#4169E1",
-    padding: 18,
-    borderRadius: 20,
-    marginBottom: 10
-  },
+    logo: {
+      backgroundColor: colors.primary,
+      padding: 18,
+      borderRadius: 20,
+      marginBottom: 10,
+    },
 
-  appName: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "#1a1a1a"
-  },
+    appName: {
+      fontSize: 28,
+      fontWeight: "700",
+      color: colors.text,
+    },
 
-  tagline: {
-    fontSize: 14,
-    color: "#6c6c6c",
-    marginTop: 4
-  },
+    tagline: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      marginTop: 4,
+    },
 
-  tabContainer: {
-    flexDirection: "row",
-    backgroundColor: "#e7ebf4",
-    padding: 5,
-    borderRadius: 12,
-    marginTop: 25,
-    alignSelf: "center"
-  },
+    tabContainer: {
+      flexDirection: "row",
+      backgroundColor: colors.card,
+      padding: 5,
+      borderRadius: 12,
+      marginTop: 25,
+      alignSelf: "center",
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
 
-  tabButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 35,
-    borderRadius: 10
-  },
+    tabButton: {
+      paddingVertical: 10,
+      paddingHorizontal: 35,
+      borderRadius: 10,
+    },
 
-  activeTab: {
-    backgroundColor: "#ffffff",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3
-  },
+    activeTab: {
+      backgroundColor: colors.primary,
+      shadowColor: "#000",
+      shadowOpacity: 0.15,
+      shadowRadius: 3,
+      elevation: 3,
+    },
 
-  tabText: {
-    fontSize: 15,
-    color: "#555"
-  },
+    tabText: {
+      fontSize: 15,
+      color: colors.textSecondary,
+    },
 
-  activeTabText: {
-    color: "#1a1a1a",
-    fontWeight: "600"
-  },
+    activeTabText: {
+      color: "#FFFFFF",
+      fontWeight: "600",
+    },
 
-  formBox: {
-    marginTop: 30,
-    backgroundColor: "#ffffff",
-    padding: 20,
-    borderRadius: 15,
-    elevation: 2
-  },
+    formBox: {
+      marginTop: 30,
+      backgroundColor: colors.card,
+      padding: 20,
+      borderRadius: 15,
+      elevation: 2,
+      shadowColor: "#000",
+      shadowOpacity: 0.06,
+      shadowRadius: 8,
+      shadowOffset: { width: 0, height: 4 },
+    },
 
-  title: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#1a1a1a"
-  },
+    title: {
+      fontSize: 18,
+      fontWeight: "700",
+      color: colors.text,
+    },
 
-  subtitle: {
-    fontSize: 14,
-    color: "#7b7b7b",
-    marginTop: 5,
-    marginBottom: 20
-  },
+    subtitle: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      marginTop: 5,
+      marginBottom: 20,
+    },
 
-  input: {
-    backgroundColor: "#f2f4f6",
-    padding: 14,
-    borderRadius: 10,
-    marginVertical: 8
-  },
+    input: {
+      backgroundColor: colors.background,
+      padding: 14,
+      borderRadius: 10,
+      marginVertical: 8,
+      borderWidth: 1,
+      borderColor: colors.border,
+      color: colors.text,
+    },
 
-  submitBtn: {
-    backgroundColor: "#4169E1",
-    padding: 14,
-    borderRadius: 10,
-    marginTop: 15
-  },
+    submitBtn: {
+      backgroundColor: colors.primary,
+      padding: 14,
+      borderRadius: 10,
+      marginTop: 15,
+      alignItems: "center",
+      justifyContent: "center",
+    },
 
-  submitText: {
-    color: "#fff",
-    fontSize: 16,
-    textAlign: "center",
-    fontWeight: "600"
-  }
-});
+    submitText: {
+      color: "#fff",
+      fontSize: 16,
+      textAlign: "center",
+      fontWeight: "600",
+    },
+  });
+
+export default makeLoginStyles;
