@@ -1,3 +1,4 @@
+// App.tsx
 import React from "react";
 import { Provider } from "react-redux";
 import { cartStore } from "./src/Screens/Cart/cartStore";

@@ -1,3 +1,4 @@
+// src/Navigation/BottomTabs.tsx
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -12,6 +13,7 @@ import ProfileScreens from "../Screens/Profile/ProfileScreens";
 
 import { useAppSelector } from "../Screens/Cart/cartStore";
 import { getProfileTheme } from "../Screens/Profile/profileTheme";
+import { useLastTab } from "../persistence/tabPersistence";
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -42,9 +44,10 @@ function createTabBarIcon(routeName: keyof BottomTabParamList) {
 
 export default function BottomTabs() {
   const insets = useSafeAreaInsets();
-
   const mode = useAppSelector((state) => state.theme.mode);
   const colors = getProfileTheme(mode);
+
+  const { initialTab, ready, handleTabChange } = useLastTab("Home");
 
   const baseTabBarStyle = {
     backgroundColor: colors.tabBar,
@@ -54,9 +57,13 @@ export default function BottomTabs() {
     paddingBottom: Math.max(8, insets.bottom),
   };
 
+  if (!ready) {
+    return null; // or a small loading view
+  }
+
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName={initialTab}
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarHideOnKeyboard: true,
@@ -65,6 +72,11 @@ export default function BottomTabs() {
         tabBarLabelStyle: { fontSize: 12 },
         tabBarIcon: createTabBarIcon(route.name as keyof BottomTabParamList),
         tabBarStyle: baseTabBarStyle,
+      })}
+      screenListeners={({ route }) => ({
+        tabPress: () => {
+          handleTabChange(route.name as keyof BottomTabParamList);
+        },
       })}
     >
       <Tab.Screen name="Home" component={HomeScreens} />
