@@ -1,4 +1,6 @@
+// src/Navigation/RootStack.tsx
 import React from "react";
+import { View, ActivityIndicator } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "./types";
 
@@ -9,15 +11,35 @@ import { useSelector } from "react-redux";
 import { RootState } from "../Screens/Cart/cartStore";
 import { getProfileTheme } from "../Screens/Profile/profileTheme";
 
+import { useInitialRoute } from "../persistence/authPersistence";
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootStack() {
   const mode = useSelector((state: RootState) => state.theme.mode);
   const colors = getProfileTheme(mode);
 
+  const initialRoute = useInitialRoute();
+
+  // Jab tak Firebase se jawab nahi aata, ek chhota loader
+  if (!initialRoute) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: colors.background,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
+
   return (
     <Stack.Navigator
-      initialRouteName="Login"
+      initialRouteName={initialRoute}
       screenOptions={{
         headerStyle: { backgroundColor: colors.background },
         headerTintColor: colors.text,
