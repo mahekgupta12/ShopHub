@@ -14,30 +14,21 @@ export default function CartItem({ item }: any) {
 
       <View style={styles.info}>
         <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.price}>${item.price.toFixed(2)}</Text>
+        <Text style={styles.price}>${item.price}</Text>
 
         <View style={styles.counterRow}>
-          <TouchableOpacity
-            style={styles.circleBtn}
-            onPress={() => dispatch(decreaseQty(item.id))}
-          >
-            <Ionicons name="remove" size={16} color="#374151" />
+          <TouchableOpacity onPress={() => dispatch(decreaseQty(item.id))}>
+            <Ionicons name="remove-circle-outline" size={24} color="#333" />
           </TouchableOpacity>
 
           <Text style={styles.qty}>{item.quantity}</Text>
 
-          <TouchableOpacity
-            style={styles.circleBtn}
-            onPress={() => dispatch(increaseQty(item.id))}
-          >
-            <Ionicons name="add" size={16} color="#374151" />
+          <TouchableOpacity onPress={() => dispatch(increaseQty(item.id))}>
+            <Ionicons name="add-circle-outline" size={24} color="#333" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => dispatch(removeItem(item.id))}
-            style={styles.deleteBtn}
-          >
-            <Ionicons name="trash-outline" size={20} color="#EF4444" />
+          <TouchableOpacity style={styles.deleteBtn} onPress={() => dispatch(removeItem(item.id))}>
+            <Ionicons name="trash-outline" size={22} color="red" />
           </TouchableOpacity>
         </View>
       </View>
