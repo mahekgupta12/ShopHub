@@ -1,6 +1,6 @@
 // src/persistence/tabPersistence.ts
 import { useEffect, useState } from "react";
-import { getJson, setJson } from "./storage";
+import { getJson, setJson, removeItem } from "./storage";
 import type { BottomTabParamList } from "../Navigation/types";
 
 const LAST_TAB_KEY = "LAST_TAB";
@@ -28,4 +28,13 @@ export function useLastTab(defaultTab: TabName = "Home") {
   };
 
   return { initialTab, ready, handleTabChange };
+}
+
+// 🆕 Logout ke time yeh call karenge
+export async function clearLastTab() {
+  try {
+    await removeItem(LAST_TAB_KEY);
+  } catch (e) {
+    console.warn("Failed to clear last tab", e);
+  }
 }
