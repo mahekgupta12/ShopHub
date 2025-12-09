@@ -33,6 +33,7 @@ export default function CartScreen() {
           data={items}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => <CartItem item={item} />}
+          // eslint-disable-next-line react-native/no-inline-styles
           contentContainerStyle={{ paddingBottom: 30 }}
           showsVerticalScrollIndicator={false}
         />

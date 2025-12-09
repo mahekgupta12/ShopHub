@@ -33,16 +33,7 @@ export default function OrderConfirmationScreen() {
   const resetCartStackToMain = () => {
     navigation.popToTop();
   };
-
-  const goToOrders = () => {
-    resetCartStackToMain();
-    navigation.getParent()?.navigate("Orders", {
-      orderId,
-      total,
-      date,
-    });
-  };
-
+  
   const goToHome = () => {
     resetCartStackToMain();
     navigation.getParent()?.navigate("Home");
@@ -66,7 +57,7 @@ export default function OrderConfirmationScreen() {
           <TouchableOpacity
             style={styles.primaryBtn}
             activeOpacity={0.9}
-            onPress={goToOrders}
+            onPress={() => navigation.navigate("Orders")}
           >
             <Text style={styles.primaryText}>View Orders</Text>
           </TouchableOpacity>
