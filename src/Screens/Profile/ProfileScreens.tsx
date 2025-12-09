@@ -1,4 +1,3 @@
-// src/Screens/Profile/ProfileScreen.tsx
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -22,7 +21,6 @@ import ProfileHeaderCard from "./ProfileHeaderCard";
 import ThemeToggleRow from "./ThemeToggleRow";
 import ProfileActionRow from "./ProfileActionRow";
 
-// 🆕 tab persistence helper
 import { clearLastTab } from "../../persistence/tabPersistence";
 
 export default function ProfileScreen() {
@@ -47,14 +45,11 @@ export default function ProfileScreen() {
   const initial = name.charAt(0).toUpperCase();
 
   const handleLogout = async () => {
-    // 1) Firebase se logout
+
     await signOut(auth);
 
-    // 2) 🆕 last selected tab clear kar do
-    //    Taaki next login par useLastTab default "Home" pick kare
     await clearLastTab();
 
-    // 3) Root stack reset → Login screen
     navigation.reset({
       index: 0,
       routes: [{ name: "Login" }],

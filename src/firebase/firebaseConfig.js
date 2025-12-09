@@ -1,4 +1,3 @@
-// src/firebase/firebaseConfig.ts
 import { initializeApp } from "firebase/app";
 import {
   initializeAuth,
@@ -17,7 +16,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-// 🔑 React Native ke liye persistence setup
 export const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
