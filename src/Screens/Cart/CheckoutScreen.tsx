@@ -14,7 +14,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../Cart/cartStore";
 import { clearCart } from "../Cart/cartSlice";
 import { addOrder } from "../Orders/ordersSlice";
-
 import { auth } from "../../firebase/firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
