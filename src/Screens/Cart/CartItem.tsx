@@ -5,7 +5,19 @@ import { useDispatch } from "react-redux";
 import { increaseQty, decreaseQty, removeItem } from "./cartSlice";
 import styles from "./cartStyles";
 
-export default function CartItem({ item }: any) {
+type CartItemType = {
+  id: number | string;
+  thumbnail?: string;
+  title?: string;
+  price?: number;
+  quantity?: number;
+};
+
+interface CartItemProps {
+  item: CartItemType;
+}
+
+export default function CartItem({ item }: CartItemProps) {
   const dispatch = useDispatch();
 
   return (
@@ -17,14 +29,14 @@ export default function CartItem({ item }: any) {
         <Text style={styles.price}>${item.price}</Text>
 
         <View style={styles.counterRow}>
-          <TouchableOpacity onPress={() => dispatch(decreaseQty(item.id))}>
-            <Ionicons name="remove-circle-outline" size={24} color="#333" />
+          <TouchableOpacity style={styles.circleBtn} onPress={() => dispatch(decreaseQty(item.id))}>
+            <Ionicons name="remove" size={18} />
           </TouchableOpacity>
 
           <Text style={styles.qty}>{item.quantity}</Text>
 
-          <TouchableOpacity onPress={() => dispatch(increaseQty(item.id))}>
-            <Ionicons name="add-circle-outline" size={24} color="#333" />
+          <TouchableOpacity style={styles.circleBtn} onPress={() => dispatch(increaseQty(item.id))}>
+            <Ionicons name="add" size={18} />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.deleteBtn} onPress={() => dispatch(removeItem(item.id))}>

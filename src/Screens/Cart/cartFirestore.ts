@@ -1,34 +1,28 @@
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDocs, collection, deleteDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
 import { CartItem } from "./cartSlice";
 
+// Load user's cart from Firestore
+export const loadCartFromFirestore = async (userId: string): Promise<CartItem[]> => {
+  const itemsRef = collection(db, "carts", userId, "items");
+  const snapshot = await getDocs(itemsRef);
+
+  const items: CartItem[] = [];
+  snapshot.forEach((docSnap) => items.push(docSnap.data() as CartItem));
+
+  return items;
+};
+
+// Save all items into Firestore
 export const saveCartToFirestore = async (userId: string, items: CartItem[]) => {
-  if (!userId) return; 
-  try {
-    await setDoc(
-      doc(db, "carts", userId), 
-      { items }, 
-      { merge: true } // merge with existing fields, don't overwrite entire document
-    );
-  } catch (e) {
-    console.log("Error saving cart:", e);
+  const userCartRef = collection(db, "carts", userId, "items");
+
+  // Delete previous items to avoid duplicates
+  const existing = await getDocs(userCartRef);
+  existing.forEach(async (d) => await deleteDoc(d.ref));
+
+  // Save each item as its own doc
+  for (const item of items) {
+    await setDoc(doc(db, "carts", userId, "items", item.id.toString()), item);
   }
 };
-
-// Load cart items for a specific user
-export const loadCartFromFirestore = async (userId: string) => {
-  if (!userId) return []; 
-  try {
-    const snap = await getDoc(doc(db, "carts", userId));
-    if (snap.exists()) {
-      const data = snap.data();
-      return data?.items || [];
-    } else {
-      return [];
-    }
-  } catch (e) {
-    console.log("Error loading cart:", e);
-    return [];
-  }
-};
-
