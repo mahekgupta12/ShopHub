@@ -1,4 +1,3 @@
-// src/persistence/checkoutPersistence.ts
 import { getJson, setJson, removeItem } from "./storage";
 
 export type CheckoutFormData = {

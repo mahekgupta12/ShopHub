@@ -36,12 +36,10 @@ export default function HomeScreens() {
 
   return (
     <View style={styles.container}>
-      {/* HEADER */}
       <View style={styles.headerRow}>
         <Text style={styles.brand}>ShopHub</Text>
 
         <View style={styles.headerActions}>
-          {/* List View Button */}
           <TouchableOpacity
             style={[
               styles.iconChip,
@@ -56,7 +54,6 @@ export default function HomeScreens() {
             />
           </TouchableOpacity>
 
-          {/* Grid View Button */}
           <TouchableOpacity
             style={[
               styles.iconChip,
@@ -73,14 +70,12 @@ export default function HomeScreens() {
         </View>
       </View>
 
-      {/* Search + Filter */}
       <SearchBar
         query={query}
         onChangeQuery={setQuery}
         RightElement={<FilterIcon />}
       />
 
-      {/* Products Section */}
       {loading && products.length === 0 ? (
         <View style={styles.stateWrapper}>
           <ActivityIndicator size="small" />

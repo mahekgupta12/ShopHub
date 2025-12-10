@@ -1,4 +1,3 @@
-// src/Navigation/RootStack.tsx
 import React from "react";
 import { View, ActivityIndicator } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -21,7 +20,6 @@ export default function RootStack() {
 
   const initialRoute = useInitialRoute();
 
-  // Jab tak Firebase se jawab nahi aata, ek chhota loader
   if (!initialRoute) {
     return (
       <View

@@ -22,7 +22,6 @@ export default function LoginScreen() {
 
   const navigation = useNavigation<any>();
 
-  // 👇 Redux theme
   const mode = useSelector((state: RootState) => state.theme.mode);
   const colors = getProfileTheme(mode);
   const styles = makeLoginStyles(colors);

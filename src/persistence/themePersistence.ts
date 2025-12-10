@@ -1,4 +1,3 @@
-// src/persistence/themePersistence.ts
 import { Store } from "@reduxjs/toolkit";
 import { setTheme, type ThemeMode } from "../Screens/Profile/themeSlice";
 import { getJson, setJson } from "./storage";

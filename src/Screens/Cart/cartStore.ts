@@ -1,4 +1,3 @@
-// src/Screens/Cart/cartStore.ts
 import { configureStore } from "@reduxjs/toolkit";
 import cartReducer from "./cartSlice";
 import themeReducer from "../Profile/themeSlice";

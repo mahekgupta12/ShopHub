@@ -1,4 +1,3 @@
-// src/Screens/Cart/CheckoutScreen.tsx
 import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
@@ -51,7 +50,6 @@ export default function CheckoutScreen() {
     .reduce((sum, item) => sum + item.price * item.quantity, 0)
     .toFixed(2);
 
-  // 👉 helper: current form ko AsyncStorage me save karo
   const persistForm = (partial?: Partial<CheckoutFormData>) => {
     const data: CheckoutFormData = {
       fullName: partial?.fullName ?? fullName,
@@ -63,7 +61,6 @@ export default function CheckoutScreen() {
     saveCheckoutForm(data);
   };
 
-  // 👉 mount pe saved form load karo
   useEffect(() => {
     const load = async () => {
       const data = await loadCheckoutForm();
@@ -78,7 +75,6 @@ export default function CheckoutScreen() {
     load();
   }, []);
 
-  // 👉 back: hamesha Cart screen par le jao
   const handleBack = () => {
     navigation.navigate("CartMain");
   };
@@ -124,7 +120,7 @@ export default function CheckoutScreen() {
     const date = today.toISOString().slice(0, 10);
 
     dispatch(clearCart());
-    await clearCheckoutForm(); // ✅ order ke baad saved form bhi clear
+    await clearCheckoutForm();
 
     navigation.navigate("OrderConfirmation", {
       orderId,
