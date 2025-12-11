@@ -22,7 +22,13 @@ const initialState: CartState = {
 const cartSlice = createSlice({
   name: "cart",
   initialState,
+
   reducers: {
+
+    setCart(state, action: PayloadAction<CartItem[]>) {
+      state.items = action.payload;
+    },
+
     addItem: (state, action: PayloadAction<Product>) => {
       const existing = state.items.find((i) => i.id === action.payload.id);
 
@@ -59,6 +65,7 @@ const cartSlice = createSlice({
 });
 
 export const {
+  setCart,
   addItem,
   increaseQty,
   decreaseQty,
