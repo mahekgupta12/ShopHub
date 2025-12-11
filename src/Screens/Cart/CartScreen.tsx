@@ -1,18 +1,47 @@
-import React from "react";
-import { View, Text, FlatList } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import { useSelector } from "react-redux";
+
 import CartItem from "./CartItem";
 import CartFooter from "./CartFooter";
 import { RootState } from "./cartStore";
+import { useLoadCart } from "./useLoadCart";
 
 import makeCartStyles from "./cartStyles";
 import { getProfileTheme } from "../Profile/profileTheme";
 
 export default function CartScreen() {
+  // 🔹 Load cart from Firebase / storage
+  useLoadCart();
+
+  // 🔹 Cart items from Redux
   const { items } = useSelector((state: RootState) => state.cart);
+
+  // 🔹 Theme from Redux
   const mode = useSelector((state: RootState) => state.theme.mode);
   const colors = getProfileTheme(mode);
   const styles = makeCartStyles(colors);
+
+  // 🔹 Loading state while cart is being hydrated
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // When items change (loaded), stop showing spinner
+    setLoading(false);
+  }, [items]);
+
+  if (loading) {
+    return (
+      <View
+        style={[
+          styles.container,
+          { justifyContent: "center", alignItems: "center" },
+        ]}
+      >
+        <ActivityIndicator size="large" color={colors.text} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
