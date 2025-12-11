@@ -1,4 +1,3 @@
-// src/persistence/storage.ts
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export async function setJson(key: string, value: unknown) {

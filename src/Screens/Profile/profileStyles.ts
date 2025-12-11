@@ -28,7 +28,6 @@ export const makeProfileStyles = (colors: AppTheme) =>
       marginBottom: 20,
     },
 
-    // header card
     profileCard: {
       flexDirection: "row",
       alignItems: "center",
@@ -69,7 +68,6 @@ export const makeProfileStyles = (colors: AppTheme) =>
       color: colors.textSecondary,
     },
 
-    // action rows
     actionCard: {
       paddingHorizontal: 18,
       paddingVertical: 14,
@@ -98,7 +96,6 @@ export const makeProfileStyles = (colors: AppTheme) =>
       fontWeight: "500",
     },
 
-    // logout
     logoutButton: {
       flexDirection: "row",
       alignItems: "center",

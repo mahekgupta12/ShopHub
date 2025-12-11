@@ -1,4 +1,3 @@
-// src/Navigation/BottomTabs.tsx
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -58,7 +57,7 @@ export default function BottomTabs() {
   };
 
   if (!ready) {
-    return null; // or a small loading view
+    return null;
   }
 
   return (

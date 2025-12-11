@@ -1,7 +1,7 @@
 export type ThemeMode = "light" | "dark";
 
 export type AppTheme = {
-  // base
+
   background: string;
   card: string;
   text: string;
@@ -11,7 +11,6 @@ export type AppTheme = {
   danger: string;
   muted: string;
 
-  // tab bar specific
   tabBar: string;
   tabActive: string;
   tabInactive: string;
@@ -33,8 +32,8 @@ const lightTheme: AppTheme = {
 };
 
 const darkTheme: AppTheme = {
-  background: "#020617",     // almost black
-  card: "#0F172A",           // slate-900
+  background: "#020617", 
+  card: "#0F172A",        
   text: "#F9FAFB",
   textSecondary: "#9CA3AF",
   border: "#1F2937",
