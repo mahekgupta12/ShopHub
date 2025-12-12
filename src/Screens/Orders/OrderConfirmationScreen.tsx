@@ -1,12 +1,8 @@
 import React from "react";
-import {
-  SafeAreaView,
-  View,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useSelector } from "react-redux";
 import { RootState } from "../Cart/cartStore";
@@ -34,16 +30,12 @@ export default function OrderConfirmationScreen() {
     navigation.popToTop();
   };
 
-  const goToOrders = () => {
+  const handleViewOrders = () => {
     resetCartStackToMain();
-    navigation.getParent()?.navigate("Orders", {
-      orderId,
-      total,
-      date,
-    });
+    navigation.getParent()?.navigate("Orders");
   };
 
-  const goToHome = () => {
+  const handleContinueShopping = () => {
     resetCartStackToMain();
     navigation.getParent()?.navigate("Home");
   };
@@ -66,7 +58,7 @@ export default function OrderConfirmationScreen() {
           <TouchableOpacity
             style={styles.primaryBtn}
             activeOpacity={0.9}
-            onPress={goToOrders}
+            onPress={handleViewOrders}
           >
             <Text style={styles.primaryText}>View Orders</Text>
           </TouchableOpacity>
@@ -74,7 +66,7 @@ export default function OrderConfirmationScreen() {
           <TouchableOpacity
             style={styles.secondaryBtn}
             activeOpacity={0.9}
-            onPress={goToHome}
+            onPress={handleContinueShopping}
           >
             <Text style={styles.secondaryText}>Continue Shopping</Text>
           </TouchableOpacity>

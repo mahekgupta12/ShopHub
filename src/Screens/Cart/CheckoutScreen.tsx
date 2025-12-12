@@ -28,6 +28,9 @@ import {
   type CheckoutFormData,
 } from "../../persistence/checkoutPersistence";
 
+import { auth, db } from "../../firebase/firebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
+
 export type PaymentMethod = "card" | "upi" | "cod";
 
 export default function CheckoutScreen() {
@@ -115,18 +118,45 @@ export default function CheckoutScreen() {
       return;
     }
 
-    const orderId = `ORD-${Date.now()}`;
-    const today = new Date();
-    const date = today.toISOString().slice(0, 10);
+    const userId = auth.currentUser?.uid;
+    if (!userId) {
+      Alert.alert("Not Logged In", "Please log in to place an order.");
+      return;
+    }
 
-    dispatch(clearCart());
-    await clearCheckoutForm();
+    try {
+      const orderId = `ORD-${Date.now()}`;
+      const today = new Date();
+      const date = today.toISOString().slice(0, 10);
 
-    navigation.navigate("OrderConfirmation", {
-      orderId,
-      total,
-      date,
-    });
+      await setDoc(
+        doc(db, "orders", userId, "userOrders", orderId),
+        {
+          orderId,
+          userId,
+          items,
+          total,
+          date,
+          paymentMethod,
+          timestamp: Date.now(),
+        }
+      );
+
+      dispatch(clearCart());
+      await clearCheckoutForm();
+
+      navigation.navigate("OrderConfirmation", {
+        orderId,
+        total,
+        date,
+      });
+    } catch (e) {
+      console.warn("Failed to place order", e);
+      Alert.alert(
+        "Order Failed",
+        "We couldn't place your order. Please try again."
+      );
+    }
   };
 
   return (
