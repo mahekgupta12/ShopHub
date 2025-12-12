@@ -3,18 +3,15 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
 
-import { increaseQty, decreaseQty, removeItem } from "./cartSlice";
+import {
+  increaseQty,
+  decreaseQty,
+  removeItem,
+  type CartItem as CartItemType,
+} from "./cartSlice";
 import makeCartStyles from "./cartStyles";
 import { RootState } from "./cartStore";
 import { getProfileTheme } from "../Profile/profileTheme";
-
-type CartItemType = {
-  id: number | string;
-  thumbnail?: string;
-  title?: string;
-  price?: number;
-  quantity?: number;
-};
 
 interface CartItemProps {
   item: CartItemType;
@@ -23,12 +20,10 @@ interface CartItemProps {
 export default function CartItem({ item }: CartItemProps) {
   const dispatch = useDispatch();
 
-  // 🔹 Theme from Redux (old code)
   const mode = useSelector((state: RootState) => state.theme.mode);
   const colors = getProfileTheme(mode);
   const styles = makeCartStyles(colors);
 
-  // 🔹 Safe fallbacks
   const price = item.price ?? 0;
   const quantity = item.quantity ?? 0;
 

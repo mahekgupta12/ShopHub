@@ -12,15 +12,11 @@ import { getProfileTheme } from "../Screens/Profile/profileTheme";
 
 import { useInitialRoute } from "../persistence/authPersistence";
 
-import { useLoadCart } from "../Screens/Cart/useLoadCart";
-
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootStack() {
   const mode = useSelector((state: RootState) => state.theme.mode);
   const colors = getProfileTheme(mode);
-
-  useLoadCart();
 
   const initialRoute = useInitialRoute();
 

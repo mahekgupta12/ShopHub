@@ -11,22 +11,17 @@ import makeCartStyles from "./cartStyles";
 import { getProfileTheme } from "../Profile/profileTheme";
 
 export default function CartScreen() {
-  // 🔹 Load cart from Firebase / storage
   useLoadCart();
 
-  // 🔹 Cart items from Redux
   const { items } = useSelector((state: RootState) => state.cart);
 
-  // 🔹 Theme from Redux
   const mode = useSelector((state: RootState) => state.theme.mode);
   const colors = getProfileTheme(mode);
   const styles = makeCartStyles(colors);
 
-  // 🔹 Loading state while cart is being hydrated
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // When items change (loaded), stop showing spinner
     setLoading(false);
   }, [items]);
 
