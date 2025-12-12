@@ -32,8 +32,8 @@ const lightTheme: AppTheme = {
 };
 
 const darkTheme: AppTheme = {
-  background: "#020617", 
-  card: "#0F172A",        
+  background: "#020617",     
+  card: "#0F172A",
   text: "#F9FAFB",
   textSecondary: "#9CA3AF",
   border: "#1F2937",

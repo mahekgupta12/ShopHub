@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 export type Product = {
+  category: any;
   id: number;
   title: string;
   price: number;

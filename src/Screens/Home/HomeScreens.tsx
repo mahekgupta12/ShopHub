@@ -13,6 +13,8 @@ import FilterIcon from "../../Navigation/Filter";
 import { useProducts } from "./Api";
 import ProductView from "./ProductView";
 
+import FilterDrawer from "./FilterDrawer";
+
 import { useSelector } from "react-redux";
 import { RootState } from "../Cart/cartStore";
 import { getProfileTheme, type AppTheme } from "../Profile/profileTheme";
@@ -21,14 +23,33 @@ export default function HomeScreens() {
   const [query, setQuery] = useState("");
   const [viewType, setViewType] = useState<"list" | "grid">("list");
 
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 2000 });
+
   const { products, loading, error } = useProducts();
 
   const mode = useSelector((state: RootState) => state.theme.mode);
   const colors = getProfileTheme(mode);
   const styles = makeStyles(colors);
 
-  const filteredProducts = products.filter((p) =>
+  let filteredProducts = products;
+
+  // CATEGORY FILTER
+  if (selectedCategory !== "All") {
+    filteredProducts = filteredProducts.filter(
+      (p) => p.category?.toLowerCase() === selectedCategory.toLowerCase()
+    );
+  }
+
+  // SEARCH FILTER
+  filteredProducts = filteredProducts.filter((p) =>
     p.title.toLowerCase().includes(query.toLowerCase())
+  );
+
+  // PRICE FILTER
+  filteredProducts = filteredProducts.filter(
+    (p) => p.price >= priceRange.min && p.price <= priceRange.max
   );
 
   const showEmpty =
@@ -70,13 +91,15 @@ export default function HomeScreens() {
         </View>
       </View>
 
+      {/* SEARCH + FILTER */}
       <SearchBar
         query={query}
         onChangeQuery={setQuery}
-        RightElement={<FilterIcon />}
+        RightElement={<FilterIcon onPress={() => setDrawerVisible(true)} />}
       />
 
-      {loading && products.length === 0 ? (
+      {/* PRODUCT LIST */}
+      {loading ? (
         <View style={styles.stateWrapper}>
           <ActivityIndicator size="small" />
         </View>
@@ -98,12 +121,27 @@ export default function HomeScreens() {
             <ProductView item={item} viewType={viewType} />
           )}
           columnWrapperStyle={
-            viewType === "grid" ? { justifyContent: "space-between" } : undefined
+            viewType === "grid"
+              // eslint-disable-next-line react-native/no-inline-styles
+              ? { justifyContent: "space-between" }
+              : undefined
           }
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.listContent}
         />
       )}
+
+      {/* FILTER DRAWER */}
+      <FilterDrawer
+        visible={drawerVisible}
+        selectedCategory={selectedCategory}
+        onClose={() => setDrawerVisible(false)}
+        onApply={(cat, min, max) => {
+          setSelectedCategory(cat);
+          setPriceRange({ min, max });
+          setDrawerVisible(false);
+        }}
+      />
     </View>
   );
 }
@@ -128,7 +166,6 @@ const makeStyles = (colors: AppTheme) =>
       color: colors.text,
     },
     headerActions: { flexDirection: "row", gap: 10 },
-
     iconChip: {
       height: 36,
       width: 36,
@@ -139,12 +176,8 @@ const makeStyles = (colors: AppTheme) =>
       borderWidth: 1,
       borderColor: colors.border,
     },
-    activeChip: {
-      backgroundColor: colors.primary,
-    },
-
+    activeChip: { backgroundColor: colors.primary },
     listContent: { paddingBottom: 20 },
-
     stateWrapper: {
       flex: 1,
       alignItems: "center",
