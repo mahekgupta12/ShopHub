@@ -33,8 +33,8 @@ const lightTheme: AppTheme = {
 };
 
 const darkTheme: AppTheme = {
-  background: "#020617",     // almost black
-  card: "#0F172A",           // slate-900
+  background: "#020617",     
+  card: "#0F172A",
   text: "#F9FAFB",
   textSecondary: "#9CA3AF",
   border: "#1F2937",
