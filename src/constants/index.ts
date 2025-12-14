@@ -197,7 +197,7 @@ export const PLACEHOLDERS = {
   FULL_NAME: "John Doe",
   PHONE: "10 digit phone number",
   STREET: "123 Main St",
-  CITY: "Nagpur",
+  CITY: "City",
   ZIP: "6 digit ZIP",
   CARD_NAME: "John Doe",
   CARD_NUMBER: "1234567812345678",
