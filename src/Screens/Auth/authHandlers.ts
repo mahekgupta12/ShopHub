@@ -1,9 +1,10 @@
 import { Alert } from "react-native";
+import Toast from "react-native-toast-message";
 import { auth } from "../../firebase/firebaseConfig";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  updateProfile,        
+  updateProfile,
 } from "firebase/auth";
 
 type Props = {
@@ -15,7 +16,6 @@ type Props = {
   setLoading: (value: boolean) => void;
 };
 
-
 export const handleSubmit = async ({
   fullName,
   email,
@@ -24,7 +24,6 @@ export const handleSubmit = async ({
   navigation,
   setLoading,
 }: Props) => {
-
   if (!email || !password || (activeTab === "signup" && !fullName?.trim())) {
     const msg =
       activeTab === "signup"
@@ -38,21 +37,34 @@ export const handleSubmit = async ({
     setLoading(true);
 
     if (activeTab === "signup") {
-
       const cred = await createUserWithEmailAndPassword(auth, email, password);
 
       await updateProfile(cred.user, {
         displayName: fullName!.trim(),
       });
 
-      setLoading(false);
-      Alert.alert("Success", "Account created successfully!");
+      Toast.show({
+        type: "success",
+        text1: "Account Created 🎉",
+        text2: "Your account has been created successfully",
+        position: "bottom",
+        visibilityTime: 2500,
+        autoHide: true,
+      });
     } else {
       await signInWithEmailAndPassword(auth, email, password);
-      setLoading(false);
-      Alert.alert("Welcome!", "Logged in successfully!");
+
+      Toast.show({
+        type: "success",
+        text1: "Welcome Back 👋",
+        text2: "Logged in successfully",
+        position: "bottom",
+        visibilityTime: 2000,
+        autoHide: true,
+      });
     }
 
+    setLoading(false);
     navigation.navigate("MainTabs");
   } catch (error: any) {
     setLoading(false);
@@ -65,8 +77,7 @@ export const handleSubmit = async ({
           message = "Please enter a valid email address.";
           break;
         case "auth/invalid-credential":
-          message =
-            "Incorrect credentials. Please provide valid email and password.";
+          message = "Incorrect email or password.";
           break;
         default:
           message = error.message;
