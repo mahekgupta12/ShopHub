@@ -14,6 +14,7 @@ import ProfileScreens from "../Screens/Profile/ProfileScreens";
 import { useAppSelector } from "../Screens/Cart/cartStore";
 import { getProfileTheme } from "../Screens/Profile/profileTheme";
 import { useLastTab } from "../persistence/tabPersistence";
+import { ROUTES, DEFAULTS } from "../constants";
 
 import { useNavigationLoader } from "../constants/navigationLoader";
 
@@ -30,7 +31,7 @@ export default function BottomTabs() {
     state.cart.items.reduce((sum, item) => sum + item.quantity, 0)
   );
 
-  const { initialTab, ready, handleTabChange } = useLastTab("Home");
+  const { initialTab, ready, handleTabChange } = useLastTab(DEFAULTS.TAB);
 
   const baseTabBarStyle = {
     backgroundColor: colors.tabBar,
@@ -54,15 +55,15 @@ export default function BottomTabs() {
         tabBarStyle: baseTabBarStyle,
         tabBarIcon: ({ focused, color, size }) => {
           const iconName =
-            route.name === "Cart"
+            route.name === ROUTES.CART
               ? focused
                 ? "cart"
                 : "cart-outline"
-              : route.name === "Home"
+              : route.name === ROUTES.HOME
               ? focused
                 ? "home"
                 : "home-outline"
-              : route.name === "Orders"
+              : route.name === ROUTES.ORDERS
               ? focused
                 ? "cube"
                 : "cube-outline"
@@ -73,7 +74,7 @@ export default function BottomTabs() {
           return (
             <View>
               <Ionicons name={iconName} size={size} color={color} />
-              {route.name === "Cart" && cartCount > 0 && (
+              {route.name === ROUTES.CART && cartCount > 0 && (
                 <View style={styles.badge}>
                   <Text style={styles.badgeText}>{cartCount}</Text>
                 </View>
@@ -92,10 +93,10 @@ export default function BottomTabs() {
         },
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreens} />
-      <Tab.Screen name="Cart" component={CartStack} />
-      <Tab.Screen name="Orders" component={OrdersScreens} />
-      <Tab.Screen name="Profile" component={ProfileScreens} />
+      <Tab.Screen name={ROUTES.HOME} component={HomeScreens} />
+      <Tab.Screen name={ROUTES.CART} component={CartStack} />
+      <Tab.Screen name={ROUTES.ORDERS} component={OrdersScreens} />
+      <Tab.Screen name={ROUTES.PROFILE} component={ProfileScreens} />
     </Tab.Navigator>
   );
 }

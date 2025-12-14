@@ -10,6 +10,7 @@ import { getProfileTheme } from "../Profile/profileTheme";
 
 import makeOrderConfirmationStyles from "./orderConfirmationStyles";
 import OrderInfoBox from "./OrderInfoBox";
+import { ROUTES } from "../../constants";
 
 type RouteParams = {
   orderId: string;
@@ -32,12 +33,12 @@ export default function OrderConfirmationScreen() {
 
   const handleViewOrders = () => {
     resetCartStackToMain();
-    navigation.getParent()?.navigate("Orders");
+    navigation.getParent()?.navigate(ROUTES.ORDERS);
   };
 
   const handleContinueShopping = () => {
     resetCartStackToMain();
-    navigation.getParent()?.navigate("Home");
+    navigation.getParent()?.navigate(ROUTES.HOME);
   };
 
   return (

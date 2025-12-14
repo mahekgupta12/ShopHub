@@ -18,14 +18,15 @@ import FilterDrawer from "./FilterDrawer";
 import { useSelector } from "react-redux";
 import { RootState } from "../Cart/cartStore";
 import { getProfileTheme, type AppTheme } from "../Profile/profileTheme";
+import { CATEGORIES, DEFAULTS } from "../../constants";
 
 export default function HomeScreens() {
   const [query, setQuery] = useState("");
   const [viewType, setViewType] = useState<"list" | "grid">("list");
 
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 2000 });
+  const [selectedCategory, setSelectedCategory] = useState(CATEGORIES.ALL);
+  const [priceRange, setPriceRange] = useState(DEFAULTS.PRICE_RANGE);
 
   const { products, loading, error } = useProducts();
 
@@ -36,7 +37,7 @@ export default function HomeScreens() {
   let filteredProducts = products;
 
 
-  if (selectedCategory !== "All") {
+  if (selectedCategory !== CATEGORIES.ALL) {
     filteredProducts = filteredProducts.filter(
       (p) => p.category?.toLowerCase() === selectedCategory.toLowerCase()
     );

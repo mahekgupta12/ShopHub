@@ -5,6 +5,7 @@ import type { RootStackParamList } from "./types";
 
 import LoginScreen from "../Screens/Auth/LoginScreen";
 import BottomTabs from "./BottomTabs";
+import { ROUTES, SCREEN_TITLES } from "../constants";
 
 import { useSelector } from "react-redux";
 import { RootState } from "../Screens/Cart/cartStore";
@@ -53,12 +54,12 @@ export default function RootStack() {
       }}
     >
       <Stack.Screen
-        name="Login"
+        name={ROUTES.LOGIN}
         component={LoginScreen}
-        options={{ title: "Login" }}
+        options={{ title: SCREEN_TITLES.LOGIN }}
       />
       <Stack.Screen
-        name="MainTabs"
+        name={ROUTES.MAIN_TABS}
         component={BottomTabs}
         options={{ headerShown: false }}
       />

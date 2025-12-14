@@ -6,6 +6,7 @@ import { RootState } from "./cartStore";
 
 import makeCartStyles from "./cartStyles";
 import { getProfileTheme } from "../Profile/profileTheme";
+import { ROUTES } from "../../constants";
 
 export default function CartFooter() {
   const { items } = useSelector((state: RootState) => state.cart);
@@ -28,7 +29,7 @@ export default function CartFooter() {
 
       <TouchableOpacity
         style={styles.checkoutBtn}
-        onPress={() => navigation.navigate("Checkout")}
+        onPress={() => navigation.navigate(ROUTES.CHECKOUT)}
       >
         <Text style={styles.checkoutText}>Proceed to Checkout</Text>
       </TouchableOpacity>

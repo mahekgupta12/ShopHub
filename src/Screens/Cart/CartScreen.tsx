@@ -10,6 +10,7 @@ import { useLoadCart } from "./useLoadCart";
 
 import makeCartStyles from "./cartStyles";
 import { getProfileTheme } from "../Profile/profileTheme";
+import { SCREEN_TITLES } from "../../constants";
 
 export default function CartScreen() {
   useLoadCart();
@@ -42,7 +43,7 @@ export default function CartScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
-        <Text style={styles.headerTitle}>Cart</Text>
+        <Text style={styles.headerTitle}>{SCREEN_TITLES.CART}</Text>
         <Text style={styles.headerCount}>({items.length})</Text>
       </View>
 

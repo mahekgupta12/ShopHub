@@ -26,8 +26,9 @@ import {
   saveCheckoutForm,
   type CheckoutFormData,
 } from "../../persistence/checkoutPersistence";
+import { VALIDATION, ERROR_MESSAGES } from "../../constants";
 
-export type PaymentMethod = "card" | "upi" | "cod";
+import { PaymentMethod, PAYMENT_METHODS, ROUTES, SCREEN_TITLES } from "../../constants";
 
 export default function CheckoutScreen() {
   const navigation = useNavigation<any>();
@@ -42,7 +43,7 @@ export default function CheckoutScreen() {
   const [street, setStreet] = useState("");
   const [city, setCity] = useState("");
   const [zip, setZip] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(PAYMENT_METHODS.CARD);
 
   const total = items
     .reduce((sum, item) => sum + item.price * item.quantity, 0)
@@ -73,7 +74,7 @@ export default function CheckoutScreen() {
     load();
   }, []);
 
-  const handleBack = () => navigation.navigate("CartMain");
+  const handleBack = () => navigation.navigate(ROUTES.CART_MAIN);
 
   const onChangeFullName = (text: string) => {
     const cleaned = text.replace(/[^A-Za-z\s]/g, "");
@@ -120,17 +121,17 @@ export default function CheckoutScreen() {
     if (!cityTrim) errors.push("• City is required");
     if (!zip) errors.push("• ZIP Code is required");
 
-    if (phone && phone.length !== 10)
-      errors.push("• Phone Number must be exactly 10 digits");
-    if (zip && zip.length !== 6)
-      errors.push("• ZIP Code must be exactly 6 digits");
+    if (phone && phone.length !== VALIDATION.PHONE.LENGTH)
+      errors.push(`• Phone Number must be exactly ${VALIDATION.PHONE.LENGTH} digits`);
+    if (zip && zip.length !== VALIDATION.ZIP.LENGTH)
+      errors.push(`• ZIP Code must be exactly ${VALIDATION.ZIP.LENGTH} digits`);
 
     if (errors.length > 0) {
       Alert.alert("Fix these details", errors.join("\n"));
       return;
     }
 
-    navigation.navigate("Payment", {
+    navigation.navigate(ROUTES.PAYMENT, {
       fullName: fullNameTrim,
       phone,
       street: streetTrim,
@@ -150,7 +151,7 @@ export default function CheckoutScreen() {
             <Ionicons name="chevron-back" size={22} color={colors.text} />
           </TouchableOpacity>
 
-          <Text style={styles.headerTitle}>Checkout</Text>
+          <Text style={styles.headerTitle}>{SCREEN_TITLES.CHECKOUT}</Text>
           <View style={styles.headerRightSpacer} />
         </View>
 

@@ -6,6 +6,7 @@ import CartScreen from "../Screens/Cart/CartScreen";
 import CheckoutScreen from "../Screens/Cart/CheckoutScreen";
 import PaymentScreen from "../Screens/Cart/PaymentScreen";
 import OrderConfirmationScreen from "../Screens/Orders/OrderConfirmationScreen";
+import { ROUTES } from "../constants";
 
 import { useNavigationLoader } from "../constants/navigationLoader";
 
@@ -22,22 +23,22 @@ export default function CartStack() {
       }}
     >
       <Stack.Screen
-        name="CartMain"
+        name={ROUTES.CART_MAIN}
         component={CartScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Checkout"
+        name={ROUTES.CHECKOUT}
         component={CheckoutScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Payment"
+        name={ROUTES.PAYMENT}
         component={PaymentScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="OrderConfirmation"
+        name={ROUTES.ORDER_CONFIRMATION}
         component={OrderConfirmationScreen}
         options={{ headerShown: false }}
       />

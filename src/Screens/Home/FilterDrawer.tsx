@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { RootState } from "../Cart/cartStore";
 import { getProfileTheme } from "../Profile/profileTheme";
-import { CATEGORY_OPTIONS } from "../../constants/filterOptions";
+import { CATEGORY_OPTIONS } from "../../constants";
 import { makeStyles } from "./filterStyles";
 
 type Props = {
