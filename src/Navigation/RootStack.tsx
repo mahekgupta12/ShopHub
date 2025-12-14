@@ -9,12 +9,15 @@ import BottomTabs from "./BottomTabs";
 import { useSelector } from "react-redux";
 import { RootState } from "../Screens/Cart/cartStore";
 import { getProfileTheme } from "../Screens/Profile/profileTheme";
-
 import { useInitialRoute } from "../persistence/authPersistence";
+
+import { useNavigationLoader } from "../constants/navigationLoader";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootStack() {
+  const { show, hide } = useNavigationLoader();
+
   const mode = useSelector((state: RootState) => state.theme.mode);
   const colors = getProfileTheme(mode);
 
@@ -38,6 +41,10 @@ export default function RootStack() {
   return (
     <Stack.Navigator
       initialRouteName={initialRoute}
+      screenListeners={{
+        transitionStart: () => show(),
+        transitionEnd: () => hide(),
+      }}
       screenOptions={{
         headerStyle: { backgroundColor: colors.background },
         headerTintColor: colors.text,

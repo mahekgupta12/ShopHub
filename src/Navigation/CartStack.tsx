@@ -4,13 +4,23 @@ import type { CartStackParamList } from "./types";
 
 import CartScreen from "../Screens/Cart/CartScreen";
 import CheckoutScreen from "../Screens/Cart/CheckoutScreen";
+import PaymentScreen from "../Screens/Cart/PaymentScreen";
 import OrderConfirmationScreen from "../Screens/Orders/OrderConfirmationScreen";
+
+import { useNavigationLoader } from "../constants/navigationLoader";
 
 const Stack = createNativeStackNavigator<CartStackParamList>();
 
 export default function CartStack() {
+  const { show, hide } = useNavigationLoader();
+
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenListeners={{
+        transitionStart: () => show(),
+        transitionEnd: () => hide(),
+      }}
+    >
       <Stack.Screen
         name="CartMain"
         component={CartScreen}
@@ -19,6 +29,11 @@ export default function CartStack() {
       <Stack.Screen
         name="Checkout"
         component={CheckoutScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Payment"
+        component={PaymentScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen

@@ -35,19 +35,19 @@ export default function HomeScreens() {
 
   let filteredProducts = products;
 
-  // CATEGORY FILTER
+
   if (selectedCategory !== "All") {
     filteredProducts = filteredProducts.filter(
       (p) => p.category?.toLowerCase() === selectedCategory.toLowerCase()
     );
   }
 
-  // SEARCH FILTER
+
   filteredProducts = filteredProducts.filter((p) =>
     p.title.toLowerCase().includes(query.toLowerCase())
   );
 
-  // PRICE FILTER
+
   filteredProducts = filteredProducts.filter(
     (p) => p.price >= priceRange.min && p.price <= priceRange.max
   );
@@ -91,14 +91,14 @@ export default function HomeScreens() {
         </View>
       </View>
 
-      {/* SEARCH + FILTER */}
+
       <SearchBar
         query={query}
         onChangeQuery={setQuery}
         RightElement={<FilterIcon onPress={() => setDrawerVisible(true)} />}
       />
 
-      {/* PRODUCT LIST */}
+
       {loading ? (
         <View style={styles.stateWrapper}>
           <ActivityIndicator size="small" />
@@ -131,7 +131,7 @@ export default function HomeScreens() {
         />
       )}
 
-      {/* FILTER DRAWER */}
+
       <FilterDrawer
         visible={drawerVisible}
         selectedCategory={selectedCategory}
