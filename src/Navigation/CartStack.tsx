@@ -1,14 +1,14 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import type { CartStackParamList } from "./types";
+import type { CartStackParamList } from "./Types";
 
-import CartScreen from "../Screens/Cart/CartScreen";
-import CheckoutScreen from "../Screens/Cart/CheckoutScreen";
-import PaymentScreen from "../Screens/Cart/PaymentScreen";
-import OrderConfirmationScreen from "../Screens/Orders/OrderConfirmationScreen";
-import { ROUTES } from "../constants";
+import CartScreen from "../screens/cart/CartScreen";
+import CheckoutScreen from "../screens/cart/CheckoutScreen";
+import PaymentScreen from "../screens/cart/PaymentScreen";
+import OrderConfirmationScreen from "../screens/orders/OrderConfirmationScreen";
+import { ROUTES } from "../constants/Index";
 
-import { useNavigationLoader } from "../constants/navigationLoader";
+import { useNavigationLoader } from "../constants/NavigationLoader";
 
 const Stack = createNativeStackNavigator<CartStackParamList>();
 

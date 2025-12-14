@@ -1,19 +1,23 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSelector } from "react-redux";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { RootState } from "../Cart/cartStore";
-import { getProfileTheme } from "../Profile/profileTheme";
-import { CATEGORY_OPTIONS } from "../../constants";
-import { makeStyles } from "./filterStyles";
+import { RootState } from "../cart/CartStore";
+import { getProfileTheme } from "../profile/ProfileTheme";
+import {
+  CATEGORY_OPTIONS,
+  DEFAULTS,
+  type Category,
+} from "../../constants/Index";
+import { makeStyles } from "./FilterStyles";
 
 type Props = {
   visible: boolean;
   onClose: () => void;
-  onApply: (category: string, min: number, max: number) => void;
-  selectedCategory: string;
+  onApply: (category: Category, min: number, max: number) => void;
+  selectedCategory: Category;
 };
 
 export default function FilterDrawer({
@@ -22,9 +26,9 @@ export default function FilterDrawer({
   onApply,
   selectedCategory,
 }: Props) {
-  const [category, setCategory] = useState(selectedCategory);
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(1000);
+  const [category, setCategory] = useState<Category>(selectedCategory);
+  const [minPrice, setMinPrice] = useState<number>(DEFAULTS.PRICE_RANGE.min);
+  const [maxPrice, setMaxPrice] = useState<number>(DEFAULTS.PRICE_RANGE.max);
 
   const mode = useSelector((state: RootState) => state.theme.mode);
   const colors = getProfileTheme(mode);
@@ -32,21 +36,20 @@ export default function FilterDrawer({
 
   const insets = useSafeAreaInsets();
   const categoriesList = CATEGORY_OPTIONS;
+  const drawerInsetsStyle = useMemo(
+    () => ({
+      top: insets.top,
+      paddingBottom: insets.bottom,
+    }),
+    [insets.bottom, insets.top]
+  );
 
   if (!visible) return null;
 
   return (
     <View style={styles.overlay}>
       <View
-        style={[
-          styles.drawer,
-          // eslint-disable-next-line react-native/no-inline-styles
-          {
-            top: insets.top,
-            height: "100%",
-            paddingBottom: insets.bottom,
-          },
-        ]}
+        style={[styles.drawer, styles.drawerFullHeight, drawerInsetsStyle]}
       >
 
         <View style={styles.headerRow}>

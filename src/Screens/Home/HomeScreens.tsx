@@ -9,24 +9,33 @@ import {
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import SearchBar from "./SearchBar";
-import FilterIcon from "../../Navigation/Filter";
-import { useProducts } from "./Api";
+import FilterIcon from "../../navigation/Filter";
+import { useProducts, type Product } from "./Api";
 import ProductView from "./ProductView";
 
 import FilterDrawer from "./FilterDrawer";
 
 import { useSelector } from "react-redux";
-import { RootState } from "../Cart/cartStore";
-import { getProfileTheme, type AppTheme } from "../Profile/profileTheme";
-import { CATEGORIES, DEFAULTS } from "../../constants";
+import { RootState } from "../cart/CartStore";
+import { getProfileTheme, type AppTheme } from "../profile/ProfileTheme";
+import {
+  CATEGORIES,
+  DEFAULTS,
+  type Category,
+  type PriceRange,
+} from "../../constants/Index";
 
 export default function HomeScreens() {
   const [query, setQuery] = useState("");
   const [viewType, setViewType] = useState<"list" | "grid">("list");
 
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(CATEGORIES.ALL);
-  const [priceRange, setPriceRange] = useState(DEFAULTS.PRICE_RANGE);
+  const [selectedCategory, setSelectedCategory] = useState<Category>(
+    DEFAULTS.CATEGORY
+  );
+  const [priceRange, setPriceRange] = useState<PriceRange>({
+    ...DEFAULTS.PRICE_RANGE,
+  });
 
   const { products, loading, error } = useProducts();
 
@@ -34,7 +43,7 @@ export default function HomeScreens() {
   const colors = getProfileTheme(mode);
   const styles = makeStyles(colors);
 
-  let filteredProducts = products;
+  let filteredProducts: Product[] = products;
 
 
   if (selectedCategory !== CATEGORIES.ALL) {
@@ -122,10 +131,7 @@ export default function HomeScreens() {
             <ProductView item={item} viewType={viewType} />
           )}
           columnWrapperStyle={
-            viewType === "grid"
-              // eslint-disable-next-line react-native/no-inline-styles
-              ? { justifyContent: "space-between" }
-              : undefined
+            viewType === "grid" ? styles.gridColumnWrapper : undefined
           }
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.listContent}
@@ -179,6 +185,7 @@ const makeStyles = (colors: AppTheme) =>
     },
     activeChip: { backgroundColor: colors.primary },
     listContent: { paddingBottom: 20 },
+    gridColumnWrapper: { justifyContent: "space-between" },
     stateWrapper: {
       flex: 1,
       alignItems: "center",

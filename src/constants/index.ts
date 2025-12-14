@@ -45,6 +45,8 @@ export const CATEGORY_OPTIONS = [
   CATEGORIES.BEAUTY,
 ] as const;
 
+export type Category = (typeof CATEGORY_OPTIONS)[number];
+
 // ============================================================================
 // UPI Handles
 // ============================================================================
@@ -170,6 +172,11 @@ export const DEFAULTS = {
   },
   TAB: ROUTES.HOME,
 } as const;
+
+export type PriceRange = {
+  min: number;
+  max: number;
+};
 
 // ============================================================================
 // Screen Titles

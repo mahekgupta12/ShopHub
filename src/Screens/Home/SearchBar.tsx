@@ -3,8 +3,8 @@ import { View, TextInput, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { useSelector } from "react-redux";
-import { RootState } from "../Cart/cartStore";
-import { getProfileTheme, type AppTheme } from "../Profile/profileTheme";
+import { RootState } from "../cart/CartStore";
+import { getProfileTheme, type AppTheme } from "../profile/ProfileTheme";
 
 type Props = {
   query: string;

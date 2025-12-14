@@ -2,11 +2,11 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import { RootState } from "./cartStore";
+import { RootState } from "./CartStore";
 
-import makeCartStyles from "./cartStyles";
-import { getProfileTheme } from "../Profile/profileTheme";
-import { ROUTES } from "../../constants";
+import makeCartStyles from "./CartStyles";
+import { getProfileTheme } from "../profile/ProfileTheme";
+import { ROUTES } from "../../constants/Index";
 
 export default function CartFooter() {
   const { items } = useSelector((state: RootState) => state.cart);

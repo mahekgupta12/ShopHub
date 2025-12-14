@@ -8,10 +8,10 @@ import {
   addItem,
   increaseQty,
   decreaseQty,
-} from "../Cart/cartSlice";
+} from "../cart/CartSlice";
 
-import { RootState } from "../Cart/cartStore";
-import { getProfileTheme, type AppTheme } from "../Profile/profileTheme";
+import { RootState } from "../cart/CartStore";
+import { getProfileTheme, type AppTheme } from "../profile/ProfileTheme";
 
 export default function ProductView({
   item,

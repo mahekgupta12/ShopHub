@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import type { AppTheme } from "../Profile/profileTheme";
+import type { AppTheme } from "../profile/ProfileTheme";
 
 const makeLoginStyles = (colors: AppTheme) =>
   StyleSheet.create({

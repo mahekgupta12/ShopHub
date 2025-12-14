@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { getJson, setJson, removeItem } from "./storage";
-import type { BottomTabParamList } from "../Navigation/types";
-import { ROUTES, DEFAULTS } from "../constants";
+import { getJson, setJson, removeItem } from "./Storage";
+import type { BottomTabParamList } from "../navigation/Types";
+import { DEFAULTS } from "../constants/Index";
 
 const LAST_TAB_KEY = "LAST_TAB";
 

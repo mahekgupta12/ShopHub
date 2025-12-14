@@ -8,21 +8,21 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import { auth } from "../../firebase/firebaseConfig";
+import { auth } from "../../firebase/FirebaseConfig";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
 
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../Cart/cartStore";
-import { toggleTheme } from "./themeSlice";
-import { getProfileTheme } from "./profileTheme";
-import { makeProfileStyles } from "./profileStyles";
+import { RootState } from "../cart/CartStore";
+import { toggleTheme } from "./ThemeSlice";
+import { getProfileTheme } from "./ProfileTheme";
+import { makeProfileStyles } from "./ProfileStyles";
 
 import ProfileHeaderCard from "./ProfileHeaderCard";
 import ThemeToggleRow from "./ThemeToggleRow";
 import ProfileActionRow from "./ProfileActionRow";
 
-import { clearLastTab } from "../../persistence/tabPersistence";
-import { ROUTES, SCREEN_TITLES } from "../../constants";
+import { clearLastTab } from "../../persistence/TabPersistence";
+import { ROUTES, SCREEN_TITLES } from "../../constants/Index";
 
 export default function ProfileScreen() {
   const navigation = useNavigation<any>();

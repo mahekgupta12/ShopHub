@@ -1,9 +1,9 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { useSelector } from "react-redux";
-import { RootState } from "../Cart/cartStore";
-import { getProfileTheme } from "../Profile/profileTheme";
-import makeOrderStyles from "./orderStyles";
+import { RootState } from "../cart/CartStore";
+import { getProfileTheme } from "../profile/ProfileTheme";
+import makeOrderStyles from "./OrderStyles";
 
 type Props = {
   orderId: string;

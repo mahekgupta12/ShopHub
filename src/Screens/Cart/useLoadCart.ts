@@ -2,13 +2,13 @@ import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { onAuthStateChanged } from "firebase/auth";
 
-import { auth } from "../../firebase/firebaseConfig";
+import { auth } from "../../firebase/FirebaseConfig";
 import {
   loadCartFromFirestore,
   saveCartToFirestore,
-} from "./cartFirestore";
-import { setCart } from "./cartSlice";
-import type { RootState } from "./cartStore";
+} from "./CartFirestore";
+import { setCart } from "./CartSlice";
+import type { RootState } from "./CartStore";
 
 export const useLoadCart = () => {
   const dispatch = useDispatch();

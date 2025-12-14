@@ -11,24 +11,24 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
-import { RootState } from "./cartStore";
+import { RootState } from "./CartStore";
 
-import makeCheckoutStyles from "./checkoutStyles";
+import makeCheckoutStyles from "./CheckoutStyles";
 import {
   DeliveryAddressCard,
   PaymentMethodCard,
   OrderSummaryCard,
 } from "./CheckoutSections";
-import { getProfileTheme } from "../Profile/profileTheme";
+import { getProfileTheme } from "../profile/ProfileTheme";
 
 import {
   loadCheckoutForm,
   saveCheckoutForm,
   type CheckoutFormData,
-} from "../../persistence/checkoutPersistence";
-import { VALIDATION, ERROR_MESSAGES } from "../../constants";
+} from "../../persistence/CheckoutPersistence";
+import { VALIDATION, ERROR_MESSAGES } from "../../constants/Index";
 
-import { PaymentMethod, PAYMENT_METHODS, ROUTES, SCREEN_TITLES } from "../../constants";
+import { PaymentMethod, PAYMENT_METHODS, ROUTES, SCREEN_TITLES } from "../../constants/Index";
 
 export default function CheckoutScreen() {
   const navigation = useNavigation<any>();

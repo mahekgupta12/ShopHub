@@ -4,19 +4,19 @@ import { View, Text, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import type { BottomTabParamList } from "./types";
+import type { BottomTabParamList } from "./Types";
 
-import HomeScreens from "../Screens/Home/HomeScreens";
+import HomeScreens from "../screens/home/HomeScreens";
 import CartStack from "./CartStack";
-import OrdersScreens from "../Screens/Orders/OrdersScreens";
-import ProfileScreens from "../Screens/Profile/ProfileScreens";
+import OrdersScreens from "../screens/orders/OrdersScreens";
+import ProfileScreens from "../screens/profile/ProfileScreens";
 
-import { useAppSelector } from "../Screens/Cart/cartStore";
-import { getProfileTheme } from "../Screens/Profile/profileTheme";
-import { useLastTab } from "../persistence/tabPersistence";
-import { ROUTES, DEFAULTS } from "../constants";
+import { useAppSelector } from "../screens/cart/CartStore";
+import { getProfileTheme } from "../screens/profile/ProfileTheme";
+import { useLastTab } from "../persistence/TabPersistence";
+import { ROUTES, DEFAULTS } from "../constants/Index";
 
-import { useNavigationLoader } from "../constants/navigationLoader";
+import { useNavigationLoader } from "../constants/NavigationLoader";
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
