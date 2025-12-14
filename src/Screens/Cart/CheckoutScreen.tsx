@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
@@ -26,7 +25,7 @@ import {
   saveCheckoutForm,
   type CheckoutFormData,
 } from "../../persistence/CheckoutPersistence";
-import { VALIDATION, ERROR_MESSAGES } from "../../constants/Index";
+import { VALIDATION } from "../../constants/Index";
 
 import { PaymentMethod, PAYMENT_METHODS, ROUTES, SCREEN_TITLES } from "../../constants/Index";
 
