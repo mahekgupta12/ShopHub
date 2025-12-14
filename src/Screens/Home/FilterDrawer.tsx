@@ -48,7 +48,7 @@ export default function FilterDrawer({
           },
         ]}
       >
-        {/* HEADER */}
+
         <View style={styles.headerRow}>
           <Text style={styles.title}>Filters</Text>
           <TouchableOpacity onPress={onClose}>
@@ -62,7 +62,7 @@ export default function FilterDrawer({
 
         <Text style={styles.subHeader}>Refine your product search</Text>
 
-        {/* CATEGORY */}
+
         <Text style={styles.sectionTitle}>Category</Text>
 
         <View style={styles.categoriesContainer}>
@@ -85,11 +85,11 @@ export default function FilterDrawer({
           ))}
         </View>
 
-        {/* PRICE RANGE */}
+
         <Text style={styles.sectionTitle}>Price Range</Text>
 
         <View style={styles.priceContainer}>
-          {/* MIN */}
+
           <View style={styles.priceRow}>
             <TouchableOpacity
               onPress={() => setMinPrice(Math.max(minPrice - 50, 0))}
@@ -110,7 +110,7 @@ export default function FilterDrawer({
             </TouchableOpacity>
           </View>
 
-          {/* MAX */}
+
           <View style={styles.priceRow}>
             <TouchableOpacity
               onPress={() => setMaxPrice(Math.max(maxPrice - 50, minPrice))}
@@ -132,7 +132,7 @@ export default function FilterDrawer({
           </View>
         </View>
 
-        {/* FOOTER */}
+
         <View style={styles.footer}>
           <TouchableOpacity onPress={onClose}>
             <Text style={styles.closeText}>Close</Text>

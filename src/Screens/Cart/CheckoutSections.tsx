@@ -56,8 +56,9 @@ export function DeliveryAddressCard(props: AddressProps) {
       <TextInput
         value={phone}
         onChangeText={onChangePhone}
-        placeholder="+1 234 567 8900"
-        keyboardType="phone-pad"
+        placeholder="10 digit phone number"
+        keyboardType="number-pad"
+        maxLength={10}
         style={styles.input}
         placeholderTextColor={colors.textSecondary}
       />
@@ -77,7 +78,7 @@ export function DeliveryAddressCard(props: AddressProps) {
           <TextInput
             value={city}
             onChangeText={onChangeCity}
-            placeholder="New York"
+            placeholder="Nagpur"
             style={styles.input}
             placeholderTextColor={colors.textSecondary}
           />
@@ -90,8 +91,9 @@ export function DeliveryAddressCard(props: AddressProps) {
           <TextInput
             value={zip}
             onChangeText={onChangeZip}
-            placeholder="10001"
-            keyboardType="numeric"
+            placeholder="6 digit ZIP"
+            keyboardType="number-pad"
+            maxLength={6}
             style={styles.input}
             placeholderTextColor={colors.textSecondary}
           />

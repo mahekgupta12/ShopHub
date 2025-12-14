@@ -3,7 +3,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useSafeAreaInsets } from "react-native-safe-area-context"; 
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { BottomTabParamList } from "./types";
 
 import HomeScreens from "../Screens/Home/HomeScreens";
@@ -15,9 +15,13 @@ import { useAppSelector } from "../Screens/Cart/cartStore";
 import { getProfileTheme } from "../Screens/Profile/profileTheme";
 import { useLastTab } from "../persistence/tabPersistence";
 
+import { useNavigationLoader } from "../constants/navigationLoader";
+
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabs() {
+  const { show, hide } = useNavigationLoader();
+
   const insets = useSafeAreaInsets();
   const mode = useAppSelector((state) => state.theme.mode);
   const colors = getProfileTheme(mode);
@@ -80,6 +84,10 @@ export default function BottomTabs() {
       })}
       screenListeners={({ route }) => ({
         tabPress: () => {
+          // ✅ show loader briefly for tab switch
+          show();
+          setTimeout(() => hide(), 250);
+
           handleTabChange(route.name as keyof BottomTabParamList);
         },
       })}
