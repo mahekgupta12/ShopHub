@@ -84,7 +84,7 @@ export default function BottomTabs() {
       })}
       screenListeners={({ route }) => ({
         tabPress: () => {
-          // ✅ show loader briefly for tab switch
+  
           show();
           setTimeout(() => hide(), 250);
 
