@@ -3,11 +3,15 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { Product } from "./Api";
 import { useDispatch, useSelector } from "react-redux";
-import { addItem } from "../Cart/cartSlice";
+
+import {
+  addItem,
+  increaseQty,
+  decreaseQty,
+} from "../Cart/cartSlice";
 
 import { RootState } from "../Cart/cartStore";
 import { getProfileTheme, type AppTheme } from "../Profile/profileTheme";
-
 
 export default function ProductView({
   item,
@@ -19,6 +23,11 @@ export default function ProductView({
   const dispatch = useDispatch();
 
   const mode = useSelector((state: RootState) => state.theme.mode);
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+
+  const cartItem = cartItems.find((i) => i.id === item.id);
+  const quantity = cartItem?.quantity ?? 0;
+
   const colors = getProfileTheme(mode);
   const styles = makeStyles(colors);
 
@@ -44,12 +53,32 @@ export default function ProductView({
         <View style={styles.footerRow}>
           <Text style={styles.price}>${item.price.toFixed(2)}</Text>
 
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => dispatch(addItem(item))}
-          >
-            <Text style={styles.addButtonText}>Add</Text>
-          </TouchableOpacity>
+          {quantity === 0 ? (
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={() => dispatch(addItem(item))}
+            >
+              <Text style={styles.addButtonText}>Add</Text>
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.qtyContainer}>
+              <TouchableOpacity
+                style={styles.qtyBtn}
+                onPress={() => dispatch(decreaseQty(item.id))}
+              >
+                <Ionicons name="remove" size={16} color={colors.text} />
+              </TouchableOpacity>
+
+              <Text style={styles.qtyText}>{quantity}</Text>
+
+              <TouchableOpacity
+                style={styles.qtyBtn}
+                onPress={() => dispatch(increaseQty(item.id))}
+              >
+                <Ionicons name="add" size={16} color={colors.text} />
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </View>
     </View>
@@ -110,6 +139,7 @@ const makeStyles = (colors: AppTheme) =>
       fontWeight: "700",
       color: colors.text,
     },
+
     addButton: {
       backgroundColor: colors.primary,
       paddingHorizontal: 14,
@@ -119,5 +149,25 @@ const makeStyles = (colors: AppTheme) =>
     addButtonText: {
       color: "#fff",
       fontWeight: "600",
+    },
+
+    qtyContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 10,
+    },
+    qtyBtn: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: colors.border,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    qtyText: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: colors.text,
     },
   });

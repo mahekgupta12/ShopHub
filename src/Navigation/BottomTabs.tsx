@@ -1,8 +1,9 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React from "react";
+import { View, Text, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import { useSafeAreaInsets } from "react-native-safe-area-context"; 
 import type { BottomTabParamList } from "./types";
 
 import HomeScreens from "../Screens/Home/HomeScreens";
@@ -16,35 +17,14 @@ import { useLastTab } from "../persistence/tabPersistence";
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
-type IconArgs = { focused: boolean; color: string; size: number };
-
-function getIconName(routeName: keyof BottomTabParamList, focused: boolean) {
-  switch (routeName) {
-    case "Home":
-      return focused ? "home" : "home-outline";
-    case "Cart":
-      return focused ? "cart" : "cart-outline";
-    case "Orders":
-      return focused ? "cube" : "cube-outline";
-    case "Profile":
-      return focused ? "person" : "person-outline";
-    default:
-      return "ellipse-outline";
-  }
-}
-
-function createTabBarIcon(routeName: keyof BottomTabParamList) {
-  return ({ focused, color, size }: IconArgs) => {
-    const s = Math.max(size, 22);
-    const name = getIconName(routeName, focused);
-    return <Ionicons name={name} size={s} color={color} />;
-  };
-}
-
 export default function BottomTabs() {
   const insets = useSafeAreaInsets();
   const mode = useAppSelector((state) => state.theme.mode);
   const colors = getProfileTheme(mode);
+
+  const cartCount = useAppSelector((state) =>
+    state.cart.items.reduce((sum, item) => sum + item.quantity, 0)
+  );
 
   const { initialTab, ready, handleTabChange } = useLastTab("Home");
 
@@ -56,9 +36,7 @@ export default function BottomTabs() {
     paddingBottom: Math.max(8, insets.bottom),
   };
 
-  if (!ready) {
-    return null;
-  }
+  if (!ready) return null;
 
   return (
     <Tab.Navigator
@@ -69,8 +47,36 @@ export default function BottomTabs() {
         tabBarActiveTintColor: colors.tabActive,
         tabBarInactiveTintColor: colors.tabInactive,
         tabBarLabelStyle: { fontSize: 12 },
-        tabBarIcon: createTabBarIcon(route.name as keyof BottomTabParamList),
         tabBarStyle: baseTabBarStyle,
+        tabBarIcon: ({ focused, color, size }) => {
+          const iconName =
+            route.name === "Cart"
+              ? focused
+                ? "cart"
+                : "cart-outline"
+              : route.name === "Home"
+              ? focused
+                ? "home"
+                : "home-outline"
+              : route.name === "Orders"
+              ? focused
+                ? "cube"
+                : "cube-outline"
+              : focused
+              ? "person"
+              : "person-outline";
+
+          return (
+            <View>
+              <Ionicons name={iconName} size={size} color={color} />
+              {route.name === "Cart" && cartCount > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{cartCount}</Text>
+                </View>
+              )}
+            </View>
+          );
+        },
       })}
       screenListeners={({ route }) => ({
         tabPress: () => {
@@ -79,26 +85,27 @@ export default function BottomTabs() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreens} />
-
-      <Tab.Screen
-        name="Cart"
-        component={CartStack}
-        options={({ route }) => {
-          const nestedRouteName =
-            getFocusedRouteNameFromRoute(route) ?? "CartMain";
-          const isOrderConfirmation = nestedRouteName === "OrderConfirmation";
-
-          return {
-            headerShown: false,
-            tabBarStyle: isOrderConfirmation
-              ? { ...baseTabBarStyle, display: "none" }
-              : baseTabBarStyle,
-          };
-        }}
-      />
-
+      <Tab.Screen name="Cart" component={CartStack} />
       <Tab.Screen name="Orders" component={OrdersScreens} />
       <Tab.Screen name="Profile" component={ProfileScreens} />
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  badge: {
+    position: "absolute",
+    right: -6,
+    top: -4,
+    backgroundColor: "#EF4444",
+    borderRadius: 10,
+    paddingHorizontal: 5,
+    minWidth: 16,
+    alignItems: "center",
+  },
+  badgeText: {
+    color: "#fff",
+    fontSize: 10,
+    fontWeight: "700",
+  },
+});
