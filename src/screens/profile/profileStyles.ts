@@ -1,8 +1,11 @@
 import { StyleSheet } from "react-native";
 import type { AppTheme } from "./profileTheme";
+import { makeCommonStyles } from "../../componets/commonStyles";
 
-export const makeProfileStyles = (colors: AppTheme) =>
-  StyleSheet.create({
+export const makeProfileStyles = (colors: AppTheme) => {
+  const common = makeCommonStyles(colors);
+
+  return StyleSheet.create({
     safe: {
       flex: 1,
       backgroundColor: colors.background,
@@ -10,7 +13,7 @@ export const makeProfileStyles = (colors: AppTheme) =>
     container: {
       flex: 1,
       paddingHorizontal: 20,
-      paddingTop: 24,
+      paddingTop: 10,
     },
 
     topSection: {
@@ -22,10 +25,8 @@ export const makeProfileStyles = (colors: AppTheme) =>
     },
 
     screenTitle: {
-      fontSize: 28,
-      fontWeight: "800",
-      color: colors.text,
-      marginBottom: 20,
+      ...common.screenTitle,
+      marginBottom: 40,
     },
 
     profileCard: {
@@ -110,5 +111,6 @@ export const makeProfileStyles = (colors: AppTheme) =>
       fontWeight: "700",
     },
   });
+};
 
 export type ProfileStyles = ReturnType<typeof makeProfileStyles>;

@@ -108,11 +108,15 @@ export default function OrdersScreens() {
   if (!orders || orders.length === 0) {
     return (
       <SafeAreaView style={styles.safe}>
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyTitle}>No Orders Yet! 🙁</Text>
-          <Text style={styles.emptySubtitle}>
-            Your past orders will appear here.{"\n"}Start shopping now!
-          </Text>
+        <View style={styles.container}>
+          <Text style={styles.title}>{SCREEN_TITLES.ORDERS}</Text>
+
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyTitle}>No Orders Yet! 🙁</Text>
+            <Text style={styles.emptySubtitle}>
+              Your past orders will appear here.{"\n"}Start shopping now!
+            </Text>
+          </View>
         </View>
       </SafeAreaView>
     );
