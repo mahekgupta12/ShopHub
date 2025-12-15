@@ -166,6 +166,38 @@ export const SCREEN_TITLES = {
 } as const;
 
 
+export const EMPTY_STATE_MESSAGES = {
+  CART_TITLE: "Hey, it feels so light! 🎒",
+  CART_SUBTITLE: "There is nothing in your bag.\nLet's add some items.",
+  ORDERS_TITLE: "No Orders Yet! 🙁",
+  ORDERS_SUBTITLE:
+    "Your past orders will appear here.\nStart shopping now!",
+} as const;
+
+
+export const PROFILE_LABELS = {
+  MY_ORDERS: "My Orders",
+  CONTINUE_SHOPPING: "Continue Shopping",
+  LOGOUT: "Logout",
+} as const;
+
+
+export const THEME_LABELS = {
+  SWITCH_TO_LIGHT: "Switch to Light Theme",
+  SWITCH_TO_DARK: "Switch to Dark Theme",
+  MODE_DARK: "Dark",
+  MODE_LIGHT: "Light",
+} as const;
+
+
+export const ORDER_CONFIRMATION_TEXT = {
+  TITLE: "Order Confirmed!",
+  SUBTITLE: "Thank you for your purchase",
+  VIEW_ORDERS: "View Orders",
+  CONTINUE_SHOPPING: "Continue Shopping",
+} as const;
+
+
 export const PLACEHOLDERS = {
   FULL_NAME: "John Doe",
   PHONE: "10 digit phone number",

@@ -13,7 +13,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme } from "../profile/profileTheme";
 import makeOrderStyles from "./orderStyles";
-import { FIREBASE_COLLECTIONS, SCREEN_TITLES } from "../../constants/index";
+import {
+  FIREBASE_COLLECTIONS,
+  SCREEN_TITLES,
+  EMPTY_STATE_MESSAGES,
+} from "../../constants/index";
 
 type OrderItem = {
   id: string | number;
@@ -112,9 +116,11 @@ export default function OrdersScreens() {
           <Text style={styles.title}>{SCREEN_TITLES.ORDERS}</Text>
 
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyTitle}>No Orders Yet! 🙁</Text>
+            <Text style={styles.emptyTitle}>
+              {EMPTY_STATE_MESSAGES.ORDERS_TITLE}
+            </Text>
             <Text style={styles.emptySubtitle}>
-              Your past orders will appear here.{"\n"}Start shopping now!
+              {EMPTY_STATE_MESSAGES.ORDERS_SUBTITLE}
             </Text>
           </View>
         </View>

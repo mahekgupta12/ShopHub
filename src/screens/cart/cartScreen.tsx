@@ -16,7 +16,10 @@ import { useLoadCart } from "./useLoadCart";
 
 import makeCartStyles from "./cartStyles";
 import { getProfileTheme } from "../profile/profileTheme";
-import { SCREEN_TITLES } from "../../constants/index";
+import {
+  SCREEN_TITLES,
+  EMPTY_STATE_MESSAGES,
+} from "../../constants/index";
 
 export default function CartScreen() {
   useLoadCart();
@@ -58,9 +61,11 @@ export default function CartScreen() {
 
         {items.length === 0 ? (
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyTitle}>Hey, it feels so light! 🎒</Text>
+            <Text style={styles.emptyTitle}>
+              {EMPTY_STATE_MESSAGES.CART_TITLE}
+            </Text>
             <Text style={styles.emptySubtitle}>
-              There is nothing in your bag.{"\n"}Let's add some items.
+              {EMPTY_STATE_MESSAGES.CART_SUBTITLE}
             </Text>
           </View>
         ) : (

@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import type { ProfileStyles } from "./profileStyles";
 import type { AppTheme } from "./profileTheme";
+import { THEME_LABELS } from "../../constants/index";
 
 type Props = {
   isDark: boolean;
@@ -30,11 +31,15 @@ export default function ThemeToggleRow({
           color={colors.primary}
         />
         <Text style={styles.actionLabel}>
-          {isDark ? "Switch to Light Theme" : "Switch to Dark Theme"}
+          {isDark
+            ? THEME_LABELS.SWITCH_TO_LIGHT
+            : THEME_LABELS.SWITCH_TO_DARK}
         </Text>
       </View>
 
-      <Text style={styles.modeTag}>{isDark ? "Dark" : "Light"}</Text>
+      <Text style={styles.modeTag}>
+        {isDark ? THEME_LABELS.MODE_DARK : THEME_LABELS.MODE_LIGHT}
+      </Text>
     </TouchableOpacity>
   );
 }

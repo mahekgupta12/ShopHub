@@ -10,7 +10,10 @@ import { getProfileTheme } from "../profile/profileTheme";
 
 import makeOrderConfirmationStyles from "./orderConfirmationStyles";
 import OrderInfoBox from "./orderInfoBox";
-import { ROUTES } from "../../constants/index";
+import {
+  ROUTES,
+  ORDER_CONFIRMATION_TEXT,
+} from "../../constants/index";
 
 type RouteParams = {
   orderId: string;
@@ -44,15 +47,17 @@ export default function OrderConfirmationScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.outer}>
-        <View style={styles.card}>
+          <View style={styles.card}>
           <View style={styles.iconCircleOuter}>
             <View style={styles.iconCircleInner}>
               <Ionicons name="checkmark" size={32} color="#16A34A" />
             </View>
           </View>
 
-          <Text style={styles.title}>Order Confirmed!</Text>
-          <Text style={styles.subtitle}>Thank you for your purchase</Text>
+          <Text style={styles.title}>{ORDER_CONFIRMATION_TEXT.TITLE}</Text>
+          <Text style={styles.subtitle}>
+            {ORDER_CONFIRMATION_TEXT.SUBTITLE}
+          </Text>
 
           <OrderInfoBox orderId={orderId} total={total} date={date} />
 
@@ -61,7 +66,9 @@ export default function OrderConfirmationScreen() {
             activeOpacity={0.9}
             onPress={handleViewOrders}
           >
-            <Text style={styles.primaryText}>View Orders</Text>
+            <Text style={styles.primaryText}>
+              {ORDER_CONFIRMATION_TEXT.VIEW_ORDERS}
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -69,7 +76,9 @@ export default function OrderConfirmationScreen() {
             activeOpacity={0.9}
             onPress={handleContinueShopping}
           >
-            <Text style={styles.secondaryText}>Continue Shopping</Text>
+            <Text style={styles.secondaryText}>
+              {ORDER_CONFIRMATION_TEXT.CONTINUE_SHOPPING}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

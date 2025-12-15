@@ -22,7 +22,11 @@ import ThemeToggleRow from "./themeToggleRow";
 import ProfileActionRow from "./profileActionRow";
 
 import { clearLastTab } from "../../persistence/tabPersistence";
-import { ROUTES, SCREEN_TITLES } from "../../constants/index";
+import {
+  ROUTES,
+  SCREEN_TITLES,
+  PROFILE_LABELS,
+} from "../../constants/index";
 
 export default function ProfileScreen() {
   const navigation = useNavigation<any>();
@@ -86,7 +90,7 @@ export default function ProfileScreen() {
 
           <ProfileActionRow
             icon="cube-outline"
-            label="My Orders"
+            label={PROFILE_LABELS.MY_ORDERS}
             colors={colors}
             styles={styles}
             onPress={goToOrders}
@@ -94,7 +98,7 @@ export default function ProfileScreen() {
 
           <ProfileActionRow
             icon="bag-handle-outline"
-            label="Continue Shopping"
+            label={PROFILE_LABELS.CONTINUE_SHOPPING}
             colors={colors}
             styles={styles}
             onPress={goToHome}
@@ -113,7 +117,7 @@ export default function ProfileScreen() {
               color="#ffffff"
               style={{ marginRight: 8 }}
             />
-            <Text style={styles.logoutText}>Logout</Text>
+            <Text style={styles.logoutText}>{PROFILE_LABELS.LOGOUT}</Text>
           </TouchableOpacity>
         </View>
       </View>
