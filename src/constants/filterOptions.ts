@@ -1,1 +1,1 @@
-export { CATEGORY_OPTIONS, CATEGORIES } from "./Index";
+export { CATEGORY_OPTIONS, CATEGORIES } from "./index";
