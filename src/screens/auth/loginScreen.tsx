@@ -6,12 +6,12 @@ import Header from "./header";
 import Tabs from "./tabs";
 import Form from "./form";
 
-import { handleSubmit as authHandleSubmit } from "./AuthHandlers";
+import { handleSubmit as authHandleSubmit } from "./authHandlers";
 
 import { useSelector } from "react-redux";
-import { RootState } from "../cart/CartStore";
-import { getProfileTheme } from "../profile/ProfileTheme";
-import makeLoginStyles from "./LoginStyles";
+import { RootState } from "../cart/cartStore";
+import { getProfileTheme } from "../profile/profileTheme";
+import makeLoginStyles from "./loginStyles";
 
 export default function LoginScreen() {
   const [activeTab, setActiveTab] = useState<"login" | "signup">("login");

@@ -1,4 +1,4 @@
-import { PaymentMethod } from "../constants/Index";
+import { PaymentMethod } from "../constants/index";
 
 export type RootStackParamList = {
   Login: undefined;

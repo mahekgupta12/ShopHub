@@ -5,12 +5,12 @@ import { useSelector } from "react-redux";
 
 import CartItem from "./cartItem";
 import CartFooter from "./cartFooter";
-import { RootState } from "./CartStore";
-import { useLoadCart } from "./UseLoadCart";
+import { RootState } from "./cartStore";
+import { useLoadCart } from "./useLoadCart";
 
-import makeCartStyles from "./CartStyles";
-import { getProfileTheme } from "../profile/ProfileTheme";
-import { SCREEN_TITLES } from "../../constants/Index";
+import makeCartStyles from "./cartStyles";
+import { getProfileTheme } from "../profile/profileTheme";
+import { SCREEN_TITLES } from "../../constants/index";
 
 export default function CartScreen() {
   useLoadCart();

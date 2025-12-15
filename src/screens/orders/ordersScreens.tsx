@@ -8,12 +8,12 @@ import {
 } from "react-native";
 import { collection, onSnapshot } from "firebase/firestore";
 
-import { auth, db } from "../../firebase/FirebaseConfig";
+import { auth, db } from "../../firebase/firebaseConfig";
 import { useSelector } from "react-redux";
-import { RootState } from "../cart/CartStore";
-import { getProfileTheme } from "../profile/ProfileTheme";
-import makeOrderStyles from "./OrderStyles";
-import { FIREBASE_COLLECTIONS, SCREEN_TITLES } from "../../constants/Index";
+import { RootState } from "../cart/cartStore";
+import { getProfileTheme } from "../profile/profileTheme";
+import makeOrderStyles from "./orderStyles";
+import { FIREBASE_COLLECTIONS, SCREEN_TITLES } from "../../constants/index";
 
 type OrderItem = {
   id: string | number;

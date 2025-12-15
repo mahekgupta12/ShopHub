@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { onAuthStateChanged, type User } from "firebase/auth";
-import { auth } from "../firebase/FirebaseConfig";
-import type { RootStackParamList } from "../navigation/Types";
-import { clearLastTab } from "./TabPersistence";
+import { auth } from "../firebase/firebaseConfig";
+import type { RootStackParamList } from "../navigation/types";
+import { clearLastTab } from "./tabPersistence";
 
 type RouteName = keyof RootStackParamList;
 

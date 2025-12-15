@@ -1,13 +1,13 @@
 import React from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import makeCheckoutStyles from "./CheckoutStyles";
-import type { PaymentMethod } from "../../constants/Index";
-import { PAYMENT_METHODS, PAYMENT_METHOD_LABELS, PLACEHOLDERS } from "../../constants/Index";
-import type { CartItem } from "./CartSlice";
+import makeCheckoutStyles from "./checkoutStyles";
+import type { PaymentMethod } from "../../constants/index";
+import { PAYMENT_METHODS, PAYMENT_METHOD_LABELS, PLACEHOLDERS } from "../../constants/index";
+import type { CartItem } from "./cartSlice";
 
 import { useSelector } from "react-redux";
-import { RootState } from "./CartStore";
-import { getProfileTheme } from "../profile/ProfileTheme";
+import { RootState } from "./cartStore";
+import { getProfileTheme } from "../profile/profileTheme";
 
 type AddressProps = {
   fullName: string;

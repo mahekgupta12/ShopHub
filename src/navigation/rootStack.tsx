@@ -3,16 +3,16 @@ import { View, ActivityIndicator } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "./Types";
 
-import LoginScreen from "../screens/auth/LoginScreen";
+import LoginScreen from "../screens/auth/loginScreen";
 import BottomTabs from "./bottomTabs";
-import { ROUTES, SCREEN_TITLES } from "../constants/Index";
+import { ROUTES, SCREEN_TITLES } from "../constants/index";
 
 import { useSelector } from "react-redux";
-import { RootState } from "../screens/cart/CartStore";
-import { getProfileTheme } from "../screens/profile/ProfileTheme";
-import { useInitialRoute } from "../persistence/AuthPersistence";
+import { RootState } from "../screens/cart/cartStore";
+import { getProfileTheme } from "../screens/profile/profileTheme";
+import { useInitialRoute } from "../persistence/authPersistence";
 
-import { useNavigationLoader } from "../constants/NavigationLoader";
+import { useNavigationLoader } from "../constants/navigationLoader";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
-import cartReducer from "./CartSlice";
-import themeReducer from "../profile/ThemeSlice";
-import ordersReducer from "../orders/OrdersSlice";
+import cartReducer from "./cartSlice";
+import themeReducer from "../profile/themeSlice";
+import ordersReducer from "../orders/ordersSlice";
 
 import {
   TypedUseSelectorHook,
@@ -12,7 +12,7 @@ import {
 import {
   bootstrapTheme,
   watchThemeChanges,
-} from "../../persistence/ThemePersistence";
+} from "../../persistence/themePersistence";
 
 export const cartStore = configureStore({
   reducer: {

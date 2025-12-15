@@ -9,21 +9,21 @@ import {
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import SearchBar from "./searchBar";
-import FilterIcon from "../../navigation/Filter";
+import FilterIcon from "../../navigation/filter";
 import { useProducts, type Product } from "./api";
 import ProductView from "./productView";
 
 import FilterDrawer from "./filterDrawer";
 
 import { useSelector } from "react-redux";
-import { RootState } from "../cart/CartStore";
-import { getProfileTheme, type AppTheme } from "../profile/ProfileTheme";
+import { RootState } from "../cart/cartStore";
+import { getProfileTheme, type AppTheme } from "../profile/profileTheme";
 import {
   CATEGORIES,
   DEFAULTS,
   type Category,
   type PriceRange,
-} from "../../constants/Index";
+} from "../../constants/index";
 
 export default function HomeScreens() {
   const [query, setQuery] = useState("");

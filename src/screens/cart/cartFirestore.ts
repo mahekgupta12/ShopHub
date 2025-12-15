@@ -5,9 +5,9 @@ import {
   collection,
   deleteDoc,
 } from "firebase/firestore";
-import { db } from "../../firebase/FirebaseConfig";
-import type { CartItem } from "./CartSlice";
-import { FIREBASE_COLLECTIONS } from "../../constants/Index";
+import { db } from "../../firebase/firebaseConfig";
+import type { CartItem } from "./cartSlice";
+import { FIREBASE_COLLECTIONS } from "../../constants/index";
 
 
 export const loadCartFromFirestore = async (

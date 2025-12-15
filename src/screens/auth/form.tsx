@@ -8,9 +8,9 @@ import {
 } from "react-native";
 
 import { useSelector } from "react-redux";
-import { RootState } from "../cart/CartStore";
-import { getProfileTheme } from "../profile/ProfileTheme";
-import makeLoginStyles from "./LoginStyles";
+import { RootState } from "../cart/cartStore";
+import { getProfileTheme } from "../profile/profileTheme";
+import makeLoginStyles from "./loginStyles";
 
 type Props = {
   activeTab: "login" | "signup";

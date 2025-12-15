@@ -5,12 +5,12 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useSelector } from "react-redux";
-import { RootState } from "../cart/CartStore";
-import { getProfileTheme } from "../profile/ProfileTheme";
+import { RootState } from "../cart/cartStore";
+import { getProfileTheme } from "../profile/profileTheme";
 
-import makeOrderConfirmationStyles from "./OrderConfirmationStyles";
+import makeOrderConfirmationStyles from "./orderConfirmationStyles";
 import OrderInfoBox from "./orderInfoBox";
-import { ROUTES } from "../../constants/Index";
+import { ROUTES } from "../../constants/index";
 
 type RouteParams = {
   orderId: string;

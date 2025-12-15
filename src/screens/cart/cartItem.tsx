@@ -8,10 +8,10 @@ import {
   decreaseQty,
   removeItem,
   type CartItem as CartItemType,
-} from "./CartSlice";
-import makeCartStyles from "./CartStyles";
-import { RootState } from "./CartStore";
-import { getProfileTheme } from "../profile/ProfileTheme";
+} from "./cartSlice";
+import makeCartStyles from "./cartStyles";
+import { RootState } from "./cartStore";
+import { getProfileTheme } from "../profile/profileTheme";
 
 interface CartItemProps {
   item: CartItemType;

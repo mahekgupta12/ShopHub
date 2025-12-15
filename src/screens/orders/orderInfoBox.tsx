@@ -2,9 +2,9 @@ import React from "react";
 import { View, Text } from "react-native";
 
 import { useSelector } from "react-redux";
-import { RootState } from "../cart/CartStore";
-import { getProfileTheme } from "../profile/ProfileTheme";
-import makeOrderConfirmationStyles from "./OrderConfirmationStyles";
+import { RootState } from "../cart/cartStore";
+import { getProfileTheme } from "../profile/profileTheme";
+import makeOrderConfirmationStyles from "./orderConfirmationStyles";
 
 type Props = {
   orderId: string;

@@ -16,13 +16,13 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "./CartStore";
-import { getProfileTheme } from "../profile/ProfileTheme";
+import { RootState } from "./cartStore";
+import { getProfileTheme } from "../profile/profileTheme";
 
-import { auth, db } from "../../firebase/FirebaseConfig";
+import { auth, db } from "../../firebase/firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
-import { clearCart } from "./CartSlice";
-import { clearCheckoutForm } from "../../persistence/CheckoutPersistence";
+import { clearCart } from "./cartSlice";
+import { clearCheckoutForm } from "../../persistence/checkoutPersistence";
 import {
   ALLOWED_UPI_HANDLES,
   PAYMENT_METHODS,
@@ -34,7 +34,7 @@ import {
   PLACEHOLDERS,
   FIREBASE_COLLECTIONS,
   type PaymentMethod,
-} from "../../constants/Index";
+} from "../../constants/index";
 
 
 const onlyDigits = (s: string) => s.replace(/\D/g, "");

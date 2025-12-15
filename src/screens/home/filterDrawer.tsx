@@ -4,14 +4,14 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSelector } from "react-redux";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { RootState } from "../cart/CartStore";
-import { getProfileTheme } from "../profile/ProfileTheme";
+import { RootState } from "../cart/cartStore";
+import { getProfileTheme } from "../profile/profileTheme";
 import {
   CATEGORY_OPTIONS,
   DEFAULTS,
   type Category,
-} from "../../constants/Index";
-import { makeStyles } from "./FilterStyles";
+} from "../../constants/index";
+import { makeStyles } from "./filterStyles";
 
 type Props = {
   visible: boolean;

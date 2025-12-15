@@ -2,8 +2,8 @@ import React from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSelector } from "react-redux";
-import { RootState } from "../screens/cart/CartStore";
-import { AppTheme, getProfileTheme } from "../screens/profile/ProfileTheme";
+import { RootState } from "../screens/cart/cartStore";
+import { AppTheme, getProfileTheme } from "../screens/profile/profileTheme";
 
 type Props = {
   onPress?: () => void;

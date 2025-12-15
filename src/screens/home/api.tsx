@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { API_URLS } from "../../config/Api";
-import { ERROR_MESSAGES } from "../../constants/Index";
+import { API_URLS } from "../../config/api";
+import { ERROR_MESSAGES } from "../../constants/index";
 
 export type Product = {
   category: any;
