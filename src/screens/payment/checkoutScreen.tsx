@@ -10,7 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
-import { RootState } from "./cartStore";
+import { RootState } from "../cart/cartStore";
 
 import makeCheckoutStyles from "./checkoutStyles";
 import {
@@ -181,3 +181,4 @@ export default function CheckoutScreen() {
     </SafeAreaView>
   );
 }
+

@@ -110,3 +110,4 @@ const makeOrderConfirmationStyles = (colors: AppTheme) =>
   });
 
 export default makeOrderConfirmationStyles;
+

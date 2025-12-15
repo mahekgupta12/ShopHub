@@ -16,12 +16,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "./cartStore";
+import { RootState } from "../cart/cartStore";
 import { getProfileTheme } from "../profile/profileTheme";
 
 import { auth, db } from "../../firebase/firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
-import { clearCart } from "./cartSlice";
+import { clearCart } from "../cart/cartSlice";
 import { clearCheckoutForm } from "../../persistence/checkoutPersistence";
 import {
   ALLOWED_UPI_HANDLES,
@@ -176,52 +176,43 @@ export default function PaymentScreen() {
       if (cardName.trim().length < VALIDATION.CARD.NAME_MIN_LENGTH) return "Enter name on card (min 2 letters).";
       if (cardNumber.length !== VALIDATION.CARD.NUMBER_LENGTH) return "Card number must be exactly 16 digits.";
       if (!isValidExpiry(expiry)) return "Expiry must be valid MM/YY and not expired.";
-      if (!(cvv.length === VALIDATION.CARD.CVV_MIN_LENGTH || cvv.length === VALIDATION.CARD.CVV_MAX_LENGTH)) return "CVV must be 3–4 digits.";
+      if (!(cvv.length === VALIDATION.CARD.CVV_MIN_LENGTH || cvv.length === VALIDATION.CARD.CVV_MAX_LENGTH)) return "CVV must be 3 or 4 digits.";
       return "";
     }
 
-    
-    if (!normalizedUpi) return `Enter UPI ID (example: ${PLACEHOLDERS.UPI_ID}).`;
-    if (!validateUpiId(normalizedUpi)) return "UPI handle not supported. Check @bank part.";
+    if (params.paymentMethod === PAYMENT_METHODS.UPI) {
+      if (!normalizedUpi) return "Enter a UPI ID.";
+      if (!isUpiValid) return "Enter a valid UPI ID with supported handle.";
+      return "";
+    }
+
     return "";
-  }, [params.paymentMethod, cardName, cardNumber, expiry, cvv, normalizedUpi]);
+  }, [params.paymentMethod, cardName, cardNumber, expiry, cvv, normalizedUpi, isUpiValid]);
+
+  const handleBack = () => navigation.goBack();
 
   const handleConfirmPayment = async () => {
-    
-    if (!canProceed) {
-      Alert.alert(ERROR_MESSAGES.INVALID_PAYMENT_DETAILS, disableReason || ERROR_MESSAGES.PLEASE_CHECK_DETAILS);
-      return;
-    }
-
-    const userId = auth.currentUser?.uid;
-    if (!userId) {
-      Alert.alert(ERROR_MESSAGES.LOGIN_REQUIRED, ERROR_MESSAGES.PLEASE_LOG_IN);
-      return;
-    }
+    if (!canProceed || loading) return;
 
     try {
       setLoading(true);
 
-      const orderId = `${ORDER.ID_PREFIX}${Date.now()}`;
-      const date = new Date().toISOString().slice(0, 10);
+      const user = auth.currentUser;
+      if (!user) {
+        Alert.alert(ERROR_MESSAGES.LOGIN_REQUIRED, ERROR_MESSAGES.PLEASE_LOG_IN);
+        return;
+      }
 
-      await setDoc(doc(db, FIREBASE_COLLECTIONS.ORDERS, userId, FIREBASE_COLLECTIONS.USER_ORDERS, orderId), {
-        orderId,
-        userId,
+      const now = new Date();
+      const orderId = `${ORDER.ID_PREFIX}${now.getTime()}`;
+
+      const orderData = {
+        id: orderId,
+        userId: user.uid,
         items: params.items,
         total: params.total,
-        date,
+        createdAt: now.toISOString(),
         paymentMethod: params.paymentMethod,
-        paymentDetails:
-          params.paymentMethod === PAYMENT_METHODS.CARD
-            ? {
-                cardName: cardName.trim(),
-                last4: cardNumber.slice(-4),
-                expiry,
-              }
-            : params.paymentMethod === PAYMENT_METHODS.UPI
-            ? { upiId: normalizedUpi }
-            : { cod: true },
         address: {
           fullName: params.fullName,
           phone: params.phone,
@@ -229,11 +220,25 @@ export default function PaymentScreen() {
           city: params.city,
           zip: params.zip,
         },
-        timestamp: Date.now(),
-      });
+      };
+
+      await Promise.all([
+        setDoc(doc(db, FIREBASE_COLLECTIONS.ORDERS, orderId), orderData),
+        setDoc(
+          doc(db, FIREBASE_COLLECTIONS.USER_ORDERS, `${user.uid}_${orderId}`),
+          {
+            orderId,
+            userId: user.uid,
+            total: params.total,
+            createdAt: now.toISOString(),
+          }
+        ),
+      ]);
 
       dispatch(clearCart());
-      await clearCheckoutForm();
+      clearCheckoutForm();
+
+      const date = now.toLocaleDateString();
 
       navigation.navigate(ROUTES.ORDER_CONFIRMATION, {
         orderId,
@@ -258,7 +263,7 @@ export default function PaymentScreen() {
           
           <View style={styles.headerRow}>
             <Pressable
-              onPress={() => navigation.goBack()}
+              onPress={handleBack}
               style={[
                 styles.backBtn,
                 { backgroundColor: colors.card, borderColor: colors.border },
@@ -290,19 +295,52 @@ export default function PaymentScreen() {
                 Order Summary
               </Text>
 
-              <Text style={{ marginTop: 10, color: colors.textSecondary }}>
-                Total Amount
-              </Text>
-              <Text
+              <View style={{ marginTop: 10 }}>
+                {params.items.map((item) => (
+                  <View
+                    key={item.id}
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      marginBottom: 6,
+                    }}
+                  >
+                    <Text style={{ color: colors.textSecondary }}>
+                      {item.title} × {item.quantity}
+                    </Text>
+                    <Text style={{ color: colors.text }}>
+                      ${(item.price * item.quantity).toFixed(2)}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+
+              <View
                 style={{
-                  fontSize: 22,
-                  fontWeight: "900",
-                  color: colors.primary,
-                  marginTop: 4,
+                  height: 1,
+                  backgroundColor: colors.border,
+                  marginVertical: 12,
+                }}
+              />
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                 }}
               >
-                ${params.total}
-              </Text>
+                <Text style={{ fontWeight: "700", color: colors.text }}>Total</Text>
+                <Text
+                  style={{
+                    fontWeight: "800",
+                    color: colors.primary,
+                    fontSize: 16,
+                  }}
+                >
+                  ${params.total}
+                </Text>
+              </View>
             </View>
 
 
@@ -313,7 +351,7 @@ export default function PaymentScreen() {
                   { backgroundColor: colors.card, borderColor: colors.border },
                 ]}
               >
-                <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                <Text style={{ fontSize: 16, fontWeight: "800", color: colors.text }}>
                   Card Details
                 </Text>
 
@@ -329,7 +367,7 @@ export default function PaymentScreen() {
                 />
 
                 <Text style={[styles.label, { color: colors.textSecondary }]}>
-                  Card Number (16 digits)
+                  Card Number
                 </Text>
                 <InputField
                   value={cardNumber}
@@ -338,7 +376,7 @@ export default function PaymentScreen() {
                   editable={!loading}
                   colors={colors}
                   keyboardType="number-pad"
-                      maxLength={VALIDATION.CARD.NUMBER_LENGTH}
+                  maxLength={VALIDATION.CARD.NUMBER_LENGTH}
                 />
 
                 <View style={styles.twoCol}>
@@ -506,3 +544,4 @@ const styles = StyleSheet.create({
   },
   primaryText: { color: "#fff", fontSize: 16, fontWeight: "800" },
 });
+

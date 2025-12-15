@@ -47,7 +47,7 @@ export default function OrderConfirmationScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.outer}>
-          <View style={styles.card}>
+        <View style={styles.card}>
           <View style={styles.iconCircleOuter}>
             <View style={styles.iconCircleInner}>
               <Ionicons name="checkmark" size={32} color="#16A34A" />
@@ -77,3 +77,4 @@ export default function OrderConfirmationScreen() {
     </SafeAreaView>
   );
 }
+

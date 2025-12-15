@@ -3,10 +3,10 @@ import { View, Text, TextInput, Pressable } from "react-native";
 import makeCheckoutStyles from "./checkoutStyles";
 import type { PaymentMethod } from "../../constants/index";
 import { PAYMENT_METHODS, PAYMENT_METHOD_LABELS, PLACEHOLDERS } from "../../constants/index";
-import type { CartItem } from "./cartSlice";
+import type { CartItem } from "../cart/cartSlice";
 
 import { useSelector } from "react-redux";
-import { RootState } from "./cartStore";
+import { RootState } from "../cart/cartStore";
 import { getProfileTheme } from "../profile/profileTheme";
 
 type AddressProps = {
@@ -174,3 +174,4 @@ export function OrderSummaryCard({ items, total }: SummaryProps) {
     </View>
   );
 }
+
