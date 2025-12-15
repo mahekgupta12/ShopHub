@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSelector } from "react-redux";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -54,13 +54,13 @@ export default function FilterDrawer({
 
         <View style={styles.headerRow}>
           <Text style={styles.title}>Filters</Text>
-          <TouchableOpacity onPress={onClose}>
+          <Pressable onPress={onClose}>
             <Ionicons
               name="close-circle-outline"
               size={26}
               color={colors.textSecondary}
             />
-          </TouchableOpacity>
+          </Pressable>
         </View>
 
         <Text style={styles.subHeader}>Refine your product search</Text>
@@ -70,7 +70,7 @@ export default function FilterDrawer({
 
         <View style={styles.categoriesContainer}>
           {categoriesList.map((cat) => (
-            <TouchableOpacity
+            <Pressable
               key={cat}
               onPress={() => setCategory(cat)}
               style={styles.radioRow}
@@ -84,7 +84,7 @@ export default function FilterDrawer({
                 {category === cat && <View style={styles.radioInner} />}
               </View>
               <Text style={styles.radioText}>{cat}</Text>
-            </TouchableOpacity>
+            </Pressable>
           ))}
         </View>
 
@@ -94,59 +94,59 @@ export default function FilterDrawer({
         <View style={styles.priceContainer}>
 
           <View style={styles.priceRow}>
-            <TouchableOpacity
+            <Pressable
               onPress={() => setMinPrice(Math.max(minPrice - 50, 0))}
               style={styles.priceButton}
             >
               <Text style={styles.priceButtonText}>−</Text>
-            </TouchableOpacity>
+            </Pressable>
 
             <View style={styles.priceValueBox}>
               <Text style={styles.priceValue}>${minPrice}</Text>
             </View>
 
-            <TouchableOpacity
+            <Pressable
               onPress={() => setMinPrice(minPrice + 50)}
               style={styles.priceButton}
             >
               <Text style={styles.priceButtonText}>+</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
 
 
           <View style={styles.priceRow}>
-            <TouchableOpacity
+            <Pressable
               onPress={() => setMaxPrice(Math.max(maxPrice - 50, minPrice))}
               style={styles.priceButton}
             >
               <Text style={styles.priceButtonText}>−</Text>
-            </TouchableOpacity>
+            </Pressable>
 
             <View style={styles.priceValueBox}>
               <Text style={styles.priceValue}>${maxPrice}</Text>
             </View>
 
-            <TouchableOpacity
+            <Pressable
               onPress={() => setMaxPrice(maxPrice + 50)}
               style={styles.priceButton}
             >
               <Text style={styles.priceButtonText}>+</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
 
 
         <View style={styles.footer}>
-          <TouchableOpacity onPress={onClose}>
+          <Pressable onPress={onClose}>
             <Text style={styles.closeText}>Close</Text>
-          </TouchableOpacity>
+          </Pressable>
 
-          <TouchableOpacity
+          <Pressable
             onPress={() => onApply(category, minPrice, maxPrice)}
             style={styles.applyBtn}
           >
             <Text style={styles.applyText}>Apply</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </View>

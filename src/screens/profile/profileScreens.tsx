@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
+  Pressable,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -106,9 +106,8 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.bottomSection}>
-          <TouchableOpacity
+          <Pressable
             style={styles.logoutButton}
-            activeOpacity={0.9}
             onPress={handleLogout}
           >
             <Ionicons
@@ -118,7 +117,7 @@ export default function ProfileScreen() {
               style={{ marginRight: 8 }}
             />
             <Text style={styles.logoutText}>{PROFILE_LABELS.LOGOUT}</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </SafeAreaView>

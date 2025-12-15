@@ -3,7 +3,7 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
+  Pressable,
   ActivityIndicator,
 } from "react-native";
 
@@ -88,11 +88,11 @@ export default function Form({
           style={{ marginTop: 15 }}
         />
       ) : (
-        <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit}>
+        <Pressable style={styles.submitBtn} onPress={handleSubmit}>
           <Text style={styles.submitText}>
             {activeTab === "signup" ? "Sign Up" : "Login"}
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       )}
     </View>
   );

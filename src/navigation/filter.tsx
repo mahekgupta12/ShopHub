@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSelector } from "react-redux";
 import { RootState } from "../screens/cart/cartStore";
@@ -16,13 +16,9 @@ export default function FilterIcon({ onPress }: Props) {
   const styles = makeStyles(colors);
 
   return (
-    <TouchableOpacity
-      style={styles.filterChip}
-      activeOpacity={0.8}
-      onPress={onPress}
-    >
+    <Pressable style={styles.filterChip} onPress={onPress}>
       <Ionicons name="options" size={30} color={iconColor} />
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 

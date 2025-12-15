@@ -3,7 +3,6 @@ import React, { useMemo, useState, memo } from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
   Alert,
   ActivityIndicator,
   TextInput,
@@ -11,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
+  Pressable,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -257,7 +257,7 @@ export default function PaymentScreen() {
         <View style={{ flex: 1, padding: 16 }}>
           
           <View style={styles.headerRow}>
-            <TouchableOpacity
+            <Pressable
               onPress={() => navigation.goBack()}
               style={[
                 styles.backBtn,
@@ -265,7 +265,7 @@ export default function PaymentScreen() {
               ]}
             >
               <Ionicons name="chevron-back" size={22} color={colors.text} />
-            </TouchableOpacity>
+            </Pressable>
 
             <Text style={[styles.headerTitle, { color: colors.text }]}>
               {SCREEN_TITLES.PAYMENT}
@@ -428,7 +428,7 @@ export default function PaymentScreen() {
 
           
           <View style={{ paddingTop: 12 }}>
-            <TouchableOpacity
+            <Pressable
               disabled={!canProceed || loading}
               onPress={handleConfirmPayment}
               style={[
@@ -448,7 +448,7 @@ export default function PaymentScreen() {
                     : "Pay & Place Order"}
                 </Text>
               )}
-            </TouchableOpacity>
+            </Pressable>
 
             {!canProceed && !loading ? (
               <Text style={{ marginTop: 10, color: colors.textSecondary, textAlign: "center" }}>

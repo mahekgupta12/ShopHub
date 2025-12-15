@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -61,7 +61,7 @@ export default function OrderConfirmationScreen() {
 
           <OrderInfoBox orderId={orderId} total={total} date={date} />
 
-          <TouchableOpacity
+          <Pressable
             style={styles.primaryBtn}
             activeOpacity={0.9}
             onPress={handleViewOrders}
@@ -69,9 +69,9 @@ export default function OrderConfirmationScreen() {
             <Text style={styles.primaryText}>
               {ORDER_CONFIRMATION_TEXT.VIEW_ORDERS}
             </Text>
-          </TouchableOpacity>
+          </Pressable>
 
-          <TouchableOpacity
+          <Pressable
             style={styles.secondaryBtn}
             activeOpacity={0.9}
             onPress={handleContinueShopping}
@@ -79,7 +79,7 @@ export default function OrderConfirmationScreen() {
             <Text style={styles.secondaryText}>
               {ORDER_CONFIRMATION_TEXT.CONTINUE_SHOPPING}
             </Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </SafeAreaView>

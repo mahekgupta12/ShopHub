@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import type { ProfileStyles } from "./profileStyles";
 import type { AppTheme } from "./profileTheme";
@@ -19,9 +19,8 @@ export default function ThemeToggleRow({
   onToggle,
 }: Props) {
   return (
-    <TouchableOpacity
+    <Pressable
       style={styles.actionCard}
-      activeOpacity={0.85}
       onPress={onToggle}
     >
       <View style={styles.actionLeft}>
@@ -40,6 +39,6 @@ export default function ThemeToggleRow({
       <Text style={styles.modeTag}>
         {isDark ? THEME_LABELS.MODE_DARK : THEME_LABELS.MODE_LIGHT}
       </Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 }

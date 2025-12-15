@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Image, Pressable, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { Product } from "./api";
 import { useDispatch, useSelector } from "react-redux";
@@ -54,29 +54,29 @@ export default function ProductView({
           <Text style={styles.price}>${item.price.toFixed(2)}</Text>
 
           {quantity === 0 ? (
-            <TouchableOpacity
+            <Pressable
               style={styles.addButton}
               onPress={() => dispatch(addItem(item))}
             >
               <Text style={styles.addButtonText}>Add</Text>
-            </TouchableOpacity>
+            </Pressable>
           ) : (
             <View style={styles.qtyContainer}>
-              <TouchableOpacity
+              <Pressable
                 style={styles.qtyBtn}
                 onPress={() => dispatch(decreaseQty(item.id))}
               >
                 <Ionicons name="remove" size={16} color={colors.text} />
-              </TouchableOpacity>
+              </Pressable>
 
               <Text style={styles.qtyText}>{quantity}</Text>
 
-              <TouchableOpacity
+              <Pressable
                 style={styles.qtyBtn}
                 onPress={() => dispatch(increaseQty(item.id))}
               >
                 <Ionicons name="add" size={16} color={colors.text} />
-              </TouchableOpacity>
+              </Pressable>
             </View>
           )}
         </View>
