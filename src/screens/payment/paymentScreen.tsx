@@ -1,16 +1,15 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useMemo, useState, memo } from "react";
+import React, { useMemo, useState } from "react";
 import {
   View,
   Text,
   Alert,
   ActivityIndicator,
-  TextInput,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  StyleSheet,
   Pressable,
+  StyleSheet,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -31,18 +30,23 @@ import {
   VALIDATION,
   ORDER,
   SCREEN_TITLES,
-  PLACEHOLDERS,
   FIREBASE_COLLECTIONS,
   type PaymentMethod,
 } from "../../constants/index";
+import { OrderSummarySection } from "./paymentMethodForm";
+import { CardDetailsSection } from "./cardDetailsSection";
+import { UpiDetailsSection } from "./upiDetailsSection";
+import { CodDetailsSection } from "./codDetailsSection";
 
-
-const onlyDigits = (s: string) => s.replace(/\D/g, "");
-
-const formatExpiryLive = (raw: string) => {
-  const d = onlyDigits(raw).slice(0, 4); // MMYY
-  if (d.length <= 2) return d;
-  return `${d.slice(0, 2)}/${d.slice(2)}`;
+type RouteParams = {
+  fullName: string;
+  phone: string;
+  street: string;
+  city: string;
+  zip: string;
+  paymentMethod: PaymentMethod;
+  items: any[];
+  total: string;
 };
 
 const isValidExpiry = (mmYY: string) => {
@@ -67,70 +71,10 @@ const validateUpiId = (value: string) => {
   const left = v.slice(0, at);
   const handle = v.slice(at);
 
-
   if (!VALIDATION.UPI.ID_PATTERN.test(left)) return false;
 
   return ALLOWED_UPI_HANDLES.includes(handle as any);
 };
-
-type RouteParams = {
-  fullName: string;
-  phone: string;
-  street: string;
-  city: string;
-  zip: string;
-  paymentMethod: PaymentMethod;
-  items: any[];
-  total: string;
-};
-
-
-type InputFieldProps = {
-  value: string;
-  onChangeText: (t: string) => void;
-  placeholder: string;
-  editable: boolean;
-  colors: any;
-  keyboardType?: any;
-  maxLength?: number;
-  secureTextEntry?: boolean;
-};
-
-const InputField = memo(function InputField({
-  value,
-  onChangeText,
-  placeholder,
-  editable,
-  colors,
-  keyboardType,
-  maxLength,
-  secureTextEntry,
-}: InputFieldProps) {
-  return (
-    <TextInput
-      value={value}
-      onChangeText={onChangeText}
-      placeholder={placeholder}
-      editable={editable}
-      autoCorrect={false}
-      autoCapitalize="none"
-      selectionColor={colors.primary}
-      placeholderTextColor={colors.textSecondary}
-      keyboardType={keyboardType}
-      maxLength={maxLength}
-      secureTextEntry={secureTextEntry}
-      style={[
-        styles.input,
-        {
-          backgroundColor: colors.background,
-          borderColor: colors.border,
-          color: colors.text,
-        },
-      ]}
-    />
-  );
-});
-
 
 export default function PaymentScreen() {
   const navigation = useNavigation<any>();
@@ -160,7 +104,10 @@ export default function PaymentScreen() {
     isValidExpiry(expiry) &&
     (cvv.length === VALIDATION.CARD.CVV_MIN_LENGTH || cvv.length === VALIDATION.CARD.CVV_MAX_LENGTH);
 
-  const isUpiValid = validateUpiId(normalizedUpi);
+  const isUpiValid = useMemo(
+    () => validateUpiId(normalizedUpi),
+    [normalizedUpi]
+  );
 
   const canProceed =
     params.paymentMethod === PAYMENT_METHODS.COD
@@ -284,183 +231,34 @@ export default function PaymentScreen() {
             keyboardShouldPersistTaps="always"
             showsVerticalScrollIndicator={false}
           >
-
-            <View
-              style={[
-                styles.card,
-                { backgroundColor: colors.card, borderColor: colors.border },
-              ]}
-            >
-              <Text style={{ fontSize: 16, fontWeight: "800", color: colors.text }}>
-                Order Summary
-              </Text>
-
-              <View style={{ marginTop: 10 }}>
-                {params.items.map((item) => (
-                  <View
-                    key={item.id}
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      marginBottom: 6,
-                    }}
-                  >
-                    <Text style={{ color: colors.textSecondary }}>
-                      {item.title} × {item.quantity}
-                    </Text>
-                    <Text style={{ color: colors.text }}>
-                      ${(item.price * item.quantity).toFixed(2)}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-
-              <View
-                style={{
-                  height: 1,
-                  backgroundColor: colors.border,
-                  marginVertical: 12,
-                }}
-              />
-
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Text style={{ fontWeight: "700", color: colors.text }}>Total</Text>
-                <Text
-                  style={{
-                    fontWeight: "800",
-                    color: colors.primary,
-                    fontSize: 16,
-                  }}
-                >
-                  ${params.total}
-                </Text>
-              </View>
-            </View>
-
+            <OrderSummarySection colors={colors} items={params.items} total={params.total} />
 
             {params.paymentMethod === PAYMENT_METHODS.CARD && (
-              <View
-                style={[
-                  styles.card,
-                  { backgroundColor: colors.card, borderColor: colors.border },
-                ]}
-              >
-                <Text style={{ fontSize: 16, fontWeight: "800", color: colors.text }}>
-                  Card Details
-                </Text>
-
-                <Text style={[styles.label, { color: colors.textSecondary }]}>
-                  Name on Card
-                </Text>
-                <InputField
-                  value={cardName}
-                  onChangeText={setCardName}
-                  placeholder={PLACEHOLDERS.CARD_NAME}
-                  editable={!loading}
-                  colors={colors}
-                />
-
-                <Text style={[styles.label, { color: colors.textSecondary }]}>
-                  Card Number
-                </Text>
-                <InputField
-                  value={cardNumber}
-                  onChangeText={(t) => setCardNumber(onlyDigits(t).slice(0, VALIDATION.CARD.NUMBER_LENGTH))}
-                  placeholder={PLACEHOLDERS.CARD_NUMBER}
-                  editable={!loading}
-                  colors={colors}
-                  keyboardType="number-pad"
-                  maxLength={VALIDATION.CARD.NUMBER_LENGTH}
-                />
-
-                <View style={styles.twoCol}>
-                  <View style={{ flex: 1 }}>
-                    <Text style={[styles.label, { color: colors.textSecondary }]}>
-                      Expiry (MM/YY)
-                    </Text>
-                    <InputField
-                      value={expiry}
-                      onChangeText={(t) => setExpiry(formatExpiryLive(t))}
-                      placeholder={PLACEHOLDERS.EXPIRY}
-                      editable={!loading}
-                      colors={colors}
-                      keyboardType="number-pad"
-                      maxLength={5}
-                    />
-                  </View>
-
-                  <View style={{ width: 12 }} />
-
-                  <View style={{ flex: 1 }}>
-                    <Text style={[styles.label, { color: colors.textSecondary }]}>
-                      CVV
-                    </Text>
-                    <InputField
-                      value={cvv}
-                      onChangeText={(t) => setCvv(onlyDigits(t).slice(0, 4))}
-                      placeholder={PLACEHOLDERS.CVV}
-                      editable={!loading}
-                      colors={colors}
-                      keyboardType="number-pad"
-                      maxLength={VALIDATION.CARD.CVV_MAX_LENGTH}
-                      secureTextEntry
-                    />
-                  </View>
-                </View>
-              </View>
+              <CardDetailsSection
+                colors={colors}
+                loading={loading}
+                cardName={cardName}
+                cardNumber={cardNumber}
+                expiry={expiry}
+                cvv={cvv}
+                setCardName={setCardName}
+                setCardNumber={setCardNumber}
+                setExpiry={setExpiry}
+                setCvv={setCvv}
+              />
             )}
-
 
             {params.paymentMethod === PAYMENT_METHODS.UPI && (
-              <View
-                style={[
-                  styles.card,
-                  { backgroundColor: colors.card, borderColor: colors.border },
-                ]}
-              >
-                <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                  UPI Details
-                </Text>
-
-                <Text style={[styles.label, { color: colors.textSecondary }]}>
-                  UPI ID (example: {PLACEHOLDERS.UPI_ID})
-                </Text>
-
-                <InputField
-                  value={upiId}
-                  onChangeText={setUpiId}
-                  placeholder={PLACEHOLDERS.UPI_ID}
-                  editable={!loading}
-                  colors={colors}
-                />
-
-                <Text style={{ marginTop: 10, color: colors.textSecondary, fontSize: 12 }}>
-                  Supported handles: {ALLOWED_UPI_HANDLES.join(" ")}
-                </Text>
-              </View>
+              <UpiDetailsSection
+                colors={colors}
+                loading={loading}
+                upiId={upiId}
+                setUpiId={setUpiId}
+              />
             )}
 
-
             {params.paymentMethod === PAYMENT_METHODS.COD && (
-              <View
-                style={[
-                  styles.card,
-                  { backgroundColor: colors.card, borderColor: colors.border },
-                ]}
-              >
-                <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                  Cash on Delivery
-                </Text>
-                <Text style={{ marginTop: 8, color: colors.textSecondary }}>
-                  Cash on Delivery selected. You will pay when the order is delivered.
-                </Text>
-              </View>
+              <CodDetailsSection colors={colors} />
             )}
           </ScrollView>
 
@@ -516,27 +314,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "800",
   },
-
-  card: {
-    borderRadius: 18,
-    padding: 16,
-    borderWidth: 1,
-    marginTop: 14,
-  },
-  sectionTitle: { fontSize: 16, fontWeight: "800" },
-  label: { marginTop: 12 },
-
-  input: {
-    marginTop: 6,
-    borderRadius: 12,
-    borderWidth: 1,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 16,
-  },
-
-  twoCol: { flexDirection: "row", marginTop: 6 },
-
   primaryBtn: {
     paddingVertical: 14,
     borderRadius: 14,
@@ -544,4 +321,3 @@ const styles = StyleSheet.create({
   },
   primaryText: { color: "#fff", fontSize: 16, fontWeight: "800" },
 });
-
