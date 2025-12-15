@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  View,
-  Text,
-  Image,
-  FlatList,
-} from "react-native";
+import { View, Text, Image, FlatList } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { collection, onSnapshot } from "firebase/firestore";
 
 import { auth, db } from "../../firebase/firebaseConfig";
