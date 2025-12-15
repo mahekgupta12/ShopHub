@@ -1,11 +1,3 @@
-/**
- * Application Constants
- * Centralized location for all constants used throughout the application
- */
-
-// ============================================================================
-// Payment Methods
-// ============================================================================
 export const PAYMENT_METHODS = {
   CARD: "card",
   UPI: "upi",
@@ -26,9 +18,6 @@ export const PAYMENT_METHOD_OPTIONS = [
   { key: PAYMENT_METHODS.COD, label: PAYMENT_METHOD_LABELS[PAYMENT_METHODS.COD] },
 ] as const;
 
-// ============================================================================
-// Categories
-// ============================================================================
 export const CATEGORIES = {
   ALL: "All",
   FRAGRANCES: "Fragrances",
@@ -47,9 +36,7 @@ export const CATEGORY_OPTIONS = [
 
 export type Category = (typeof CATEGORY_OPTIONS)[number];
 
-// ============================================================================
-// UPI Handles
-// ============================================================================
+
 export const ALLOWED_UPI_HANDLES = [
   // Google Pay
   "@okhdfcbank",
@@ -96,9 +83,7 @@ export const ALLOWED_UPI_HANDLES = [
   "@yapl",
 ] as const;
 
-// ============================================================================
-// Navigation Routes
-// ============================================================================
+
 export const ROUTES = {
   // Root Stack
   LOGIN: "Login",
@@ -117,9 +102,7 @@ export const ROUTES = {
   ORDER_CONFIRMATION: "OrderConfirmation",
 } as const;
 
-// ============================================================================
-// Error Messages
-// ============================================================================
+
 export const ERROR_MESSAGES = {
   FAILED_TO_LOAD_PRODUCTS: "Failed to load products",
   FAILED_TO_LOAD: "Failed to load",
@@ -131,9 +114,7 @@ export const ERROR_MESSAGES = {
   PLEASE_LOG_IN: "Please log in to continue.",
 } as const;
 
-// ============================================================================
-// Validation Rules
-// ============================================================================
+
 export const VALIDATION = {
   CARD: {
     NAME_MIN_LENGTH: 2,
@@ -153,22 +134,18 @@ export const VALIDATION = {
   },
 } as const;
 
-// ============================================================================
-// Order Constants
-// ============================================================================
+
 export const ORDER = {
   ID_PREFIX: "ORD-",
 } as const;
 
-// ============================================================================
-// Default Values
-// ============================================================================
+
 export const DEFAULTS = {
   PAYMENT_METHOD: PAYMENT_METHODS.CARD,
   CATEGORY: CATEGORIES.ALL,
   PRICE_RANGE: {
     min: 0,
-    max: 2000,
+    max: 1000,
   },
   TAB: ROUTES.HOME,
 } as const;
@@ -178,9 +155,7 @@ export type PriceRange = {
   max: number;
 };
 
-// ============================================================================
-// Screen Titles
-// ============================================================================
+
 export const SCREEN_TITLES = {
   LOGIN: "Login",
   CHECKOUT: "Checkout",
@@ -190,9 +165,7 @@ export const SCREEN_TITLES = {
   PROFILE: "Profile",
 } as const;
 
-// ============================================================================
-// Form Placeholders
-// ============================================================================
+
 export const PLACEHOLDERS = {
   FULL_NAME: "John Doe",
   PHONE: "10 digit phone number",
@@ -206,9 +179,7 @@ export const PLACEHOLDERS = {
   UPI_ID: "987654321@icici",
 } as const;
 
-// ============================================================================
-// Firebase Collections
-// ============================================================================
+
 export const FIREBASE_COLLECTIONS = {
   CARTS: "carts",
   ORDERS: "orders",
