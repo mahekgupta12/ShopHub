@@ -8,12 +8,12 @@ import {
   ActivityIndicator,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import SearchBar from "./SearchBar";
+import SearchBar from "./searchBar";
 import FilterIcon from "../../navigation/Filter";
-import { useProducts, type Product } from "./Api";
-import ProductView from "./ProductView";
+import { useProducts, type Product } from "./api";
+import ProductView from "./productView";
 
-import FilterDrawer from "./FilterDrawer";
+import FilterDrawer from "./filterDrawer";
 
 import { useSelector } from "react-redux";
 import { RootState } from "../cart/CartStore";

@@ -17,7 +17,7 @@ import {
   DeliveryAddressCard,
   PaymentMethodCard,
   OrderSummaryCard,
-} from "./CheckoutSections";
+} from "./checkoutSections";
 import { getProfileTheme } from "../profile/ProfileTheme";
 
 import {

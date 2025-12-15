@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { BottomTabParamList } from "./Types";
 
 import HomeScreens from "../screens/home/HomeScreens";
-import CartStack from "./CartStack";
+import CartStack from "./cartStack";
 import OrdersScreens from "../screens/orders/OrdersScreens";
 import ProfileScreens from "../screens/profile/ProfileScreens";
 

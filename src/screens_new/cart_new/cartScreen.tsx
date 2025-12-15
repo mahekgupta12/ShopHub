@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import { useSelector } from "react-redux";
 
-import CartItem from "./CartItem";
-import CartFooter from "./CartFooter";
+import CartItem from "./cartItem";
+import CartFooter from "./cartFooter";
 import { RootState } from "./CartStore";
 import { useLoadCart } from "./UseLoadCart";
 

@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-import Header from "./Header";
-import Tabs from "./Tabs";
-import Form from "./Form";
+import Header from "./header";
+import Tabs from "./tabs";
+import Form from "./form";
 
 import { handleSubmit as authHandleSubmit } from "./AuthHandlers";
 

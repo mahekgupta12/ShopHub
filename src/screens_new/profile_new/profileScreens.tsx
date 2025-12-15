@@ -17,9 +17,9 @@ import { toggleTheme } from "./ThemeSlice";
 import { getProfileTheme } from "./ProfileTheme";
 import { makeProfileStyles } from "./ProfileStyles";
 
-import ProfileHeaderCard from "./ProfileHeaderCard";
-import ThemeToggleRow from "./ThemeToggleRow";
-import ProfileActionRow from "./ProfileActionRow";
+import ProfileHeaderCard from "./profileHeaderCard";
+import ThemeToggleRow from "./themeToggleRow";
+import ProfileActionRow from "./profileActionRow";
 
 import { clearLastTab } from "../../persistence/TabPersistence";
 import { ROUTES, SCREEN_TITLES } from "../../constants/Index";

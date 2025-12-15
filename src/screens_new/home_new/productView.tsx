@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { Product } from "./Api";
+import { Product } from "./api";
 import { useDispatch, useSelector } from "react-redux";
 
 import {

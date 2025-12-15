@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type { RootStackParamList } from "./Types";
 
 import LoginScreen from "../screens/auth/LoginScreen";
-import BottomTabs from "./BottomTabs";
+import BottomTabs from "./bottomTabs";
 import { ROUTES, SCREEN_TITLES } from "../constants/Index";
 
 import { useSelector } from "react-redux";

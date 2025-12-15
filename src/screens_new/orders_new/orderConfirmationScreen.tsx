@@ -9,7 +9,7 @@ import { RootState } from "../cart/CartStore";
 import { getProfileTheme } from "../profile/ProfileTheme";
 
 import makeOrderConfirmationStyles from "./OrderConfirmationStyles";
-import OrderInfoBox from "./OrderInfoBox";
+import OrderInfoBox from "./orderInfoBox";
 import { ROUTES } from "../../constants/Index";
 
 type RouteParams = {
