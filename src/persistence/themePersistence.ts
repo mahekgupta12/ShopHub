@@ -1,6 +1,6 @@
 import { Store } from "@reduxjs/toolkit";
-import { setTheme, type ThemeMode } from "../Screens/Profile/themeSlice";
-import { getJson, setJson } from "./storage";
+import { setTheme, type ThemeMode } from "../screens/profile/ThemeSlice";
+import { getJson, setJson } from "./Storage";
 
 const THEME_KEY = "APP_THEME_MODE";
 

@@ -5,11 +5,12 @@ import { useSelector } from "react-redux";
 
 import CartItem from "./CartItem";
 import CartFooter from "./CartFooter";
-import { RootState } from "./cartStore";
-import { useLoadCart } from "./useLoadCart";
+import { RootState } from "./CartStore";
+import { useLoadCart } from "./UseLoadCart";
 
-import makeCartStyles from "./cartStyles";
-import { getProfileTheme } from "../Profile/profileTheme";
+import makeCartStyles from "./CartStyles";
+import { getProfileTheme } from "../profile/ProfileTheme";
+import { SCREEN_TITLES } from "../../constants/Index";
 
 export default function CartScreen() {
   useLoadCart();
@@ -42,7 +43,7 @@ export default function CartScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
-        <Text style={styles.headerTitle}>Cart</Text>
+        <Text style={styles.headerTitle}>{SCREEN_TITLES.CART}</Text>
         <Text style={styles.headerCount}>({items.length})</Text>
       </View>
 

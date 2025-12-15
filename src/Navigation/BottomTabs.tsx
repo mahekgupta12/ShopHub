@@ -4,18 +4,19 @@ import { View, Text, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import type { BottomTabParamList } from "./types";
+import type { BottomTabParamList } from "./Types";
 
-import HomeScreens from "../Screens/Home/HomeScreens";
+import HomeScreens from "../screens/home/HomeScreens";
 import CartStack from "./CartStack";
-import OrdersScreens from "../Screens/Orders/OrdersScreens";
-import ProfileScreens from "../Screens/Profile/ProfileScreens";
+import OrdersScreens from "../screens/orders/OrdersScreens";
+import ProfileScreens from "../screens/profile/ProfileScreens";
 
-import { useAppSelector } from "../Screens/Cart/cartStore";
-import { getProfileTheme } from "../Screens/Profile/profileTheme";
-import { useLastTab } from "../persistence/tabPersistence";
+import { useAppSelector } from "../screens/cart/CartStore";
+import { getProfileTheme } from "../screens/profile/ProfileTheme";
+import { useLastTab } from "../persistence/TabPersistence";
+import { ROUTES, DEFAULTS } from "../constants/Index";
 
-import { useNavigationLoader } from "../constants/navigationLoader";
+import { useNavigationLoader } from "../constants/NavigationLoader";
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -30,7 +31,7 @@ export default function BottomTabs() {
     state.cart.items.reduce((sum, item) => sum + item.quantity, 0)
   );
 
-  const { initialTab, ready, handleTabChange } = useLastTab("Home");
+  const { initialTab, ready, handleTabChange } = useLastTab(DEFAULTS.TAB);
 
   const baseTabBarStyle = {
     backgroundColor: colors.tabBar,
@@ -54,15 +55,15 @@ export default function BottomTabs() {
         tabBarStyle: baseTabBarStyle,
         tabBarIcon: ({ focused, color, size }) => {
           const iconName =
-            route.name === "Cart"
+            route.name === ROUTES.CART
               ? focused
                 ? "cart"
                 : "cart-outline"
-              : route.name === "Home"
+              : route.name === ROUTES.HOME
               ? focused
                 ? "home"
                 : "home-outline"
-              : route.name === "Orders"
+              : route.name === ROUTES.ORDERS
               ? focused
                 ? "cube"
                 : "cube-outline"
@@ -73,7 +74,7 @@ export default function BottomTabs() {
           return (
             <View>
               <Ionicons name={iconName} size={size} color={color} />
-              {route.name === "Cart" && cartCount > 0 && (
+              {route.name === ROUTES.CART && cartCount > 0 && (
                 <View style={styles.badge}>
                   <Text style={styles.badgeText}>{cartCount}</Text>
                 </View>
@@ -92,10 +93,10 @@ export default function BottomTabs() {
         },
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreens} />
-      <Tab.Screen name="Cart" component={CartStack} />
-      <Tab.Screen name="Orders" component={OrdersScreens} />
-      <Tab.Screen name="Profile" component={ProfileScreens} />
+      <Tab.Screen name={ROUTES.HOME} component={HomeScreens} />
+      <Tab.Screen name={ROUTES.CART} component={CartStack} />
+      <Tab.Screen name={ROUTES.ORDERS} component={OrdersScreens} />
+      <Tab.Screen name={ROUTES.PROFILE} component={ProfileScreens} />
     </Tab.Navigator>
   );
 }

@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import type { AppTheme } from "../Profile/profileTheme";
+import type { AppTheme } from "../profile/ProfileTheme";
 
 export const makeStyles = (colors: AppTheme) =>
   StyleSheet.create({
@@ -21,6 +21,9 @@ export const makeStyles = (colors: AppTheme) =>
       shadowOpacity: 0.15,
       shadowRadius: 8,
       elevation: 6,
+    },
+    drawerFullHeight: {
+      height: "100%",
     },
 
     headerRow: {

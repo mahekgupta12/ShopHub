@@ -1,12 +1,13 @@
 import React from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import makeCheckoutStyles from "./checkoutStyles";
-import type { PaymentMethod } from "./CheckoutScreen";
-import type { CartItem } from "./cartSlice";
+import makeCheckoutStyles from "./CheckoutStyles";
+import type { PaymentMethod } from "../../constants/Index";
+import { PAYMENT_METHODS, PAYMENT_METHOD_LABELS, PLACEHOLDERS } from "../../constants/Index";
+import type { CartItem } from "./CartSlice";
 
 import { useSelector } from "react-redux";
-import { RootState } from "./cartStore";
-import { getProfileTheme } from "../Profile/profileTheme";
+import { RootState } from "./CartStore";
+import { getProfileTheme } from "../profile/ProfileTheme";
 
 type AddressProps = {
   fullName: string;
@@ -47,7 +48,7 @@ export function DeliveryAddressCard(props: AddressProps) {
       <TextInput
         value={fullName}
         onChangeText={onChangeFullName}
-        placeholder="John Doe"
+        placeholder={PLACEHOLDERS.FULL_NAME}
         style={styles.input}
         placeholderTextColor={colors.textSecondary}
       />
@@ -56,7 +57,7 @@ export function DeliveryAddressCard(props: AddressProps) {
       <TextInput
         value={phone}
         onChangeText={onChangePhone}
-        placeholder="10 digit phone number"
+        placeholder={PLACEHOLDERS.PHONE}
         keyboardType="number-pad"
         maxLength={10}
         style={styles.input}
@@ -67,7 +68,7 @@ export function DeliveryAddressCard(props: AddressProps) {
       <TextInput
         value={street}
         onChangeText={onChangeStreet}
-        placeholder="123 Main St"
+        placeholder={PLACEHOLDERS.STREET}
         style={styles.input}
         placeholderTextColor={colors.textSecondary}
       />
@@ -78,7 +79,7 @@ export function DeliveryAddressCard(props: AddressProps) {
           <TextInput
             value={city}
             onChangeText={onChangeCity}
-            placeholder="Nagpur"
+            placeholder={PLACEHOLDERS.CITY}
             style={styles.input}
             placeholderTextColor={colors.textSecondary}
           />
@@ -91,7 +92,7 @@ export function DeliveryAddressCard(props: AddressProps) {
           <TextInput
             value={zip}
             onChangeText={onChangeZip}
-            placeholder="6 digit ZIP"
+            placeholder={PLACEHOLDERS.ZIP}
             keyboardType="number-pad"
             maxLength={6}
             style={styles.input}
@@ -114,9 +115,9 @@ export function PaymentMethodCard({ paymentMethod, onChange }: PaymentProps) {
   const styles = makeCheckoutStyles(colors);
 
   const options: { key: PaymentMethod; label: string }[] = [
-    { key: "card", label: "Credit/Debit Card" },
-    { key: "upi", label: "UPI" },
-    { key: "cod", label: "Cash on Delivery" },
+    { key: PAYMENT_METHODS.CARD, label: PAYMENT_METHOD_LABELS[PAYMENT_METHODS.CARD] },
+    { key: PAYMENT_METHODS.UPI, label: PAYMENT_METHOD_LABELS[PAYMENT_METHODS.UPI] },
+    { key: PAYMENT_METHODS.COD, label: PAYMENT_METHOD_LABELS[PAYMENT_METHODS.COD] },
   ];
 
   return (

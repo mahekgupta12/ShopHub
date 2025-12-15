@@ -5,14 +5,15 @@ import {
   collection,
   deleteDoc,
 } from "firebase/firestore";
-import { db } from "../../firebase/firebaseConfig";
-import type { CartItem } from "./cartSlice";
+import { db } from "../../firebase/FirebaseConfig";
+import type { CartItem } from "./CartSlice";
+import { FIREBASE_COLLECTIONS } from "../../constants/Index";
 
 
 export const loadCartFromFirestore = async (
   userId: string
 ): Promise<CartItem[]> => {
-  const itemsRef = collection(db, "carts", userId, "items");
+  const itemsRef = collection(db, FIREBASE_COLLECTIONS.CARTS, userId, FIREBASE_COLLECTIONS.ITEMS);
   const snapshot = await getDocs(itemsRef);
 
   const items: CartItem[] = [];
@@ -27,7 +28,7 @@ export const saveCartToFirestore = async (
   userId: string,
   items: CartItem[]
 ) => {
-  const userCartRef = collection(db, "carts", userId, "items");
+  const userCartRef = collection(db, FIREBASE_COLLECTIONS.CARTS, userId, FIREBASE_COLLECTIONS.ITEMS);
 
   const existing = await getDocs(userCartRef);
   existing.forEach(async (d) => {
@@ -36,7 +37,7 @@ export const saveCartToFirestore = async (
 
   for (const item of items) {
     await setDoc(
-      doc(db, "carts", userId, "items", item.id.toString()),
+      doc(db, FIREBASE_COLLECTIONS.CARTS, userId, FIREBASE_COLLECTIONS.ITEMS, item.id.toString()),
       item
     );
   }

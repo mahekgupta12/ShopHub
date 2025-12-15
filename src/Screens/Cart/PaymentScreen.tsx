@@ -16,14 +16,25 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "./cartStore";
-import { getProfileTheme } from "../Profile/profileTheme";
+import { RootState } from "./CartStore";
+import { getProfileTheme } from "../profile/ProfileTheme";
 
-import { auth, db } from "../../firebase/firebaseConfig";
+import { auth, db } from "../../firebase/FirebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
-import { clearCart } from "./cartSlice";
-import { clearCheckoutForm } from "../../persistence/checkoutPersistence";
-import { allowedUpiHandles } from "../../constants/upiHandles";
+import { clearCart } from "./CartSlice";
+import { clearCheckoutForm } from "../../persistence/CheckoutPersistence";
+import {
+  ALLOWED_UPI_HANDLES,
+  PAYMENT_METHODS,
+  ROUTES,
+  ERROR_MESSAGES,
+  VALIDATION,
+  ORDER,
+  SCREEN_TITLES,
+  PLACEHOLDERS,
+  FIREBASE_COLLECTIONS,
+  type PaymentMethod,
+} from "../../constants/Index";
 
 
 const onlyDigits = (s: string) => s.replace(/\D/g, "");
@@ -35,7 +46,7 @@ const formatExpiryLive = (raw: string) => {
 };
 
 const isValidExpiry = (mmYY: string) => {
-  if (!/^\d{2}\/\d{2}$/.test(mmYY)) return false;
+  if (!VALIDATION.CARD.EXPIRY_FORMAT.test(mmYY)) return false;
 
   const mm = +mmYY.slice(0, 2);
   const yy = +mmYY.slice(3, 5);
@@ -57,9 +68,9 @@ const validateUpiId = (value: string) => {
   const handle = v.slice(at);
 
 
-  if (!/^[a-z0-9._-]{2,}$/.test(left)) return false;
+  if (!VALIDATION.UPI.ID_PATTERN.test(left)) return false;
 
-  return allowedUpiHandles.includes(handle as any);
+  return ALLOWED_UPI_HANDLES.includes(handle as any);
 };
 
 type RouteParams = {
@@ -68,7 +79,7 @@ type RouteParams = {
   street: string;
   city: string;
   zip: string;
-  paymentMethod: "card" | "upi" | "cod";
+  paymentMethod: PaymentMethod;
   items: any[];
   total: string;
 };
@@ -144,33 +155,33 @@ export default function PaymentScreen() {
   const normalizedUpi = useMemo(() => upiId.trim().toLowerCase(), [upiId]);
 
   const isCardValid =
-    cardName.trim().length >= 2 &&
-    cardNumber.length === 16 &&
+    cardName.trim().length >= VALIDATION.CARD.NAME_MIN_LENGTH &&
+    cardNumber.length === VALIDATION.CARD.NUMBER_LENGTH &&
     isValidExpiry(expiry) &&
-    (cvv.length === 3 || cvv.length === 4);
+    (cvv.length === VALIDATION.CARD.CVV_MIN_LENGTH || cvv.length === VALIDATION.CARD.CVV_MAX_LENGTH);
 
   const isUpiValid = validateUpiId(normalizedUpi);
 
   const canProceed =
-    params.paymentMethod === "cod"
+    params.paymentMethod === PAYMENT_METHODS.COD
       ? true
-      : params.paymentMethod === "card"
+      : params.paymentMethod === PAYMENT_METHODS.CARD
       ? isCardValid
       : isUpiValid;
 
   const disableReason = useMemo(() => {
-    if (params.paymentMethod === "cod") return "";
+    if (params.paymentMethod === PAYMENT_METHODS.COD) return "";
 
-    if (params.paymentMethod === "card") {
-      if (cardName.trim().length < 2) return "Enter name on card (min 2 letters).";
-      if (cardNumber.length !== 16) return "Card number must be exactly 16 digits.";
+    if (params.paymentMethod === PAYMENT_METHODS.CARD) {
+      if (cardName.trim().length < VALIDATION.CARD.NAME_MIN_LENGTH) return "Enter name on card (min 2 letters).";
+      if (cardNumber.length !== VALIDATION.CARD.NUMBER_LENGTH) return "Card number must be exactly 16 digits.";
       if (!isValidExpiry(expiry)) return "Expiry must be valid MM/YY and not expired.";
-      if (!(cvv.length === 3 || cvv.length === 4)) return "CVV must be 3–4 digits.";
+      if (!(cvv.length === VALIDATION.CARD.CVV_MIN_LENGTH || cvv.length === VALIDATION.CARD.CVV_MAX_LENGTH)) return "CVV must be 3–4 digits.";
       return "";
     }
 
     
-    if (!normalizedUpi) return "Enter UPI ID (example: 987654321@icici).";
+    if (!normalizedUpi) return `Enter UPI ID (example: ${PLACEHOLDERS.UPI_ID}).`;
     if (!validateUpiId(normalizedUpi)) return "UPI handle not supported. Check @bank part.";
     return "";
   }, [params.paymentMethod, cardName, cardNumber, expiry, cvv, normalizedUpi]);
@@ -178,23 +189,23 @@ export default function PaymentScreen() {
   const handleConfirmPayment = async () => {
     
     if (!canProceed) {
-      Alert.alert("Invalid Payment Details", disableReason || "Please check your details.");
+      Alert.alert(ERROR_MESSAGES.INVALID_PAYMENT_DETAILS, disableReason || ERROR_MESSAGES.PLEASE_CHECK_DETAILS);
       return;
     }
 
     const userId = auth.currentUser?.uid;
     if (!userId) {
-      Alert.alert("Login required", "Please log in to continue.");
+      Alert.alert(ERROR_MESSAGES.LOGIN_REQUIRED, ERROR_MESSAGES.PLEASE_LOG_IN);
       return;
     }
 
     try {
       setLoading(true);
 
-      const orderId = `ORD-${Date.now()}`;
+      const orderId = `${ORDER.ID_PREFIX}${Date.now()}`;
       const date = new Date().toISOString().slice(0, 10);
 
-      await setDoc(doc(db, "orders", userId, "userOrders", orderId), {
+      await setDoc(doc(db, FIREBASE_COLLECTIONS.ORDERS, userId, FIREBASE_COLLECTIONS.USER_ORDERS, orderId), {
         orderId,
         userId,
         items: params.items,
@@ -202,13 +213,13 @@ export default function PaymentScreen() {
         date,
         paymentMethod: params.paymentMethod,
         paymentDetails:
-          params.paymentMethod === "card"
+          params.paymentMethod === PAYMENT_METHODS.CARD
             ? {
                 cardName: cardName.trim(),
                 last4: cardNumber.slice(-4),
                 expiry,
               }
-            : params.paymentMethod === "upi"
+            : params.paymentMethod === PAYMENT_METHODS.UPI
             ? { upiId: normalizedUpi }
             : { cod: true },
         address: {
@@ -224,14 +235,14 @@ export default function PaymentScreen() {
       dispatch(clearCart());
       await clearCheckoutForm();
 
-      navigation.navigate("OrderConfirmation", {
+      navigation.navigate(ROUTES.ORDER_CONFIRMATION, {
         orderId,
         total: params.total,
         date,
       });
     } catch (e) {
       console.warn(e);
-      Alert.alert("Payment failed", "Please try again.");
+      Alert.alert(ERROR_MESSAGES.PAYMENT_FAILED, ERROR_MESSAGES.PLEASE_TRY_AGAIN);
     } finally {
       setLoading(false);
     }
@@ -257,7 +268,7 @@ export default function PaymentScreen() {
             </TouchableOpacity>
 
             <Text style={[styles.headerTitle, { color: colors.text }]}>
-              Payment
+              {SCREEN_TITLES.PAYMENT}
             </Text>
             <View style={{ width: 36 }} />
           </View>
@@ -295,7 +306,7 @@ export default function PaymentScreen() {
             </View>
 
 
-            {params.paymentMethod === "card" && (
+            {params.paymentMethod === PAYMENT_METHODS.CARD && (
               <View
                 style={[
                   styles.card,
@@ -312,7 +323,7 @@ export default function PaymentScreen() {
                 <InputField
                   value={cardName}
                   onChangeText={setCardName}
-                  placeholder="John Doe"
+                  placeholder={PLACEHOLDERS.CARD_NAME}
                   editable={!loading}
                   colors={colors}
                 />
@@ -322,12 +333,12 @@ export default function PaymentScreen() {
                 </Text>
                 <InputField
                   value={cardNumber}
-                  onChangeText={(t) => setCardNumber(onlyDigits(t).slice(0, 16))}
-                  placeholder="1234567812345678"
+                  onChangeText={(t) => setCardNumber(onlyDigits(t).slice(0, VALIDATION.CARD.NUMBER_LENGTH))}
+                  placeholder={PLACEHOLDERS.CARD_NUMBER}
                   editable={!loading}
                   colors={colors}
                   keyboardType="number-pad"
-                  maxLength={16}
+                      maxLength={VALIDATION.CARD.NUMBER_LENGTH}
                 />
 
                 <View style={styles.twoCol}>
@@ -338,7 +349,7 @@ export default function PaymentScreen() {
                     <InputField
                       value={expiry}
                       onChangeText={(t) => setExpiry(formatExpiryLive(t))}
-                      placeholder="MM/YY"
+                      placeholder={PLACEHOLDERS.EXPIRY}
                       editable={!loading}
                       colors={colors}
                       keyboardType="number-pad"
@@ -355,11 +366,11 @@ export default function PaymentScreen() {
                     <InputField
                       value={cvv}
                       onChangeText={(t) => setCvv(onlyDigits(t).slice(0, 4))}
-                      placeholder="123"
+                      placeholder={PLACEHOLDERS.CVV}
                       editable={!loading}
                       colors={colors}
                       keyboardType="number-pad"
-                      maxLength={4}
+                      maxLength={VALIDATION.CARD.CVV_MAX_LENGTH}
                       secureTextEntry
                     />
                   </View>
@@ -368,7 +379,7 @@ export default function PaymentScreen() {
             )}
 
 
-            {params.paymentMethod === "upi" && (
+            {params.paymentMethod === PAYMENT_METHODS.UPI && (
               <View
                 style={[
                   styles.card,
@@ -380,25 +391,25 @@ export default function PaymentScreen() {
                 </Text>
 
                 <Text style={[styles.label, { color: colors.textSecondary }]}>
-                  UPI ID (example: 987654321@icici)
+                  UPI ID (example: {PLACEHOLDERS.UPI_ID})
                 </Text>
 
                 <InputField
                   value={upiId}
                   onChangeText={setUpiId}
-                  placeholder="987654321@icici"
+                  placeholder={PLACEHOLDERS.UPI_ID}
                   editable={!loading}
                   colors={colors}
                 />
 
                 <Text style={{ marginTop: 10, color: colors.textSecondary, fontSize: 12 }}>
-                  Supported handles: {allowedUpiHandles.join(" ")}
+                  Supported handles: {ALLOWED_UPI_HANDLES.join(" ")}
                 </Text>
               </View>
             )}
 
 
-            {params.paymentMethod === "cod" && (
+            {params.paymentMethod === PAYMENT_METHODS.COD && (
               <View
                 style={[
                   styles.card,
@@ -432,7 +443,7 @@ export default function PaymentScreen() {
                 <ActivityIndicator />
               ) : (
                 <Text style={styles.primaryText}>
-                  {params.paymentMethod === "cod"
+                  {params.paymentMethod === PAYMENT_METHODS.COD
                     ? "Confirm Order"
                     : "Pay & Place Order"}
                 </Text>

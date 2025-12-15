@@ -8,11 +8,12 @@ import {
 } from "react-native";
 import { collection, onSnapshot } from "firebase/firestore";
 
-import { auth, db } from "../../firebase/firebaseConfig";
+import { auth, db } from "../../firebase/FirebaseConfig";
 import { useSelector } from "react-redux";
-import { RootState } from "../Cart/cartStore";
-import { getProfileTheme } from "../Profile/profileTheme";
-import makeOrderStyles from "./orderStyles";
+import { RootState } from "../cart/CartStore";
+import { getProfileTheme } from "../profile/ProfileTheme";
+import makeOrderStyles from "./OrderStyles";
+import { FIREBASE_COLLECTIONS, SCREEN_TITLES } from "../../constants/Index";
 
 type OrderItem = {
   id: string | number;
@@ -42,7 +43,7 @@ export default function OrdersScreens() {
   useEffect(() => {
     if (!userId) return;
 
-    const ordersRef = collection(db, "orders", userId, "userOrders");
+    const ordersRef = collection(db, FIREBASE_COLLECTIONS.ORDERS, userId, FIREBASE_COLLECTIONS.USER_ORDERS);
 
     const unsubscribe = onSnapshot(ordersRef, (snapshot) => {
       const list: Order[] = snapshot.docs.map((docSnap) => {
@@ -120,7 +121,7 @@ export default function OrdersScreens() {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
-        <Text style={styles.title}>Orders</Text>
+        <Text style={styles.title}>{SCREEN_TITLES.ORDERS}</Text>
 
         <FlatList
           data={orders}

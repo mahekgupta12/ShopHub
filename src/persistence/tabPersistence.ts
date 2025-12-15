@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { getJson, setJson, removeItem } from "./storage";
-import type { BottomTabParamList } from "../Navigation/types";
+import { getJson, setJson, removeItem } from "./Storage";
+import type { BottomTabParamList } from "../navigation/Types";
+import { DEFAULTS } from "../constants/Index";
 
 const LAST_TAB_KEY = "LAST_TAB";
 
 export type TabName = keyof BottomTabParamList;
 
-export function useLastTab(defaultTab: TabName = "Home") {
+export function useLastTab(defaultTab: TabName = DEFAULTS.TAB as TabName) {
   const [initialTab, setInitialTab] = useState<TabName>(defaultTab);
   const [ready, setReady] = useState(false);
 

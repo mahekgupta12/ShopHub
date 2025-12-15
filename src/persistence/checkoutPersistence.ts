@@ -1,4 +1,4 @@
-import { getJson, setJson, removeItem } from "./storage";
+import { getJson, setJson, removeItem } from "./Storage";
 
 export type CheckoutFormData = {
   fullName: string;

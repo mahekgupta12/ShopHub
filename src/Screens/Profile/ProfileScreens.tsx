@@ -8,20 +8,21 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import { auth } from "../../firebase/firebaseConfig";
+import { auth } from "../../firebase/FirebaseConfig";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
 
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../Cart/cartStore";
-import { toggleTheme } from "./themeSlice";
-import { getProfileTheme } from "./profileTheme";
-import { makeProfileStyles } from "./profileStyles";
+import { RootState } from "../cart/CartStore";
+import { toggleTheme } from "./ThemeSlice";
+import { getProfileTheme } from "./ProfileTheme";
+import { makeProfileStyles } from "./ProfileStyles";
 
 import ProfileHeaderCard from "./ProfileHeaderCard";
 import ThemeToggleRow from "./ThemeToggleRow";
 import ProfileActionRow from "./ProfileActionRow";
 
-import { clearLastTab } from "../../persistence/tabPersistence";
+import { clearLastTab } from "../../persistence/TabPersistence";
+import { ROUTES, SCREEN_TITLES } from "../../constants/Index";
 
 export default function ProfileScreen() {
   const navigation = useNavigation<any>();
@@ -52,12 +53,12 @@ export default function ProfileScreen() {
 
     navigation.reset({
       index: 0,
-      routes: [{ name: "Login" }],
+      routes: [{ name: ROUTES.LOGIN }],
     });
   };
 
-  const goToOrders = () => navigation.navigate("Orders");
-  const goToHome = () => navigation.navigate("Home");
+  const goToOrders = () => navigation.navigate(ROUTES.ORDERS);
+  const goToHome = () => navigation.navigate(ROUTES.HOME);
 
   const handleToggleTheme = () => {
     dispatch(toggleTheme());
@@ -67,7 +68,7 @@ export default function ProfileScreen() {
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
         <View style={styles.topSection}>
-          <Text style={styles.screenTitle}>Profile</Text>
+          <Text style={styles.screenTitle}>{SCREEN_TITLES.PROFILE}</Text>
 
           <ProfileHeaderCard
             initial={initial}

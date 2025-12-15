@@ -2,10 +2,11 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import { RootState } from "./cartStore";
+import { RootState } from "./CartStore";
 
-import makeCartStyles from "./cartStyles";
-import { getProfileTheme } from "../Profile/profileTheme";
+import makeCartStyles from "./CartStyles";
+import { getProfileTheme } from "../profile/ProfileTheme";
+import { ROUTES } from "../../constants/Index";
 
 export default function CartFooter() {
   const { items } = useSelector((state: RootState) => state.cart);
@@ -28,7 +29,7 @@ export default function CartFooter() {
 
       <TouchableOpacity
         style={styles.checkoutBtn}
-        onPress={() => navigation.navigate("Checkout")}
+        onPress={() => navigation.navigate(ROUTES.CHECKOUT)}
       >
         <Text style={styles.checkoutText}>Proceed to Checkout</Text>
       </TouchableOpacity>

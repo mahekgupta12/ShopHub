@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import type { ProfileStyles } from "./profileStyles";
-import type { AppTheme } from "./profileTheme";
+import type { ProfileStyles } from "./ProfileStyles";
+import type { AppTheme } from "./ProfileTheme";
 
 type Props = {
   icon: string;

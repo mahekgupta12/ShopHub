@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { API_URLS } from "../../config/Api";
+import { ERROR_MESSAGES } from "../../constants/Index";
 
 export type Product = {
   category: any;
@@ -22,7 +24,7 @@ export function useProducts() {
         setLoading(true);
         setError(null);
 
-        const res = await fetch("https://dummyjson.com/products");
+        const res = await fetch(API_URLS.PRODUCTS);
         const json = await res.json();
 
         if (isMounted) {
@@ -30,7 +32,7 @@ export function useProducts() {
         }
       } catch {
         if (isMounted) {
-          setError("Failed to load products");
+          setError(ERROR_MESSAGES.FAILED_TO_LOAD_PRODUCTS);
         }
       } finally {
         if (isMounted) {

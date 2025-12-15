@@ -1,3 +1,5 @@
+import { PaymentMethod } from "../constants/Index";
+
 export type RootStackParamList = {
   Login: undefined;
   MainTabs: undefined;
@@ -20,7 +22,7 @@ export type CartStackParamList = {
     street: string;
     city: string;
     zip: string;
-    paymentMethod: "card" | "upi" | "cod";
+    paymentMethod: PaymentMethod;
     items: any[];
     total: string;
   };

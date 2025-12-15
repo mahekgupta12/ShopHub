@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text } from "react-native";
-import type { ProfileStyles } from "./profileStyles";
+import type { ProfileStyles } from "./ProfileStyles";
 
 type Props = {
   initial: string;

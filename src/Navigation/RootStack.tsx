@@ -1,17 +1,18 @@
 import React from "react";
 import { View, ActivityIndicator } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import type { RootStackParamList } from "./types";
+import type { RootStackParamList } from "./Types";
 
-import LoginScreen from "../Screens/Auth/LoginScreen";
+import LoginScreen from "../screens/auth/LoginScreen";
 import BottomTabs from "./BottomTabs";
+import { ROUTES, SCREEN_TITLES } from "../constants/Index";
 
 import { useSelector } from "react-redux";
-import { RootState } from "../Screens/Cart/cartStore";
-import { getProfileTheme } from "../Screens/Profile/profileTheme";
-import { useInitialRoute } from "../persistence/authPersistence";
+import { RootState } from "../screens/cart/CartStore";
+import { getProfileTheme } from "../screens/profile/ProfileTheme";
+import { useInitialRoute } from "../persistence/AuthPersistence";
 
-import { useNavigationLoader } from "../constants/navigationLoader";
+import { useNavigationLoader } from "../constants/NavigationLoader";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -53,12 +54,12 @@ export default function RootStack() {
       }}
     >
       <Stack.Screen
-        name="Login"
+        name={ROUTES.LOGIN}
         component={LoginScreen}
-        options={{ title: "Login" }}
+        options={{ title: SCREEN_TITLES.LOGIN }}
       />
       <Stack.Screen
-        name="MainTabs"
+        name={ROUTES.MAIN_TABS}
         component={BottomTabs}
         options={{ headerShown: false }}
       />
