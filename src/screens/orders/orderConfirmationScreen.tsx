@@ -61,21 +61,13 @@ export default function OrderConfirmationScreen() {
 
           <OrderInfoBox orderId={orderId} total={total} date={date} />
 
-          <Pressable
-            style={styles.primaryBtn}
-            activeOpacity={0.9}
-            onPress={handleViewOrders}
-          >
+          <Pressable style={styles.primaryBtn} onPress={handleViewOrders}>
             <Text style={styles.primaryText}>
               {ORDER_CONFIRMATION_TEXT.VIEW_ORDERS}
             </Text>
           </Pressable>
 
-          <Pressable
-            style={styles.secondaryBtn}
-            activeOpacity={0.9}
-            onPress={handleContinueShopping}
-          >
+          <Pressable style={styles.secondaryBtn} onPress={handleContinueShopping}>
             <Text style={styles.secondaryText}>
               {ORDER_CONFIRMATION_TEXT.CONTINUE_SHOPPING}
             </Text>
