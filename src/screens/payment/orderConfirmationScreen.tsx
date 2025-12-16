@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Pressable, Alert } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -10,93 +10,13 @@ import { getProfileTheme } from "../profile/profileTheme";
 
 import makeOrderConfirmationStyles from "./orderConfirmationStyles";
 import OrderInfoBox from "./orderInfoBox";
-import {
-  ROUTES,
-  ORDER_CONFIRMATION_TEXT,
-  ERROR_MESSAGES,
-  ORDER,
-  FIREBASE_COLLECTIONS,
-} from "../../constants/index";
-import { auth, db } from "../../firebase/firebaseConfig";
-import { doc, setDoc } from "firebase/firestore";
-import { clearCart } from "../cart/cartSlice";
-import { clearCheckoutForm } from "../../persistence/checkoutPersistence";
-
-type PaymentRouteParams = {
-  fullName: string;
-  phone: string;
-  street: string;
-  city: string;
-  zip: string;
-  paymentMethod: any;
-  items: any[];
-  total: string;
-};
+import { ROUTES, ORDER_CONFIRMATION_TEXT } from "../../constants/index";
 
 type RouteParams = {
   orderId: string;
   total: string;
   date: string;
 };
-
-export async function confirmOrderFromPayment({
-  navigation,
-  params,
-  dispatch,
-}: {
-  navigation: any;
-  params: PaymentRouteParams;
-  dispatch: any;
-}) {
-  const user = auth.currentUser;
-  if (!user) {
-    Alert.alert(ERROR_MESSAGES.LOGIN_REQUIRED, ERROR_MESSAGES.PLEASE_LOG_IN);
-    return;
-  }
-
-  const now = new Date();
-  const orderId = `${ORDER.ID_PREFIX}${now.getTime()}`;
-
-  const orderData = {
-    id: orderId,
-    userId: user.uid,
-    items: params.items,
-    total: params.total,
-    createdAt: now.toISOString(),
-    paymentMethod: params.paymentMethod,
-    address: {
-      fullName: params.fullName,
-      phone: params.phone,
-      street: params.street,
-      city: params.city,
-      zip: params.zip,
-    },
-  };
-
-  await Promise.all([
-    setDoc(doc(db, FIREBASE_COLLECTIONS.ORDERS, orderId), orderData),
-    setDoc(
-      doc(db, FIREBASE_COLLECTIONS.USER_ORDERS, `${user.uid}_${orderId}`),
-      {
-        orderId,
-        userId: user.uid,
-        total: params.total,
-        createdAt: now.toISOString(),
-      }
-    ),
-  ]);
-
-  dispatch(clearCart());
-  clearCheckoutForm();
-
-  const date = now.toLocaleDateString();
-
-  navigation.navigate(ROUTES.ORDER_CONFIRMATION, {
-    orderId,
-    total: params.total,
-    date,
-  });
-}
 
 export default function OrderConfirmationScreen() {
   const navigation = useNavigation<any>();

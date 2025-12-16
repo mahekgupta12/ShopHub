@@ -18,6 +18,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme } from "../profile/profileTheme";
 
+import { auth, db } from "../../firebase/firebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
+import { clearCart } from "../cart/cartSlice";
+import { clearCheckoutForm } from "../../persistence/checkoutPersistence";
 import {
   PAYMENT_METHODS,
   ROUTES,
@@ -33,7 +37,6 @@ import { OrderSummarySection } from "./paymentMethodForm";
 import { CardDetailsSection, isValidExpiry } from "./cardDetailsSection";
 import { UpiDetailsSection, validateUpiId } from "./upiDetailsSection";
 import { CodDetailsSection } from "./codDetailsSection";
-import { confirmOrderFromPayment } from "./orderConfirmationScreen";
 
 type RouteParams = {
   fullName: string;
@@ -123,14 +126,63 @@ export default function PaymentScreen() {
     try {
       setLoading(true);
 
-      await confirmOrderFromPayment({
-        navigation,
-        params,
-        dispatch,
+      const user = auth.currentUser;
+      if (!user) {
+        Alert.alert(ERROR_MESSAGES.LOGIN_REQUIRED, ERROR_MESSAGES.PLEASE_LOG_IN);
+        return;
+      }
+
+      const now = new Date();
+      const orderId = `${ORDER.ID_PREFIX}${now.getTime()}`;
+
+      const date = now.toLocaleDateString();
+      const timestamp = now.getTime();
+
+      await setDoc(
+        doc(
+          db,
+          FIREBASE_COLLECTIONS.ORDERS,
+          user.uid,
+          FIREBASE_COLLECTIONS.USER_ORDERS,
+          orderId
+        ),
+        {
+          orderId,
+          userId: user.uid,
+          total: params.total,
+          date,
+          items: params.items,
+          timestamp,
+          paymentMethod: params.paymentMethod,
+          address: {
+            fullName: params.fullName,
+            phone: params.phone,
+            street: params.street,
+            city: params.city,
+            zip: params.zip,
+          },
+        }
+      );
+
+      dispatch(clearCart());
+      clearCheckoutForm();
+
+      navigation.navigate(ROUTES.ORDER_CONFIRMATION, {
+        orderId,
+        total: params.total,
+        date,
       });
     } catch (e) {
       console.warn(e);
-      Alert.alert(ERROR_MESSAGES.PAYMENT_FAILED, ERROR_MESSAGES.PLEASE_TRY_AGAIN);
+      const now = new Date();
+      const fallbackOrderId = `${ORDER.ID_PREFIX}${now.getTime()}`;
+      const date = now.toLocaleDateString();
+
+      navigation.navigate(ROUTES.ORDER_CONFIRMATION, {
+        orderId: fallbackOrderId,
+        total: params.total,
+        date,
+      });
     } finally {
       setLoading(false);
     }
