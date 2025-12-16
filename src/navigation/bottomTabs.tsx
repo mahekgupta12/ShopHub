@@ -27,9 +27,15 @@ export default function BottomTabs() {
   const mode = useAppSelector((state) => state.theme.mode);
   const colors = getProfileTheme(mode);
 
+  // const cartCount = useAppSelector((state) =>
+  //   state.cart.items.reduce((sum, item) => sum + item.quantity, 0)
+  // );
   const cartCount = useAppSelector((state) =>
-    state.cart.items.reduce((sum, item) => sum + item.quantity, 0)
-  );
+  state.cart.items.reduce((sum, item) => {
+    if (!item) return sum;
+    return sum + (item.quantity ?? 0);
+  }, 0)
+);
 
   const { initialTab, ready, handleTabChange } = useLastTab(DEFAULTS.TAB);
 

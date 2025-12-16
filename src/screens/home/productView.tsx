@@ -25,7 +25,9 @@ export default function ProductView({
   const mode = useSelector((state: RootState) => state.theme.mode);
   const cartItems = useSelector((state: RootState) => state.cart.items);
 
-  const cartItem = cartItems.find((i) => i.id === item.id);
+  //const cartItem = cartItems.find((i) => i.id === item.id);
+  const cartItem = cartItems.find((i) => i && i.id === item.id);
+
   const quantity = cartItem?.quantity ?? 0;
 
   const colors = getProfileTheme(mode);
