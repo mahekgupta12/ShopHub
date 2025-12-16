@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -10,7 +10,7 @@ import { getProfileTheme } from "../profile/profileTheme";
 
 import makeOrderConfirmationStyles from "./orderConfirmationStyles";
 import OrderInfoBox from "./orderInfoBox";
-import { ROUTES } from "../../constants/index";
+import { ROUTES, ORDER_CONFIRMATION_TEXT } from "../../constants/index";
 
 type RouteParams = {
   orderId: string;
@@ -51,26 +51,24 @@ export default function OrderConfirmationScreen() {
             </View>
           </View>
 
-          <Text style={styles.title}>Order Confirmed!</Text>
-          <Text style={styles.subtitle}>Thank you for your purchase</Text>
+          <Text style={styles.title}>{ORDER_CONFIRMATION_TEXT.TITLE}</Text>
+          <Text style={styles.subtitle}>
+            {ORDER_CONFIRMATION_TEXT.SUBTITLE}
+          </Text>
 
           <OrderInfoBox orderId={orderId} total={total} date={date} />
 
-          <TouchableOpacity
-            style={styles.primaryBtn}
-            activeOpacity={0.9}
-            onPress={handleViewOrders}
-          >
-            <Text style={styles.primaryText}>View Orders</Text>
-          </TouchableOpacity>
+          <Pressable style={styles.primaryBtn} onPress={handleViewOrders}>
+            <Text style={styles.primaryText}>
+              {ORDER_CONFIRMATION_TEXT.VIEW_ORDERS}
+            </Text>
+          </Pressable>
 
-          <TouchableOpacity
-            style={styles.secondaryBtn}
-            activeOpacity={0.9}
-            onPress={handleContinueShopping}
-          >
-            <Text style={styles.secondaryText}>Continue Shopping</Text>
-          </TouchableOpacity>
+          <Pressable style={styles.secondaryBtn} onPress={handleContinueShopping}>
+            <Text style={styles.secondaryText}>
+              {ORDER_CONFIRMATION_TEXT.CONTINUE_SHOPPING}
+            </Text>
+          </Pressable>
         </View>
       </View>
     </SafeAreaView>

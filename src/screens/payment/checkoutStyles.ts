@@ -162,3 +162,4 @@ const makeCheckoutStyles = (colors: AppTheme) =>
   });
 
 export default makeCheckoutStyles;
+

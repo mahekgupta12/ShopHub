@@ -3,9 +3,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type { CartStackParamList } from "./types";
 
 import CartScreen from "../screens/cart/cartScreen";
-import CheckoutScreen from "../screens/cart/checkoutScreen";
-import PaymentScreen from "../screens/cart/paymentScreen";
-import OrderConfirmationScreen from "../screens/orders/orderConfirmationScreen";
+import CheckoutScreen from "../screens/payment/checkoutScreen";
+import PaymentScreen from "../screens/payment/paymentScreen";
+import OrderConfirmationScreen from "../screens/payment/orderConfirmationScreen";
 import { ROUTES } from "../constants/index";
 
 import { useNavigationLoader } from "../constants/navigationLoader";

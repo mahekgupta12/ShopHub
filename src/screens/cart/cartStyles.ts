@@ -1,8 +1,16 @@
 import { StyleSheet } from "react-native";
 import type { AppTheme } from "../profile/profileTheme";
+import { makeCommonStyles } from "../../componets/commonStyles";
 
-const makeCartStyles = (colors: AppTheme) =>
-  StyleSheet.create({
+const makeCartStyles = (colors: AppTheme) => {
+  const common = makeCommonStyles(colors);
+
+  return StyleSheet.create({
+    safe: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+
     container: {
       flex: 1,
       backgroundColor: colors.background,
@@ -13,14 +21,11 @@ const makeCartStyles = (colors: AppTheme) =>
     headerRow: {
       flexDirection: "row",
       alignItems: "center",
-      marginBottom: 12,
+      marginBottom: 40,
     },
 
     headerTitle: {
-      fontSize: 26,
-      fontWeight: "800",
-      color: colors.text,
-      marginTop: 40,
+      ...common.screenTitle,
     },
 
     headerCount: {
@@ -28,7 +33,6 @@ const makeCartStyles = (colors: AppTheme) =>
       fontWeight: "600",
       marginLeft: 6,
       color: colors.textSecondary,
-      marginTop: 40,
     },
 
     emptyContainer: {
@@ -152,5 +156,6 @@ const makeCartStyles = (colors: AppTheme) =>
       fontWeight: "600",
     },
   });
+};
 
 export default makeCartStyles;

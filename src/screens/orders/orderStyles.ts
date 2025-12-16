@@ -1,8 +1,11 @@
 import { StyleSheet } from "react-native";
 import type { AppTheme } from "../profile/profileTheme";
+import { makeCommonStyles } from "../../componets/commonStyles";
 
-const makeOrderStyles = (colors: AppTheme) =>
-  StyleSheet.create({
+const makeOrderStyles = (colors: AppTheme) => {
+  const common = makeCommonStyles(colors);
+
+  return StyleSheet.create({
     safe: {
       flex: 1,
       backgroundColor: colors.background,
@@ -12,16 +15,13 @@ const makeOrderStyles = (colors: AppTheme) =>
       flex: 1,
       backgroundColor: colors.background,
       paddingHorizontal: 16,
-      paddingTop: 16,
+      paddingTop: 10,
       paddingBottom: 16,
     },
 
     title: {
-      fontSize: 24,
-      fontWeight: "700",
-      marginBottom: 16,
-      color: colors.text,
-      alignSelf: "flex-start",
+      ...common.screenTitle,
+      marginBottom: 40,
     },
 
     // 🔹 Empty state
@@ -187,5 +187,6 @@ const makeOrderStyles = (colors: AppTheme) =>
       color: colors.primary,
     },
   });
+};
 
 export default makeOrderStyles;

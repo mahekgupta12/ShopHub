@@ -166,6 +166,55 @@ export const SCREEN_TITLES = {
 } as const;
 
 
+export const EMPTY_STATE_MESSAGES = {
+  CART_TITLE: "Hey, it feels so light! 🎒",
+  CART_SUBTITLE: "There is nothing in your bag.\nLet's add some items.",
+  ORDERS_TITLE: "No Orders Yet! 🙁",
+  ORDERS_SUBTITLE:
+    "Your past orders will appear here.\nStart shopping now!",
+} as const;
+
+
+export const PROFILE_LABELS = {
+  MY_ORDERS: "My Orders",
+  CONTINUE_SHOPPING: "Continue Shopping",
+  LOGOUT: "Logout",
+} as const;
+
+
+export const THEME_LABELS = {
+  SWITCH_TO_LIGHT: "Switch to Light Theme",
+  SWITCH_TO_DARK: "Switch to Dark Theme",
+  MODE_DARK: "Dark",
+  MODE_LIGHT: "Light",
+} as const;
+
+
+export const ORDER_CONFIRMATION_TEXT = {
+  TITLE: "Order Confirmed!",
+  SUBTITLE: "Thank you for your purchase",
+  VIEW_ORDERS: "View Orders",
+  CONTINUE_SHOPPING: "Continue Shopping",
+} as const;
+
+export const PAYMENT_TEXT = {
+  CARD_DETAILS_TITLE: "Card Details",
+  DISABLE_NAME_ON_CARD: "Enter name on card (min 2 letters).",
+  DISABLE_CARD_NUMBER: "Card number must be exactly 16 digits.",
+  DISABLE_EXPIRY: "Expiry must be valid MM/YY and not expired.",
+  DISABLE_CVV: "CVV must be 3 or 4 digits.",
+  DISABLE_UPI_EMPTY: "Enter a UPI ID.",
+  DISABLE_UPI_INVALID: "Enter a valid UPI ID with supported handle.",
+  CONFIRM_ORDER_BUTTON: "Confirm Order",
+  PAY_AND_PLACE_ORDER_BUTTON: "Pay & Place Order",
+  ORDER_SUMMARY_TITLE: "Order Summary",
+  ORDER_SUMMARY_TOTAL_LABEL: "Total",
+  COD_TITLE: "Cash on Delivery",
+  COD_DESCRIPTION:
+    "Cash on Delivery selected. You will pay when the order is delivered.",
+} as const;
+
+
 export const PLACEHOLDERS = {
   FULL_NAME: "John Doe",
   PHONE: "10 digit phone number",

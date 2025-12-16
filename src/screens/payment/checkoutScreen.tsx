@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import {
-  SafeAreaView,
   View,
   Text,
   ScrollView,
-  TouchableOpacity,
   Alert,
+  Pressable,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
-import { RootState } from "./cartStore";
+import { RootState } from "../cart/cartStore";
 
 import makeCheckoutStyles from "./checkoutStyles";
 import {
@@ -146,9 +146,9 @@ export default function CheckoutScreen() {
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
         <View style={styles.headerRow}>
-          <TouchableOpacity onPress={handleBack} style={styles.backBtn} activeOpacity={0.8}>
+          <Pressable onPress={handleBack} style={styles.backBtn}>
             <Ionicons name="chevron-back" size={22} color={colors.text} />
-          </TouchableOpacity>
+          </Pressable>
 
           <Text style={styles.headerTitle}>{SCREEN_TITLES.CHECKOUT}</Text>
           <View style={styles.headerRightSpacer} />
@@ -173,11 +173,12 @@ export default function CheckoutScreen() {
         </ScrollView>
 
         <View style={styles.footer}>
-          <TouchableOpacity style={styles.placeOrderBtn} activeOpacity={0.9} onPress={handlePlaceOrder}>
+          <Pressable style={styles.placeOrderBtn} onPress={handlePlaceOrder}>
             <Text style={styles.placeOrderText}>Proceed to Payment</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </SafeAreaView>
   );
 }
+

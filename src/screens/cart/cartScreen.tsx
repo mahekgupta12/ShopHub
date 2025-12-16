@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, ActivityIndicator } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 
 import CartItem from "./cartItem";
@@ -10,7 +11,10 @@ import { useLoadCart } from "./useLoadCart";
 
 import makeCartStyles from "./cartStyles";
 import { getProfileTheme } from "../profile/profileTheme";
-import { SCREEN_TITLES } from "../../constants/index";
+import {
+  SCREEN_TITLES,
+  EMPTY_STATE_MESSAGES,
+} from "../../constants/index";
 
 export default function CartScreen() {
   useLoadCart();
@@ -29,42 +33,48 @@ export default function CartScreen() {
 
   if (loading) {
     return (
-      <View
-        style={[
-          styles.container,
-          { justifyContent: "center", alignItems: "center" },
-        ]}
-      >
-        <ActivityIndicator size="large" color={colors.text} />
-      </View>
+      <SafeAreaView style={styles.safe}>
+        <View
+          style={[
+            styles.container,
+            { justifyContent: "center", alignItems: "center" },
+          ]}
+        >
+          <ActivityIndicator size="large" color={colors.text} />
+        </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headerRow}>
-        <Text style={styles.headerTitle}>{SCREEN_TITLES.CART}</Text>
-        <Text style={styles.headerCount}>({items.length})</Text>
-      </View>
-
-      {items.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyTitle}>Hey, it feels so light! 🎒</Text>
-          <Text style={styles.emptySubtitle}>
-            There is nothing in your bag.{"\n"}Let's add some items.
-          </Text>
+    <SafeAreaView style={styles.safe}>
+      <View style={styles.container}>
+        <View style={styles.headerRow}>
+          <Text style={styles.headerTitle}>{SCREEN_TITLES.CART}</Text>
+          <Text style={styles.headerCount}>({items.length})</Text>
         </View>
-      ) : (
-        <FlatList
-          data={items}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <CartItem item={item} />}
-          contentContainerStyle={{ paddingBottom: 30 }}
-          showsVerticalScrollIndicator={false}
-        />
-      )}
 
-      {items.length > 0 && <CartFooter />}
-    </View>
+        {items.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyTitle}>
+              {EMPTY_STATE_MESSAGES.CART_TITLE}
+            </Text>
+            <Text style={styles.emptySubtitle}>
+              {EMPTY_STATE_MESSAGES.CART_SUBTITLE}
+            </Text>
+          </View>
+        ) : (
+          <FlatList
+            data={items}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => <CartItem item={item} />}
+            contentContainerStyle={{ paddingBottom: 30 }}
+            showsVerticalScrollIndicator={false}
+          />
+        )}
+
+        {items.length > 0 && <CartFooter />}
+      </View>
+    </SafeAreaView>
   );
 }

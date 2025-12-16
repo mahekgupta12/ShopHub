@@ -36,3 +36,4 @@ export default function OrderInfoBox({ orderId, total, date }: Props) {
     </View>
   );
 }
+

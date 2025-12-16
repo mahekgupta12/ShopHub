@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
+  Pressable,
   StyleSheet,
   FlatList,
   ActivityIndicator,
@@ -71,7 +71,7 @@ export default function HomeScreens() {
         <Text style={styles.brand}>ShopHub</Text>
 
         <View style={styles.headerActions}>
-          <TouchableOpacity
+          <Pressable
             style={[
               styles.iconChip,
               viewType === "list" && styles.activeChip,
@@ -83,9 +83,9 @@ export default function HomeScreens() {
               size={18}
               color={viewType === "list" ? "#FFFFFF" : colors.textSecondary}
             />
-          </TouchableOpacity>
+          </Pressable>
 
-          <TouchableOpacity
+          <Pressable
             style={[
               styles.iconChip,
               viewType === "grid" && styles.activeChip,
@@ -97,7 +97,7 @@ export default function HomeScreens() {
               size={18}
               color={viewType === "grid" ? "#FFFFFF" : colors.textSecondary}
             />
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
 

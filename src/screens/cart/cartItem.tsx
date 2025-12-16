@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, Pressable } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -38,28 +38,28 @@ export default function CartItem({ item }: CartItemProps) {
         <Text style={styles.price}>${price.toFixed(2)}</Text>
 
         <View style={styles.counterRow}>
-          <TouchableOpacity
+          <Pressable
             style={styles.circleBtn}
             onPress={() => dispatch(decreaseQty(item.id))}
           >
             <Ionicons name="remove" size={18} color={colors.text} />
-          </TouchableOpacity>
+          </Pressable>
 
           <Text style={styles.qty}>{quantity}</Text>
 
-          <TouchableOpacity
+          <Pressable
             style={styles.circleBtn}
             onPress={() => dispatch(increaseQty(item.id))}
           >
             <Ionicons name="add" size={18} color={colors.text} />
-          </TouchableOpacity>
+          </Pressable>
 
-          <TouchableOpacity
+          <Pressable
             style={styles.deleteBtn}
             onPress={() => dispatch(removeItem(item.id))}
           >
             <Ionicons name="trash-outline" size={22} color="#EF4444" />
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </View>

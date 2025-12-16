@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  View,
-  Text,
-  Image,
-  FlatList,
-} from "react-native";
+import { View, Text, Image, FlatList } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { collection, onSnapshot } from "firebase/firestore";
 
 import { auth, db } from "../../firebase/firebaseConfig";
@@ -13,7 +8,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme } from "../profile/profileTheme";
 import makeOrderStyles from "./orderStyles";
-import { FIREBASE_COLLECTIONS, SCREEN_TITLES } from "../../constants/index";
+import {
+  FIREBASE_COLLECTIONS,
+  SCREEN_TITLES,
+  EMPTY_STATE_MESSAGES,
+} from "../../constants/index";
 
 type OrderItem = {
   id: string | number;
@@ -108,11 +107,17 @@ export default function OrdersScreens() {
   if (!orders || orders.length === 0) {
     return (
       <SafeAreaView style={styles.safe}>
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyTitle}>No Orders Yet! 🙁</Text>
-          <Text style={styles.emptySubtitle}>
-            Your past orders will appear here.{"\n"}Start shopping now!
-          </Text>
+        <View style={styles.container}>
+          <Text style={styles.title}>{SCREEN_TITLES.ORDERS}</Text>
+
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyTitle}>
+              {EMPTY_STATE_MESSAGES.ORDERS_TITLE}
+            </Text>
+            <Text style={styles.emptySubtitle}>
+              {EMPTY_STATE_MESSAGES.ORDERS_SUBTITLE}
+            </Text>
+          </View>
         </View>
       </SafeAreaView>
     );

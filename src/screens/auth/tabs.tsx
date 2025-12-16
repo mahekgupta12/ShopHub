@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, Pressable } from "react-native";
 
 import { useSelector } from "react-redux";
 import { RootState } from "../cart/cartStore";
@@ -21,7 +21,7 @@ export default function Tabs({ activeTab, setActiveTab }: Props) {
 
   return (
     <View style={styles.tabContainer}>
-      <TouchableOpacity
+      <Pressable
         style={[styles.tabButton, isLogin && styles.activeTab]}
         onPress={() => setActiveTab("login")}
       >
@@ -33,9 +33,9 @@ export default function Tabs({ activeTab, setActiveTab }: Props) {
         >
           Login
         </Text>
-      </TouchableOpacity>
+      </Pressable>
 
-      <TouchableOpacity
+      <Pressable
         style={[styles.tabButton, isSignup && styles.activeTab]}
         onPress={() => setActiveTab("signup")}
       >
@@ -47,7 +47,7 @@ export default function Tabs({ activeTab, setActiveTab }: Props) {
         >
           Sign Up
         </Text>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }

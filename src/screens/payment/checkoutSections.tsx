@@ -1,12 +1,12 @@
 import React from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, Pressable } from "react-native";
 import makeCheckoutStyles from "./checkoutStyles";
 import type { PaymentMethod } from "../../constants/index";
 import { PAYMENT_METHODS, PAYMENT_METHOD_LABELS, PLACEHOLDERS } from "../../constants/index";
-import type { CartItem } from "./cartSlice";
+import type { CartItem } from "../cart/cartSlice";
 
 import { useSelector } from "react-redux";
-import { RootState } from "./cartStore";
+import { RootState } from "../cart/cartStore";
 import { getProfileTheme } from "../profile/profileTheme";
 
 type AddressProps = {
@@ -125,17 +125,16 @@ export function PaymentMethodCard({ paymentMethod, onChange }: PaymentProps) {
       <Text style={styles.cardTitle}>Payment Method</Text>
 
       {options.map((opt) => (
-        <TouchableOpacity
+        <Pressable
           key={opt.key}
           style={styles.paymentRow}
-          activeOpacity={0.8}
           onPress={() => onChange(opt.key)}
         >
           <View style={styles.radioOuter}>
             {paymentMethod === opt.key && <View style={styles.radioInner} />}
           </View>
           <Text style={styles.paymentLabel}>{opt.label}</Text>
-        </TouchableOpacity>
+        </Pressable>
       ))}
     </View>
   );
@@ -175,3 +174,4 @@ export function OrderSummaryCard({ items, total }: SummaryProps) {
     </View>
   );
 }
+
