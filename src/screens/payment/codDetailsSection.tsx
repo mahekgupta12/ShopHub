@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text } from "react-native";
+import { PAYMENT_TEXT } from "../../constants/index";
 import { paymentFormStyles, type Colors } from "./paymentMethodForm";
 
 type CodDetailsProps = {
@@ -14,15 +15,12 @@ export function CodDetailsSection({ colors }: CodDetailsProps) {
         { backgroundColor: colors.background, borderColor: colors.border },
       ]}
     >
-      <Text
-        style={[paymentFormStyles.sectionTitle, { color: colors.text }]}
-      >
-        Cash on Delivery
+      <Text style={[paymentFormStyles.sectionTitle, { color: colors.text }]}>
+        {PAYMENT_TEXT.COD_TITLE}
       </Text>
       <Text style={{ marginTop: 8, color: colors.textSecondary }}>
-        Cash on Delivery selected. You will pay when the order is delivered.
+        {PAYMENT_TEXT.COD_DESCRIPTION}
       </Text>
     </View>
   );
 }
-

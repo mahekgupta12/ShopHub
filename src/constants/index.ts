@@ -197,6 +197,23 @@ export const ORDER_CONFIRMATION_TEXT = {
   CONTINUE_SHOPPING: "Continue Shopping",
 } as const;
 
+export const PAYMENT_TEXT = {
+  CARD_DETAILS_TITLE: "Card Details",
+  DISABLE_NAME_ON_CARD: "Enter name on card (min 2 letters).",
+  DISABLE_CARD_NUMBER: "Card number must be exactly 16 digits.",
+  DISABLE_EXPIRY: "Expiry must be valid MM/YY and not expired.",
+  DISABLE_CVV: "CVV must be 3 or 4 digits.",
+  DISABLE_UPI_EMPTY: "Enter a UPI ID.",
+  DISABLE_UPI_INVALID: "Enter a valid UPI ID with supported handle.",
+  CONFIRM_ORDER_BUTTON: "Confirm Order",
+  PAY_AND_PLACE_ORDER_BUTTON: "Pay & Place Order",
+  ORDER_SUMMARY_TITLE: "Order Summary",
+  ORDER_SUMMARY_TOTAL_LABEL: "Total",
+  COD_TITLE: "Cash on Delivery",
+  COD_DESCRIPTION:
+    "Cash on Delivery selected. You will pay when the order is delivered.",
+} as const;
+
 
 export const PLACEHOLDERS = {
   FULL_NAME: "John Doe",

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text } from "react-native";
-import { ALLOWED_UPI_HANDLES, PLACEHOLDERS } from "../../constants/index";
+import { ALLOWED_UPI_HANDLES, PLACEHOLDERS, VALIDATION } from "../../constants/index";
 import {
   PaymentInputField,
   paymentFormStyles,
@@ -12,6 +12,19 @@ type UpiDetailsProps = {
   loading: boolean;
   upiId: string;
   setUpiId: (t: string) => void;
+};
+
+export const validateUpiId = (value: string) => {
+  const v = value.trim().toLowerCase();
+  const at = v.lastIndexOf("@");
+  if (at <= 0) return false;
+
+  const left = v.slice(0, at);
+  const handle = v.slice(at);
+
+  if (!VALIDATION.UPI.ID_PATTERN.test(left)) return false;
+
+  return ALLOWED_UPI_HANDLES.includes(handle as any);
 };
 
 export function UpiDetailsSection({
@@ -53,4 +66,3 @@ export function UpiDetailsSection({
     </View>
   );
 }
-

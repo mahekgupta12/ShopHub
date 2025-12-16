@@ -84,7 +84,7 @@ export function OrderSummarySection({ colors, items, total }: OrderSummaryProps)
             }}
           >
             <Text style={{ color: colors.textSecondary }}>
-              {item.title} × {item.quantity}
+              {item.title} x {item.quantity}
             </Text>
             <Text style={{ color: colors.text }}>
               ${(item.price * item.quantity).toFixed(2)}

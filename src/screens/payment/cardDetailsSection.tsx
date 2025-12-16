@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text } from "react-native";
-import { PLACEHOLDERS, VALIDATION } from "../../constants/index";
+import { PLACEHOLDERS, VALIDATION, PAYMENT_TEXT } from "../../constants/index";
 import {
   PaymentInputField,
   paymentFormStyles,
@@ -9,10 +9,24 @@ import {
 
 const onlyDigits = (s: string) => s.replace(/\D/g, "");
 
-const formatExpiryLive = (raw: string) => {
+export const formatExpiryLive = (raw: string) => {
   const d = onlyDigits(raw).slice(0, 4); // MMYY
   if (d.length <= 2) return d;
   return `${d.slice(0, 2)}/${d.slice(2)}`;
+};
+
+export const isValidExpiry = (mmYY: string) => {
+  if (!VALIDATION.CARD.EXPIRY_FORMAT.test(mmYY)) return false;
+
+  const mm = +mmYY.slice(0, 2);
+  const yy = +mmYY.slice(3, 5);
+  if (mm < 1 || mm > 12) return false;
+
+  const now = new Date();
+  const cYY = now.getFullYear() % 100;
+  const cMM = now.getMonth() + 1;
+
+  return yy > cYY || (yy === cYY && mm >= cMM);
 };
 
 type CardDetailsProps = {
@@ -48,7 +62,7 @@ export function CardDetailsSection({
       ]}
     >
       <Text style={{ fontSize: 16, fontWeight: "800", color: colors.text }}>
-        Card Details
+        {PAYMENT_TEXT.CARD_DETAILS_TITLE}
       </Text>
 
       <Text style={[paymentFormStyles.label, { color: colors.textSecondary }]}>
@@ -118,4 +132,3 @@ export function CardDetailsSection({
     </View>
   );
 }
-

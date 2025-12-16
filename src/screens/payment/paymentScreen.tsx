@@ -18,12 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme } from "../profile/profileTheme";
 
-import { auth, db } from "../../firebase/firebaseConfig";
-import { doc, setDoc } from "firebase/firestore";
-import { clearCart } from "../cart/cartSlice";
-import { clearCheckoutForm } from "../../persistence/checkoutPersistence";
 import {
-  ALLOWED_UPI_HANDLES,
   PAYMENT_METHODS,
   ROUTES,
   ERROR_MESSAGES,
@@ -31,12 +26,14 @@ import {
   ORDER,
   SCREEN_TITLES,
   FIREBASE_COLLECTIONS,
+  PAYMENT_TEXT,
   type PaymentMethod,
 } from "../../constants/index";
 import { OrderSummarySection } from "./paymentMethodForm";
-import { CardDetailsSection } from "./cardDetailsSection";
-import { UpiDetailsSection } from "./upiDetailsSection";
+import { CardDetailsSection, isValidExpiry } from "./cardDetailsSection";
+import { UpiDetailsSection, validateUpiId } from "./upiDetailsSection";
 import { CodDetailsSection } from "./codDetailsSection";
+import { confirmOrderFromPayment } from "./orderConfirmationScreen";
 
 type RouteParams = {
   fullName: string;
@@ -47,33 +44,6 @@ type RouteParams = {
   paymentMethod: PaymentMethod;
   items: any[];
   total: string;
-};
-
-const isValidExpiry = (mmYY: string) => {
-  if (!VALIDATION.CARD.EXPIRY_FORMAT.test(mmYY)) return false;
-
-  const mm = +mmYY.slice(0, 2);
-  const yy = +mmYY.slice(3, 5);
-  if (mm < 1 || mm > 12) return false;
-
-  const now = new Date();
-  const cYY = now.getFullYear() % 100;
-  const cMM = now.getMonth() + 1;
-
-  return yy > cYY || (yy === cYY && mm >= cMM);
-};
-
-const validateUpiId = (value: string) => {
-  const v = value.trim().toLowerCase();
-  const at = v.lastIndexOf("@");
-  if (at <= 0) return false;
-
-  const left = v.slice(0, at);
-  const handle = v.slice(at);
-
-  if (!VALIDATION.UPI.ID_PATTERN.test(left)) return false;
-
-  return ALLOWED_UPI_HANDLES.includes(handle as any);
 };
 
 export default function PaymentScreen() {
@@ -120,16 +90,25 @@ export default function PaymentScreen() {
     if (params.paymentMethod === PAYMENT_METHODS.COD) return "";
 
     if (params.paymentMethod === PAYMENT_METHODS.CARD) {
-      if (cardName.trim().length < VALIDATION.CARD.NAME_MIN_LENGTH) return "Enter name on card (min 2 letters).";
-      if (cardNumber.length !== VALIDATION.CARD.NUMBER_LENGTH) return "Card number must be exactly 16 digits.";
-      if (!isValidExpiry(expiry)) return "Expiry must be valid MM/YY and not expired.";
-      if (!(cvv.length === VALIDATION.CARD.CVV_MIN_LENGTH || cvv.length === VALIDATION.CARD.CVV_MAX_LENGTH)) return "CVV must be 3 or 4 digits.";
+      if (cardName.trim().length < VALIDATION.CARD.NAME_MIN_LENGTH)
+        return PAYMENT_TEXT.DISABLE_NAME_ON_CARD;
+      if (cardNumber.length !== VALIDATION.CARD.NUMBER_LENGTH)
+        return PAYMENT_TEXT.DISABLE_CARD_NUMBER;
+      if (!isValidExpiry(expiry))
+        return PAYMENT_TEXT.DISABLE_EXPIRY;
+      if (
+        !(
+          cvv.length === VALIDATION.CARD.CVV_MIN_LENGTH ||
+          cvv.length === VALIDATION.CARD.CVV_MAX_LENGTH
+        )
+      )
+        return PAYMENT_TEXT.DISABLE_CVV;
       return "";
     }
 
     if (params.paymentMethod === PAYMENT_METHODS.UPI) {
-      if (!normalizedUpi) return "Enter a UPI ID.";
-      if (!isUpiValid) return "Enter a valid UPI ID with supported handle.";
+      if (!normalizedUpi) return PAYMENT_TEXT.DISABLE_UPI_EMPTY;
+      if (!isUpiValid) return PAYMENT_TEXT.DISABLE_UPI_INVALID;
       return "";
     }
 
@@ -144,53 +123,10 @@ export default function PaymentScreen() {
     try {
       setLoading(true);
 
-      const user = auth.currentUser;
-      if (!user) {
-        Alert.alert(ERROR_MESSAGES.LOGIN_REQUIRED, ERROR_MESSAGES.PLEASE_LOG_IN);
-        return;
-      }
-
-      const now = new Date();
-      const orderId = `${ORDER.ID_PREFIX}${now.getTime()}`;
-
-      const orderData = {
-        id: orderId,
-        userId: user.uid,
-        items: params.items,
-        total: params.total,
-        createdAt: now.toISOString(),
-        paymentMethod: params.paymentMethod,
-        address: {
-          fullName: params.fullName,
-          phone: params.phone,
-          street: params.street,
-          city: params.city,
-          zip: params.zip,
-        },
-      };
-
-      await Promise.all([
-        setDoc(doc(db, FIREBASE_COLLECTIONS.ORDERS, orderId), orderData),
-        setDoc(
-          doc(db, FIREBASE_COLLECTIONS.USER_ORDERS, `${user.uid}_${orderId}`),
-          {
-            orderId,
-            userId: user.uid,
-            total: params.total,
-            createdAt: now.toISOString(),
-          }
-        ),
-      ]);
-
-      dispatch(clearCart());
-      clearCheckoutForm();
-
-      const date = now.toLocaleDateString();
-
-      navigation.navigate(ROUTES.ORDER_CONFIRMATION, {
-        orderId,
-        total: params.total,
-        date,
+      await confirmOrderFromPayment({
+        navigation,
+        params,
+        dispatch,
       });
     } catch (e) {
       console.warn(e);
@@ -280,8 +216,8 @@ export default function PaymentScreen() {
               ) : (
                 <Text style={styles.primaryText}>
                   {params.paymentMethod === PAYMENT_METHODS.COD
-                    ? "Confirm Order"
-                    : "Pay & Place Order"}
+                    ? PAYMENT_TEXT.CONFIRM_ORDER_BUTTON
+                    : PAYMENT_TEXT.PAY_AND_PLACE_ORDER_BUTTON}
                 </Text>
               )}
             </Pressable>
