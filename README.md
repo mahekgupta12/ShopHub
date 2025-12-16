@@ -1,97 +1,81 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# ShopHub
 
-# Getting Started
+ShopHub is a React Native e‑commerce demo app with authentication, cart, checkout, orders, and profile screens. It uses React Navigation for navigation, Redux Toolkit for cart state, Firebase for data, and local persistence for cart/orders.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Setup steps
 
-## Step 1: Start Metro
+1. Install dependencies:
+   - `npm install`
+2. iOS native setup (first time or after native changes):
+   - `cd ios`
+   - `pod install`
+   - `cd ..`
+3. Start Metro bundler:
+   - `npm start`
+4. Run the app:
+   - Android: `npm run android`
+   - iOS: `npm run ios`
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+Make sure you have the React Native environment set up (Android Studio / Xcode, device/emulator, Java, etc.).
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+## Library dependencies
 
-```sh
-# Using npm
-npm start
+Key runtime libraries:
+- `react`, `react-native` – core framework.
+- `@react-navigation/native`, `@react-navigation/native-stack`, `@react-navigation/bottom-tabs`, `@react-navigation/drawer` – navigation, stacks, tabs, and drawers.
+- `react-native-screens`, `react-native-safe-area-context` – navigation performance and safe‑area handling.
+- `@reduxjs/toolkit`, `react-redux` – global state management (cart, checkout, etc.).
+- `@react-native-async-storage/async-storage` – local persistence (cart/orders, user data).
+- `firebase` – backend for items, carts, and orders.
+- `react-native-toast-message` – in‑app toast notifications.
+- `react-native-vector-icons` – icons used across the UI.
 
-# OR using Yarn
-yarn start
-```
+Dev tooling:
+- `@react-native-community/cli` and related packages – React Native CLI.
+- `@react-native/babel-preset`, `@babel/core`, `@babel/runtime` – Babel configuration.
+- `typescript`, `@react-native/typescript-config` – TypeScript support.
+- `eslint`, `@react-native/eslint-config`, `prettier` – linting and formatting.
+- `jest`, `react-test-renderer`, testing `@types/*` – unit testing.
 
-## Step 2: Build and run your app
+## Folder structure
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+High‑level layout:
+- `App.tsx` – root component; sets up Redux provider, navigation container, toast, and navigation loader context.
+- `src/` – main app source code.
 
-### Android
+Inside `src/`:
+- `src/constants/`
+  - `index.ts` – shared constants for payments, categories, routes, validation rules, defaults, screen titles, placeholders, and Firebase collection names.
+  - `filterOptions.ts` – product/category filters.
+  - `navigationLoader.tsx` – navigation loading context/provider.
+  - `upiHandles.ts` – allowed UPI handles.
+- `src/navigation/`
+  - `rootStack.tsx` – root stack navigator (auth vs main tabs).
+  - `bottomTabs.tsx` – bottom tab navigator (Home, Cart, Orders, Profile).
+  - `cartStack.tsx` – nested stack for cart/checkout/payment/confirmation flows.
+  - `filter.tsx`, `types.ts` – navigation utilities and type definitions.
+- `src/screens/`
+  - `auth/` – login/authentication flow.
+  - `home/` – home screen and product listing/filtering.
+  - `cart/` – cart view and `cartStore` (Redux Toolkit store).
+  - `checkout/` / `payment/` – payment details, validations, and placing orders (if split by file).
+  - `orders/` – orders list and order details.
+  - `profile/` – profile, theme switcher, navigation shortcuts (My Orders, Continue Shopping, Logout).
+- `src/componets/` – shared UI components (buttons, inputs, cards, etc.). Note: directory is spelled `componets`.
+- `src/firebase/` – Firebase configuration, initialization, and helpers (collections, queries).
+- `src/persistence/` – helpers for reading/writing data to `AsyncStorage` (cart, orders, user).
+- `src/config/` – app‑level configuration (API keys, environment‑specific config).
 
-```sh
-# Using npm
-npm run android
+Other top‑level files:
+- `package.json` – scripts and dependencies.
+- `jest.config.js` – Jest test configuration.
+- `metro.config.js`, `babel.config.js` – bundler and Babel configuration.
+- `app.json` – app metadata.
 
-# OR using Yarn
-yarn android
-```
+## Known issues / limitations
 
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- Sample/demo data: The app expects product and order data in Firebase collections defined in `FIREBASE_COLLECTIONS` (e.g., `items`, `carts`, `orders`, `userOrders`). You must configure these collections and security rules yourself.
+- Firebase config not included: API keys, project ID, and other Firebase settings are not committed; you need to create your own config in `src/firebase` and ensure it matches the expected shape.
+- Validation assumptions: Payment and address validations (card number length, expiry format, ZIP length, phone length, UPI ID rules) are opinionated and may not cover all real‑world edge cases or international formats.
+- Platform requirements: React Native 0.82+ and Node 20+ are required; older environments may fail to build.
+- Incomplete error handling: Some network/storage failures may only surface as generic error toasts using messages from `ERROR_MESSAGES` and might not provide detailed diagnostics in the UI.
