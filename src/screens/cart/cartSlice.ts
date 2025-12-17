@@ -115,8 +115,6 @@ const cartSlice = createSlice({
         : [];
     },
 
-    // ⬇️ Existing logic unchanged ⬇️
-
     addItem: (state, action: PayloadAction<Product>) => {
       const existing = state.items.find((i) => i.id === action.payload.id);
 
