@@ -1,12 +1,13 @@
-import { auth } from "../firebase/firebaseConfig";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { USER_ID_KEY, ID_TOKEN_KEY } from "./authKeys";
 
-export const getAuthData = async () => {
-  const user = auth.currentUser;
-  if (!user) throw new Error("User not authenticated");
+export async function getAuthData() {
+  const userId = await AsyncStorage.getItem(USER_ID_KEY);
+  const idToken = await AsyncStorage.getItem(ID_TOKEN_KEY);
 
-  const idToken = await user.getIdToken();
-  return {
-    userId: user.uid,
-    idToken,
-  };
-};
+  if (!userId || !idToken) {
+    throw new Error("User not authenticated");
+  }
+
+  return { userId, idToken };
+}

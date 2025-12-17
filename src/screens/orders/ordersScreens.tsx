@@ -143,6 +143,8 @@
 //   );
 // }
 
+
+
 // import React, { useEffect, useState } from "react";
 // import { View, Text, Image, FlatList, ActivityIndicator } from "react-native";
 // import { SafeAreaView } from "react-native-safe-area-context";
@@ -319,7 +321,6 @@
 //   );
 // }
 
-
 import React, { useState, useCallback } from "react";
 import {
   View,
@@ -332,7 +333,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 
-import { auth } from "../../firebase/firebaseConfig";
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme } from "../profile/profileTheme";
 import makeOrderStyles from "./orderStyles";
@@ -341,6 +341,9 @@ import {
   SCREEN_TITLES,
   EMPTY_STATE_MESSAGES,
 } from "../../constants/index";
+
+/* 🔽 REST helpers */
+import { getAuthData } from "../../restAPIs/authHelpers";
 
 /* 🔽 Firebase Realtime Database URL */
 const FIREBASE_DB_URL =
@@ -374,16 +377,11 @@ export default function OrdersScreens() {
     try {
       setLoading(true);
 
-      const user = auth.currentUser;
-      if (!user) {
-        setOrders([]);
-        return;
-      }
-
-      const idToken = await user.getIdToken();
+      /* 🔽 REST-based auth source */
+      const { userId, idToken } = await getAuthData();
 
       const res = await fetch(
-        `${FIREBASE_DB_URL}/orders/${user.uid}.json?auth=${idToken}`
+        `${FIREBASE_DB_URL}/orders/${userId}.json?auth=${idToken}`
       );
 
       if (!res.ok) {
@@ -412,6 +410,7 @@ export default function OrdersScreens() {
       setOrders(list);
     } catch (e) {
       console.warn("Failed to load orders", e);
+      setOrders([]);
     } finally {
       setLoading(false);
     }

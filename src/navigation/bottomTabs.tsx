@@ -17,19 +17,19 @@ import { useLastTab } from "../persistence/tabPersistence";
 import { ROUTES, DEFAULTS } from "../constants/index";
 
 import { useNavigationLoader } from "../constants/navigationLoader";
+import { useLoadCart } from "../screens/cart/useLoadCart";
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabs() {
+  useLoadCart();
+
   const { show, hide } = useNavigationLoader();
 
   const insets = useSafeAreaInsets();
   const mode = useAppSelector((state) => state.theme.mode);
   const colors = getProfileTheme(mode);
 
-  // const cartCount = useAppSelector((state) =>
-  //   state.cart.items.reduce((sum, item) => sum + item.quantity, 0)
-  // );
   const cartCount = useAppSelector((state) =>
   state.cart.items.reduce((sum, item) => {
     if (!item) return sum;
@@ -91,7 +91,11 @@ export default function BottomTabs() {
       })}
       screenListeners={({ route }) => ({
         tabPress: () => {
-  
+          if (route.name === ROUTES.PROFILE || route.name === ROUTES.ORDERS) {
+            handleTabChange(route.name as keyof BottomTabParamList);
+            return;
+          }
+
           show();
           setTimeout(() => hide(), 250);
 

@@ -330,9 +330,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme } from "../profile/profileTheme";
 
-import { auth } from "../../firebase/firebaseConfig";
 import { clearCart } from "../cart/cartSlice";
 import { clearCheckoutForm } from "../../persistence/checkoutPersistence";
+
+/* 🔽 REST auth helper */
+import { getAuthData } from "../../restAPIs/authHelpers";
 
 import {
   PAYMENT_METHODS,
@@ -411,32 +413,23 @@ export default function PaymentScreen() {
     try {
       setLoading(true);
 
-      const user = auth.currentUser;
-      if (!user) {
-        Alert.alert(
-          ERROR_MESSAGES.LOGIN_REQUIRED,
-          ERROR_MESSAGES.PLEASE_LOG_IN
-        );
-        return;
-      }
-
-      /* 🔽 Get auth token */
-      const idToken = await user.getIdToken();
+      /* 🔽 REST-based auth */
+      const { userId, idToken } = await getAuthData();
 
       const now = new Date();
       const orderId = `${ORDER.ID_PREFIX}${now.getTime()}`;
       const date = now.toLocaleDateString();
       const timestamp = now.getTime();
 
-      /* 🔽 REST API CALL (Realtime Database) */
+      /* 🔽 Save order */
       await fetch(
-        `${FIREBASE_DB_URL}/orders/${user.uid}/${orderId}.json?auth=${idToken}`,
+        `${FIREBASE_DB_URL}/orders/${userId}/${orderId}.json?auth=${idToken}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             orderId,
-            userId: user.uid,
+            userId,
             total: params.total,
             date,
             items: params.items,
@@ -455,7 +448,7 @@ export default function PaymentScreen() {
 
       /* 🔽 Clear cart in RTDB */
       await fetch(
-        `${FIREBASE_DB_URL}/carts/${user.uid}.json?auth=${idToken}`,
+        `${FIREBASE_DB_URL}/carts/${userId}.json?auth=${idToken}`,
         { method: "DELETE" }
       );
 
@@ -470,15 +463,10 @@ export default function PaymentScreen() {
     } catch (e) {
       console.warn(e);
 
-      const now = new Date();
-      const fallbackOrderId = `${ORDER.ID_PREFIX}${now.getTime()}`;
-      const date = now.toLocaleDateString();
-
-      navigation.navigate(ROUTES.ORDER_CONFIRMATION, {
-        orderId: fallbackOrderId,
-        total: params.total,
-        date,
-      });
+      Alert.alert(
+        ERROR_MESSAGES.LOGIN_REQUIRED,
+        ERROR_MESSAGES.PLEASE_LOG_IN
+      );
     } finally {
       setLoading(false);
     }
