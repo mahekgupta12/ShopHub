@@ -88,7 +88,7 @@ export default function Form({
           style={{ marginTop: 15 }}
         />
       ) : (
-        <AppPressable style={styles.submitBtn} onPress={handleSubmit} disabled={loading || !email || !password || (activeTab === "signup" && !fullName)}>
+        <AppPressable style={styles.submitBtn} onPress={handleSubmit}>
           <Text style={styles.submitText}>
             {activeTab === "signup" ? "Sign Up" : "Login"}
           </Text>

@@ -23,7 +23,7 @@ export default function Tabs({ activeTab, setActiveTab }: Props) {
   return (
     <View style={styles.tabContainer}>
       <AppPressable
-        style={styles.tabButton}
+        style={[styles.tabButton, isLogin && styles.activeTab]}
         pressedStyle={styles.activeTab}
         onPress={() => setActiveTab("login")}
       >
@@ -38,7 +38,7 @@ export default function Tabs({ activeTab, setActiveTab }: Props) {
       </AppPressable>
 
       <AppPressable
-        style={styles.tabButton}
+        style={[styles.tabButton, isSignup && styles.activeTab]}
         pressedStyle={styles.activeTab}
         onPress={() => setActiveTab("signup")}
       >
