@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { RootStackParamList } from "../navigation/types";
 import { clearLastTab } from "./tabPersistence";
-import { USER_ID_KEY, ID_TOKEN_KEY } from "../restAPIs/authKeys";
+import { USER_ID_KEY, ID_TOKEN_KEY } from "../restapi/authKeys";
 
 type RouteName = keyof RootStackParamList;
 

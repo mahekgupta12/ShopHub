@@ -1,6 +1,6 @@
 import type { CartItem } from "./cartSlice";
-import { firebaseRest } from "../../restAPIs/firebaseRest";
-import { getAuthData } from "../../restAPIs/authHelpers";
+import { firebaseRest } from "../../restapi/firebaseRest";
+import { getAuthData } from "../../restapi/authHelpers";
 
 export async function loadCartFromFirestore(
   userId: string

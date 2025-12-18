@@ -343,7 +343,7 @@ import {
 } from "../../constants/index";
 
 /* 🔽 REST helpers */
-import { getAuthData } from "../../restAPIs/authHelpers";
+import { getAuthData } from "../../restapi/authHelpers";
 
 /* 🔽 Firebase Realtime Database URL */
 const FIREBASE_DB_URL =

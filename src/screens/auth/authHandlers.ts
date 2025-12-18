@@ -7,7 +7,7 @@ import {
   ID_TOKEN_KEY,
   EMAIL_KEY,
   DISPLAY_NAME_KEY,
-} from "../../restAPIs/authKeys";
+} from "../../restapi/authKeys";
 
 const API_KEY = "AIzaSyBT0BETZxtheIggDmUVfQEe83graJHt1IU";
 

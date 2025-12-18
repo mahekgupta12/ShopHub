@@ -222,7 +222,7 @@ import {
  * 🔽 NEW IMPORT (REST order helper)
  * NOTE: We DO NOT call it here yet
  */
-//import { placeOrder } from "../../restAPIs/ordersRest";
+//import { placeOrder } from "../../restapi/ordersRest";
 
 export default function CheckoutScreen() {
   const navigation = useNavigation<any>();
@@ -418,4 +418,3 @@ export default function CheckoutScreen() {
     </SafeAreaView>
   );
 }
-

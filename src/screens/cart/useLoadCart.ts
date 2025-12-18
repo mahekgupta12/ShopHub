@@ -52,7 +52,7 @@ import {
 } from "./cartFirestore";
 import { setCart } from "./cartSlice";
 import type { RootState } from "./cartStore";
-import { USER_ID_KEY } from "../../restAPIs/authKeys";
+import { USER_ID_KEY } from "../../restapi/authKeys";
 
 export const useLoadCart = () => {
   const dispatch = useDispatch();

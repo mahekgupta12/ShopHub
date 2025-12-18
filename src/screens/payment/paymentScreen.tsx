@@ -334,7 +334,7 @@ import { clearCart } from "../cart/cartSlice";
 import { clearCheckoutForm } from "../../persistence/checkoutPersistence";
 
 /* 🔽 REST auth helper */
-import { getAuthData } from "../../restAPIs/authHelpers";
+import { getAuthData } from "../../restapi/authHelpers";
 
 import {
   PAYMENT_METHODS,
@@ -404,6 +404,42 @@ export default function PaymentScreen() {
       : params.paymentMethod === PAYMENT_METHODS.CARD
       ? isCardValid
       : isUpiValid;
+
+  const disableReason = useMemo(() => {
+    if (params.paymentMethod === PAYMENT_METHODS.COD) return "";
+
+    if (params.paymentMethod === PAYMENT_METHODS.CARD) {
+      if (cardName.trim().length < VALIDATION.CARD.NAME_MIN_LENGTH)
+        return PAYMENT_TEXT.DISABLE_NAME_ON_CARD;
+      if (cardNumber.length !== VALIDATION.CARD.NUMBER_LENGTH)
+        return PAYMENT_TEXT.DISABLE_CARD_NUMBER;
+      if (!isValidExpiry(expiry)) return PAYMENT_TEXT.DISABLE_EXPIRY;
+      if (
+        !(
+          cvv.length === VALIDATION.CARD.CVV_MIN_LENGTH ||
+          cvv.length === VALIDATION.CARD.CVV_MAX_LENGTH
+        )
+      )
+        return PAYMENT_TEXT.DISABLE_CVV;
+      return "";
+    }
+
+    if (params.paymentMethod === PAYMENT_METHODS.UPI) {
+      if (!normalizedUpi) return PAYMENT_TEXT.DISABLE_UPI_EMPTY;
+      if (!isUpiValid) return PAYMENT_TEXT.DISABLE_UPI_INVALID;
+      return "";
+    }
+
+    return "";
+  }, [
+    params.paymentMethod,
+    cardName,
+    cardNumber,
+    expiry,
+    cvv,
+    normalizedUpi,
+    isUpiValid,
+  ]);
 
   const handleBack = () => navigation.goBack();
 
@@ -559,6 +595,18 @@ export default function PaymentScreen() {
                 </Text>
               )}
             </Pressable>
+
+            {!canProceed && !loading && disableReason ? (
+              <Text
+                style={{
+                  marginTop: 10,
+                  color: colors.textSecondary,
+                  textAlign: "center",
+                }}
+              >
+                {disableReason}
+              </Text>
+            ) : null}
           </View>
         </View>
       </KeyboardAvoidingView>
