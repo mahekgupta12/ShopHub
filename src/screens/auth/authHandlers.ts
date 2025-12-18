@@ -46,7 +46,6 @@ export async function handleSubmit({
   try {
     setLoading(true);
 
-    /* 🔐 AUTH */
     const authEndpoint =
       activeTab === "signup"
         ? `${FIREBASE_AUTH_ENDPOINTS.SIGNUP}?key=${FIREBASE_API_KEY}`
@@ -70,7 +69,6 @@ export async function handleSubmit({
 
     const { idToken, localId } = authData;
 
-    /* ✅ SAVE DISPLAY NAME TO FIREBASE (CRITICAL FIX) */
     if (activeTab === "signup") {
       await fetch(
         `${FIREBASE_AUTH_ENDPOINTS.UPDATE_PROFILE}?key=${FIREBASE_API_KEY}`,
@@ -86,7 +84,6 @@ export async function handleSubmit({
       );
     }
 
-    /* 🔍 FETCH PROFILE (ALWAYS AFTER LOGIN) */
     const lookupRes = await fetch(
       `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${FIREBASE_API_KEY}`,
       {
@@ -102,7 +99,6 @@ export async function handleSubmit({
       lookupData?.users?.[0]?.displayName?.trim() ||
       email.split("@")[0];
 
-    /* 💾 PERSIST */
     await AsyncStorage.multiSet([
       [USER_ID_KEY, localId],
       [ID_TOKEN_KEY, idToken],
