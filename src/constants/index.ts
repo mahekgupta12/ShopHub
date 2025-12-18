@@ -18,6 +18,13 @@ export const PAYMENT_METHOD_OPTIONS = [
   { key: PAYMENT_METHODS.COD, label: PAYMENT_METHOD_LABELS[PAYMENT_METHODS.COD] },
 ] as const;
 
+// Re-export new constant files
+export * from "./api";
+export * from "./colors";
+export * from "./authMessages";
+export * from "./checkoutMessages";
+export * from "./ui";
+
 export const CATEGORIES = {
   ALL: "All",
   FRAGRANCES: "Fragrances",

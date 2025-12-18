@@ -9,7 +9,8 @@ import {
   DISPLAY_NAME_KEY,
 } from "../../restapi/authKeys";
 
-const API_KEY = "AIzaSyBT0BETZxtheIggDmUVfQEe83graJHt1IU";
+import { FIREBASE_API_KEY, FIREBASE_AUTH_ENDPOINTS, HTTP_METHODS } from "../../constants/api";
+import { AUTH_MESSAGES, AUTH_TABS } from "../../constants/authMessages";
 
 type Params = {
   fullName: string;
@@ -34,10 +35,10 @@ export async function handleSubmit({
     (activeTab === "signup" && !fullName?.trim())
   ) {
     Alert.alert(
-      "Missing Details",
-      activeTab === "signup"
-        ? "Full name, email and password are required."
-        : "Email and Password are required."
+      AUTH_MESSAGES.MISSING_DETAILS,
+      activeTab === AUTH_TABS.SIGNUP
+        ? AUTH_MESSAGES.SIGNUP_MISSING_DETAILS
+        : AUTH_MESSAGES.LOGIN_MISSING_DETAILS
     );
     return;
   }
@@ -48,11 +49,11 @@ export async function handleSubmit({
     /* 🔐 AUTH */
     const authEndpoint =
       activeTab === "signup"
-        ? `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`
-        : `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`;
+        ? `${FIREBASE_AUTH_ENDPOINTS.SIGNUP}?key=${FIREBASE_API_KEY}`
+        : `${FIREBASE_AUTH_ENDPOINTS.LOGIN}?key=${FIREBASE_API_KEY}`;
 
     const authRes = await fetch(authEndpoint, {
-      method: "POST",
+      method: HTTP_METHODS.POST,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email,
@@ -64,7 +65,7 @@ export async function handleSubmit({
     const authData = await authRes.json();
 
     if (!authRes.ok) {
-      throw new Error(authData.error?.message || "Authentication failed");
+      throw new Error(authData.error?.message || AUTH_MESSAGES.AUTHENTICATION_FAILED);
     }
 
     const { idToken, localId } = authData;
@@ -72,9 +73,9 @@ export async function handleSubmit({
     /* ✅ SAVE DISPLAY NAME TO FIREBASE (CRITICAL FIX) */
     if (activeTab === "signup") {
       await fetch(
-        `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${API_KEY}`,
+        `${FIREBASE_AUTH_ENDPOINTS.UPDATE_PROFILE}?key=${FIREBASE_API_KEY}`,
         {
-          method: "POST",
+          method: HTTP_METHODS.POST,
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             idToken,
@@ -87,9 +88,9 @@ export async function handleSubmit({
 
     /* 🔍 FETCH PROFILE (ALWAYS AFTER LOGIN) */
     const lookupRes = await fetch(
-      `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${API_KEY}`,
+      `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${FIREBASE_API_KEY}`,
       {
-        method: "POST",
+        method: HTTP_METHODS.POST,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ idToken }),
       }
@@ -112,25 +113,25 @@ export async function handleSubmit({
     Toast.show({
       type: "success",
       text1:
-        activeTab === "signup"
+        activeTab === AUTH_TABS.SIGNUP
           ? "Account Created 🎉"
           : "Welcome Back 👋",
       text2:
-        activeTab === "signup"
-          ? "Your account has been created successfully"
-          : "Logged in successfully",
+        activeTab === AUTH_TABS.SIGNUP
+          ? AUTH_MESSAGES.SIGNUP_SUCCESS
+          : AUTH_MESSAGES.LOGIN_SUCCESS,
       position: "bottom",
       visibilityTime: 2500,
     });
 
     navigation.reset({
       index: 0,
-      routes: [{ name: "MainTabs" }],
+      routes: [{ name: AUTH_MESSAGES.NAVIGATE_TO_MAIN_TABS }],
     });
   } catch (error: any) {
     Alert.alert(
-      activeTab === "signup" ? "Signup Failed" : "Login Failed",
-      error.message || "Something went wrong"
+      activeTab === AUTH_TABS.SIGNUP ? AUTH_MESSAGES.SIGNUP_FAILED : AUTH_MESSAGES.LOGIN_FAILED,
+      error.message || AUTH_MESSAGES.SOMETHING_WENT_WRONG
     );
   } finally {
     setLoading(false);
