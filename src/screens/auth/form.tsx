@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TextInput,
-  Pressable,
   ActivityIndicator,
 } from "react-native";
 
@@ -11,6 +10,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme } from "../profile/profileTheme";
 import makeLoginStyles from "./loginStyles";
+import PrimaryButton from "../../componets/primaryButton";
 
 type Props = {
   activeTab: "login" | "signup";
@@ -38,6 +38,21 @@ export default function Form({
   const mode = useSelector((state: RootState) => state.theme.mode);
   const colors = getProfileTheme(mode);
   const styles = makeLoginStyles(colors);
+
+  // const [emailError, setEmailError] = React.useState("");
+
+  // React.useEffect(() => {
+  //   if (email) {
+  //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //     if (!emailRegex.test(email)) {
+  //       setEmailError("Please enter a valid email address.");
+  //     } else {
+  //       setEmailError("");
+  //       // Email is valid, you can perform further actions if needed
+  //     }
+  //   }
+  // }, [email]);
+
 
   return (
     <View style={styles.formBox}>
@@ -71,6 +86,7 @@ export default function Form({
         onChangeText={setEmail}
         placeholderTextColor={colors.textSecondary}
       />
+      {/* {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null} */}
 
       <TextInput
         placeholder="Password"
@@ -88,11 +104,11 @@ export default function Form({
           style={{ marginTop: 15 }}
         />
       ) : (
-        <Pressable style={styles.submitBtn} onPress={handleSubmit}>
+        <PrimaryButton style={styles.submitBtn} onPress={handleSubmit} disabled={loading || !email || !password || (activeTab === "signup" && !fullName)}>
           <Text style={styles.submitText}>
             {activeTab === "signup" ? "Sign Up" : "Login"}
           </Text>
-        </Pressable>
+        </PrimaryButton>
       )}
     </View>
   );

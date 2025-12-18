@@ -1,10 +1,6 @@
 import { StyleSheet } from "react-native";
 import type { AppTheme } from "../screens/profile/profileTheme";
 
-/**
- * Shared, reusable styles for the whole app.
- * Import these into feature-specific style files and compose with spreads.
- */
 
 export const makeCommonStyles = (colors: AppTheme) =>
   StyleSheet.create({

@@ -114,6 +114,13 @@ const makeLoginStyles = (colors: AppTheme) =>
       textAlign: "center",
       fontWeight: "600",
     },
+    // errorText: {
+    //   color: "red",
+    //   fontSize: 12,
+    //   marginBottom: 15,
+    //   marginStart: 5,
+    // },
+
   });
 
 export default makeLoginStyles;

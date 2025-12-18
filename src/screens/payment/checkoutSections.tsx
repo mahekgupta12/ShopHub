@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, TextInput, Pressable } from "react-native";
+import { View, Text, TextInput } from "react-native";
+import AppPressable from "../../componets/appPressables";
 import makeCheckoutStyles from "./checkoutStyles";
 import type { PaymentMethod } from "../../constants/index";
 import { PAYMENT_METHODS, PAYMENT_METHOD_LABELS, PLACEHOLDERS } from "../../constants/index";
@@ -125,7 +126,7 @@ export function PaymentMethodCard({ paymentMethod, onChange }: PaymentProps) {
       <Text style={styles.cardTitle}>Payment Method</Text>
 
       {options.map((opt) => (
-        <Pressable
+        <AppPressable
           key={opt.key}
           style={styles.paymentRow}
           onPress={() => onChange(opt.key)}
@@ -134,7 +135,7 @@ export function PaymentMethodCard({ paymentMethod, onChange }: PaymentProps) {
             {paymentMethod === opt.key && <View style={styles.radioInner} />}
           </View>
           <Text style={styles.paymentLabel}>{opt.label}</Text>
-        </Pressable>
+        </AppPressable>
       ))}
     </View>
   );

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, Pressable, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { Product } from "./api";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +12,7 @@ import {
 
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme, type AppTheme } from "../profile/profileTheme";
+import AppPressable from "../../componets/appPressables";
 
 export default function ProductView({
   item,
@@ -25,7 +26,7 @@ export default function ProductView({
   const mode = useSelector((state: RootState) => state.theme.mode);
   const cartItems = useSelector((state: RootState) => state.cart.items);
 
-  //const cartItem = cartItems.find((i) => i.id === item.id);
+
   const cartItem = cartItems.find((i) => i && i.id === item.id);
 
   const quantity = cartItem?.quantity ?? 0;
@@ -56,29 +57,29 @@ export default function ProductView({
           <Text style={styles.price}>${item.price.toFixed(2)}</Text>
 
           {quantity === 0 ? (
-            <Pressable
+            <AppPressable
               style={styles.addButton}
               onPress={() => dispatch(addItem(item))}
             >
               <Text style={styles.addButtonText}>Add</Text>
-            </Pressable>
+            </AppPressable>
           ) : (
             <View style={styles.qtyContainer}>
-              <Pressable
+              <AppPressable
                 style={styles.qtyBtn}
                 onPress={() => dispatch(decreaseQty(item.id))}
               >
                 <Ionicons name="remove" size={16} color={colors.text} />
-              </Pressable>
+              </AppPressable>
 
               <Text style={styles.qtyText}>{quantity}</Text>
 
-              <Pressable
+              <AppPressable
                 style={styles.qtyBtn}
                 onPress={() => dispatch(increaseQty(item.id))}
               >
                 <Ionicons name="add" size={16} color={colors.text} />
-              </Pressable>
+              </AppPressable>
             </View>
           )}
         </View>
