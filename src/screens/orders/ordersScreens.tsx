@@ -21,6 +21,7 @@ import {
 
 import { getAuthData } from "../../restapi/authHelpers";
 import { FIREBASE_DB_URL } from "../../constants/api";
+import EmptyState from "../../components/emptyState";
 
 type OrderItem = {
   id: string | number;
@@ -151,14 +152,11 @@ export default function OrdersScreens() {
         <View style={styles.container}>
           <Text style={styles.title}>{SCREEN_TITLES.ORDERS}</Text>
 
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyTitle}>
-              {EMPTY_STATE_MESSAGES.ORDERS_TITLE}
-            </Text>
-            <Text style={styles.emptySubtitle}>
-              {EMPTY_STATE_MESSAGES.ORDERS_SUBTITLE}
-            </Text>
-          </View>
+          <EmptyState
+            title={EMPTY_STATE_MESSAGES.ORDERS_TITLE}
+            subtitle={EMPTY_STATE_MESSAGES.ORDERS_SUBTITLE}
+            colors={colors}
+          />
         </View>
       </SafeAreaView>
     );

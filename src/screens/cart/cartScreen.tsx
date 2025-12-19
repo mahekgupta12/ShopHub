@@ -15,6 +15,7 @@ import {
   SCREEN_TITLES,
   EMPTY_STATE_MESSAGES,
 } from "../../constants/index";
+import EmptyState from "../../components/emptyState";
 
 export default function CartScreen() {
   useLoadCart();
@@ -55,14 +56,11 @@ export default function CartScreen() {
         </View>
 
         {items.length === 0 ? (
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyTitle}>
-              {EMPTY_STATE_MESSAGES.CART_TITLE}
-            </Text>
-            <Text style={styles.emptySubtitle}>
-              {EMPTY_STATE_MESSAGES.CART_SUBTITLE}
-            </Text>
-          </View>
+          <EmptyState
+            title={EMPTY_STATE_MESSAGES.CART_TITLE}
+            subtitle={EMPTY_STATE_MESSAGES.CART_SUBTITLE}
+            colors={colors}
+          />
         ) : (
           <FlatList
             data={items}
