@@ -12,7 +12,7 @@ import {
 
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme, type AppTheme } from "../profile/profileTheme";
-import AppPressable from "../../componets/appPressables";
+import AppPressable from "../../components/appPressables";
 import {
   COLORS,
   ICON_NAMES,

@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import AppPressable from "../../componets/appPressables";
+import AppPressable from "../../components/appPressables";
 import { RootState } from "./cartStore";
 
 import makeCartStyles from "./cartStyles";

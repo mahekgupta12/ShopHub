@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, TextInput } from "react-native";
-import AppPressable from "../../componets/appPressables";
+import AppPressable from "../../components/appPressables";
 import makeCheckoutStyles from "./checkoutStyles";
 import type { PaymentMethod } from "../../constants/index";
 import { PAYMENT_METHODS, PAYMENT_METHOD_LABELS, PLACEHOLDERS } from "../../constants/index";
@@ -175,4 +175,3 @@ export function OrderSummaryCard({ items, total }: SummaryProps) {
     </View>
   );
 }
-

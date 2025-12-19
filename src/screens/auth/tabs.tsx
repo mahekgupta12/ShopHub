@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme } from "../profile/profileTheme";
 import makeLoginStyles from "./loginStyles";
-import AppPressable from "../../componets/appPressables";
+import AppPressable from "../../components/appPressables";
 
 type Props = {
   activeTab: "login" | "signup";

@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSelector } from "react-redux";
-import AppPressable from "../componets/appPressables";
+import AppPressable from "../components/appPressables";
 import { RootState } from "../screens/cart/cartStore";
 import { AppTheme, getProfileTheme } from "../screens/profile/profileTheme";
 

@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import type { ProfileStyles } from "./profileStyles";
 import type { AppTheme } from "./profileTheme";
-import AppPressable from "../../componets/appPressables";
+import AppPressable from "../../components/appPressables";
 
 type Props = {
   icon: string;

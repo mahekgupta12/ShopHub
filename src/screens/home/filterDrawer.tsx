@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSelector } from "react-redux";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import AppPressable from "../../componets/appPressables";
+import AppPressable from "../../components/appPressables";
 
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme } from "../profile/profileTheme";

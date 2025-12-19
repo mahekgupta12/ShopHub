@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../cart/cartStore";
 import { getProfileTheme } from "../profile/profileTheme";
 import makeLoginStyles from "./loginStyles";
-import AppPressable from "../../componets/appPressables";
+import AppPressable from "../../components/appPressables";
 import { AUTH_MESSAGES, AUTH_TABS, type AuthTab } from "../../constants/authMessages";
 
 type Props = {

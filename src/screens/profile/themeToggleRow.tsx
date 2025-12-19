@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import AppPressable from "../../componets/appPressables";
+import AppPressable from "../../components/appPressables";
 import type { ProfileStyles } from "./profileStyles";
 import type { AppTheme } from "./profileTheme";
 import { THEME_LABELS } from "../../constants/index";
