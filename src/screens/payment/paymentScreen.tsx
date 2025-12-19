@@ -38,9 +38,7 @@ import { OrderSummarySection } from "./paymentMethodForm";
 import { CardDetailsSection, isValidExpiry } from "./cardDetailsSection";
 import { UpiDetailsSection, validateUpiId } from "./upiDetailsSection";
 import { CodDetailsSection } from "./codDetailsSection";
-
-const FIREBASE_DB_URL =
-  "https://shophub-f4dfe-default-rtdb.firebaseio.com";
+import { FIREBASE_DB_URL } from "../../constants/api";
 
 type RouteParams = {
   fullName: string;

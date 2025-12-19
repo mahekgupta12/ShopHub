@@ -1,5 +1,4 @@
-const FIREBASE_DB_URL =
-  "https://shophub-f4dfe-default-rtdb.firebaseio.com";
+import { FIREBASE_DB_URL } from "../constants/api";
 
 export async function firebaseRest(
   path: string,

@@ -1,8 +1,6 @@
 import { getAuthData } from "../../restapi/authHelpers";
+import { FIREBASE_DB_URL } from "../../constants/api";
  
-const FIREBASE_DB_URL =
-  "https://shophub-f4dfe-default-rtdb.firebaseio.com";
-
 export async function loadCartFromApi(userId: string) {
   const { idToken } = await getAuthData();
  

@@ -20,9 +20,7 @@ import {
 } from "../../constants/index";
 
 import { getAuthData } from "../../restapi/authHelpers";
-
-const FIREBASE_DB_URL =
-  "https://shophub-f4dfe-default-rtdb.firebaseio.com";
+import { FIREBASE_DB_URL } from "../../constants/api";
 
 type OrderItem = {
   id: string | number;
