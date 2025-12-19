@@ -1,7 +1,8 @@
 import React from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text } from "react-native";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
+import AppPressable from "../../components/appPressables";
 import { RootState } from "./cartStore";
 
 import makeCartStyles from "./cartStyles";
@@ -27,12 +28,12 @@ export default function CartFooter() {
         <Text style={styles.totalValue}>${total}</Text>
       </View>
 
-      <Pressable
+      <AppPressable
         style={styles.checkoutBtn}
         onPress={() => navigation.navigate(ROUTES.CHECKOUT)}
       >
         <Text style={styles.checkoutText}>Proceed to Checkout</Text>
-      </Pressable>
+      </AppPressable>
     </View>
   );
 }

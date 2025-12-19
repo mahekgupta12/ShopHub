@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AppPressable from "../../components/appPressables";
 
 import { useSelector } from "react-redux";
 import { RootState } from "../cart/cartStore";
@@ -58,17 +59,17 @@ export default function OrderConfirmationScreen() {
 
           <OrderInfoBox orderId={orderId} total={total} date={date} />
 
-          <Pressable style={styles.primaryBtn} onPress={handleViewOrders}>
+          <AppPressable style={styles.primaryBtn} onPress={handleViewOrders}>
             <Text style={styles.primaryText}>
               {ORDER_CONFIRMATION_TEXT.VIEW_ORDERS}
             </Text>
-          </Pressable>
+          </AppPressable>
 
-          <Pressable style={styles.secondaryBtn} onPress={handleContinueShopping}>
+          <AppPressable style={styles.secondaryBtn} onPress={handleContinueShopping}>
             <Text style={styles.secondaryText}>
               {ORDER_CONFIRMATION_TEXT.CONTINUE_SHOPPING}
             </Text>
-          </Pressable>
+          </AppPressable>
         </View>
       </View>
     </SafeAreaView>

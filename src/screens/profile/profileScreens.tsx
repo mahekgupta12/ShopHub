@@ -8,8 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import { auth } from "../../firebase/firebaseConfig";
-import { onAuthStateChanged, signOut, User } from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../cart/cartStore";
@@ -28,9 +27,24 @@ import {
   PROFILE_LABELS,
 } from "../../constants/index";
 
+const USER_ID_KEY = "USER_ID";
+const EMAIL_KEY = "USER_EMAIL";
+const DISPLAY_NAME_KEY = "DISPLAY_NAME";
+
+type LocalUser = {
+  userId: string;
+  email: string;
+  displayName?: string;
+};
+
 export default function ProfileScreen() {
   const navigation = useNavigation<any>();
-  const [user, setUser] = useState<User | null>(auth.currentUser);
+
+  const [user, setUser] = useState<LocalUser>({
+    userId: "",
+    email: "guest@example.com",
+    displayName: "",
+  });
 
   const dispatch = useDispatch();
   const mode = useSelector((state: RootState) => state.theme.mode);
@@ -40,18 +54,36 @@ export default function ProfileScreen() {
   const styles = makeProfileStyles(colors);
 
   useEffect(() => {
-    const sub = onAuthStateChanged(auth, (u) => setUser(u));
-    return () => sub();
+    const loadUser = async () => {
+      const userId = await AsyncStorage.getItem(USER_ID_KEY);
+      const email = await AsyncStorage.getItem(EMAIL_KEY);
+      const displayName = await AsyncStorage.getItem(DISPLAY_NAME_KEY);
+
+      if (userId && email) {
+        setUser({
+          userId,
+          email,
+          displayName: displayName ?? "",
+        });
+      }
+    };
+
+    loadUser();
   }, []);
 
-  const email = user?.email ?? "guest@example.com";
+  const email = user.email;
   const nameFromEmail = email.split("@")[0];
-  const name = user?.displayName ?? nameFromEmail;
+  const name = user.displayName || nameFromEmail;
   const initial = name.charAt(0).toUpperCase();
 
   const handleLogout = async () => {
 
-    await signOut(auth);
+    await AsyncStorage.multiRemove([
+      USER_ID_KEY,
+      "ID_TOKEN",
+      EMAIL_KEY,
+      DISPLAY_NAME_KEY,
+    ]);
 
     await clearLastTab();
 

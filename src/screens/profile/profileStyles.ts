@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import type { AppTheme } from "./profileTheme";
-import { makeCommonStyles } from "../../componets/commonStyles";
+import { makeCommonStyles } from "../../components/commonStyles";
 
 export const makeProfileStyles = (colors: AppTheme) => {
   const common = makeCommonStyles(colors);

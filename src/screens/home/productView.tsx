@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, Pressable, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { Product } from "./api";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,30 +12,42 @@ import {
 
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme, type AppTheme } from "../profile/profileTheme";
+import AppPressable from "../../components/appPressables";
+import {
+  COLORS,
+  ICON_NAMES,
+  ICON_SIZES,
+  MONEY,
+  PRODUCT_MESSAGES,
+  VIEW_TYPES,
+  type ViewType,
+} from "../../constants/index";
 
 export default function ProductView({
   item,
   viewType,
 }: {
   item: Product;
-  viewType: "list" | "grid";
+  viewType: ViewType;
 }) {
   const dispatch = useDispatch();
 
   const mode = useSelector((state: RootState) => state.theme.mode);
   const cartItems = useSelector((state: RootState) => state.cart.items);
 
-  const cartItem = cartItems.find((i) => i.id === item.id);
+
+  const cartItem = cartItems.find((i) => i && i.id === item.id);
+
   const quantity = cartItem?.quantity ?? 0;
 
   const colors = getProfileTheme(mode);
   const styles = makeStyles(colors);
 
   return (
-    <View style={viewType === "grid" ? styles.gridCard : styles.listCard}>
+    <View style={viewType === VIEW_TYPES.GRID ? styles.gridCard : styles.listCard}>
       <Image
         source={{ uri: item.thumbnail }}
-        style={viewType === "grid" ? styles.gridImage : styles.listImage}
+        style={viewType === VIEW_TYPES.GRID ? styles.gridImage : styles.listImage}
       />
 
       <View style={styles.cardBody}>
@@ -44,39 +56,48 @@ export default function ProductView({
         </Text>
 
         <View style={styles.ratingRow}>
-          <Ionicons name="star" size={14} color="#FBBF24" />
+          <Ionicons
+            name={ICON_NAMES.STAR}
+            size={ICON_SIZES.SMALL}
+            color={COLORS.STAR_YELLOW}
+          />
           <Text style={styles.ratingText}>
-            {item.rating ? item.rating.toFixed(1) : "-"}
+            {item.rating
+              ? item.rating.toFixed(MONEY.RATING_DECIMALS)
+              : PRODUCT_MESSAGES.RATING_FALLBACK}
           </Text>
         </View>
 
         <View style={styles.footerRow}>
-          <Text style={styles.price}>${item.price.toFixed(2)}</Text>
+          <Text style={styles.price}>
+            {MONEY.CURRENCY_SYMBOL}
+            {item.price.toFixed(MONEY.PRICE_DECIMALS)}
+          </Text>
 
           {quantity === 0 ? (
-            <Pressable
+            <AppPressable
               style={styles.addButton}
               onPress={() => dispatch(addItem(item))}
             >
-              <Text style={styles.addButtonText}>Add</Text>
-            </Pressable>
+              <Text style={styles.addButtonText}>{PRODUCT_MESSAGES.ADD_BUTTON}</Text>
+            </AppPressable>
           ) : (
             <View style={styles.qtyContainer}>
-              <Pressable
+              <AppPressable
                 style={styles.qtyBtn}
                 onPress={() => dispatch(decreaseQty(item.id))}
               >
-                <Ionicons name="remove" size={16} color={colors.text} />
-              </Pressable>
+                <Ionicons name={ICON_NAMES.REMOVE} size={ICON_SIZES.MEDIUM} color={colors.text} />
+              </AppPressable>
 
               <Text style={styles.qtyText}>{quantity}</Text>
 
-              <Pressable
+              <AppPressable
                 style={styles.qtyBtn}
                 onPress={() => dispatch(increaseQty(item.id))}
               >
-                <Ionicons name="add" size={16} color={colors.text} />
-              </Pressable>
+                <Ionicons name={ICON_NAMES.ADD} size={ICON_SIZES.MEDIUM} color={colors.text} />
+              </AppPressable>
             </View>
           )}
         </View>
@@ -147,7 +168,7 @@ const makeStyles = (colors: AppTheme) =>
       borderRadius: 20,
     },
     addButtonText: {
-      color: "#fff",
+      color: COLORS.WHITE,
       fontWeight: "600",
     },
 

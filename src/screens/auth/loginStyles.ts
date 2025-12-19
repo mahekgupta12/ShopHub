@@ -114,6 +114,10 @@ const makeLoginStyles = (colors: AppTheme) =>
       textAlign: "center",
       fontWeight: "600",
     },
+
+    loader: {
+      marginTop: 15,
+    },
   });
 
 export default makeLoginStyles;

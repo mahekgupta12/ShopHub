@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, ActivityIndicator } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 
@@ -15,6 +15,7 @@ import {
   SCREEN_TITLES,
   EMPTY_STATE_MESSAGES,
 } from "../../constants/index";
+import { EmptyStateView, LoadingState } from "../../components/sharedComponents";
 
 export default function CartScreen() {
   useLoadCart();
@@ -34,14 +35,7 @@ export default function CartScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.safe}>
-        <View
-          style={[
-            styles.container,
-            { justifyContent: "center", alignItems: "center" },
-          ]}
-        >
-          <ActivityIndicator size="large" color={colors.text} />
-        </View>
+        <LoadingState colors={colors} containerStyle={styles.container} />
       </SafeAreaView>
     );
   }
@@ -55,14 +49,14 @@ export default function CartScreen() {
         </View>
 
         {items.length === 0 ? (
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyTitle}>
-              {EMPTY_STATE_MESSAGES.CART_TITLE}
-            </Text>
-            <Text style={styles.emptySubtitle}>
-              {EMPTY_STATE_MESSAGES.CART_SUBTITLE}
-            </Text>
-          </View>
+          <EmptyStateView
+            title={EMPTY_STATE_MESSAGES.CART_TITLE}
+            subtitle={EMPTY_STATE_MESSAGES.CART_SUBTITLE}
+            colors={colors}
+            containerStyle={styles.emptyContainer}
+            titleStyle={styles.emptyTitle}
+            subtitleStyle={styles.emptySubtitle}
+          />
         ) : (
           <FlatList
             data={items}

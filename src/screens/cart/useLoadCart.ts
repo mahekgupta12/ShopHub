@@ -1,43 +1,44 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { onAuthStateChanged } from "firebase/auth";
-
-import { auth } from "../../firebase/firebaseConfig";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+ 
 import {
-  loadCartFromFirestore,
-  saveCartToFirestore,
-} from "./cartFirestore";
+  loadCartFromApi,
+  saveCartToApi,
+} from "./cartApi";
+ 
 import { setCart } from "./cartSlice";
 import type { RootState } from "./cartStore";
-
+import { USER_ID_KEY } from "../../restapi/authKeys";
 export const useLoadCart = () => {
   const dispatch = useDispatch();
-  const { items } = useSelector((state: RootState) => state.cart);
+  const items = useSelector((state: RootState) => state.cart.items);
   const initialLoadDone = useRef(false);
-
+ 
+  // Load cart on app start / login
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-
-        dispatch(setCart([]));
-        initialLoadDone.current = false;
-        return;
-      }
-
-      const savedItems = await loadCartFromFirestore(user.uid);
-      dispatch(setCart(savedItems));
+    const load = async () => {
+      const userId = await AsyncStorage.getItem(USER_ID_KEY);
+      if (!userId) return;
+ 
+      const savedItems = await loadCartFromApi(userId);
+      dispatch(setCart(savedItems as any));
       initialLoadDone.current = true;
-    });
-
-    return unsubscribe;
+    };
+ 
+    load();
   }, [dispatch]);
-
+ 
+  // Sync cart on change
   useEffect(() => {
-    const userId = auth.currentUser?.uid;
-
-    if (!userId) return;
-    if (!initialLoadDone.current) return;
-
-    saveCartToFirestore(userId, items);
+    const sync = async () => {
+      const userId = await AsyncStorage.getItem(USER_ID_KEY);
+      if (!userId || !initialLoadDone.current) return;
+ 
+      await saveCartToApi(userId, items);
+    };
+ 
+    sync();
   }, [items]);
 };
+ 

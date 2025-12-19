@@ -1,10 +1,6 @@
 import { StyleSheet } from "react-native";
 import type { AppTheme } from "../screens/profile/profileTheme";
 
-/**
- * Shared, reusable styles for the whole app.
- * Import these into feature-specific style files and compose with spreads.
- */
 
 export const makeCommonStyles = (colors: AppTheme) =>
   StyleSheet.create({
@@ -118,5 +114,48 @@ export const makeCommonStyles = (colors: AppTheme) =>
       textAlign: "center",
       lineHeight: 22,
     },
-  });
 
+
+    emptyContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      paddingHorizontal: 20,
+    },
+    emptyTitle: {
+      fontSize: 22,
+      fontWeight: "700",
+      textAlign: "center",
+      marginBottom: 8,
+      color: colors.text,
+    },
+    emptySubtitle: {
+      fontSize: 14,
+      fontWeight: "400",
+      textAlign: "center",
+      opacity: 0.7,
+      color: colors.textSecondary,
+    },
+    loadingContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: colors.background,
+    },
+    sharedCardBase: {
+      borderRadius: 12,
+      padding: 12,
+      marginBottom: 12,
+      backgroundColor: colors.card,
+    },
+    rowBase: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    divider: {
+      height: 1,
+      width: "100%",
+      marginVertical: 12,
+      backgroundColor: colors.border,
+    },
+  });

@@ -1,7 +1,8 @@
 import React from "react";
-import { Pressable, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSelector } from "react-redux";
+import AppPressable from "../components/appPressables";
 import { RootState } from "../screens/cart/cartStore";
 import { AppTheme, getProfileTheme } from "../screens/profile/profileTheme";
 
@@ -16,9 +17,9 @@ export default function FilterIcon({ onPress }: Props) {
   const styles = makeStyles(colors);
 
   return (
-    <Pressable style={styles.filterChip} onPress={onPress}>
+    <AppPressable style={styles.filterChip} onPress={onPress}>
       <Ionicons name="options" size={30} color={iconColor} />
-    </Pressable>
+    </AppPressable>
   );
 }
 

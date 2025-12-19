@@ -3,17 +3,18 @@ import {
   View,
   Text,
   TextInput,
-  Pressable,
   ActivityIndicator,
 } from "react-native";
 
 import { useSelector } from "react-redux";
-import { RootState } from "../cart/cartStore";
+import type { RootState } from "../cart/cartStore";
 import { getProfileTheme } from "../profile/profileTheme";
 import makeLoginStyles from "./loginStyles";
+import AppPressable from "../../components/appPressables";
+import { AUTH_MESSAGES, AUTH_TABS, type AuthTab } from "../../constants/authMessages";
 
 type Props = {
-  activeTab: "login" | "signup";
+  activeTab: AuthTab;
   fullName: string;
   email: string;
   password: string;
@@ -41,21 +42,21 @@ export default function Form({
 
   return (
     <View style={styles.formBox}>
-      {activeTab === "signup" ? (
-        <Text style={styles.title}>Create Account</Text>
+      {activeTab === AUTH_TABS.SIGNUP ? (
+        <Text style={styles.title}>{AUTH_MESSAGES.FORM_HEADER_SIGNUP}</Text>
       ) : (
-        <Text style={styles.title}>Welcome Back! We missed you.</Text>
+        <Text style={styles.title}>{AUTH_MESSAGES.FORM_HEADER_LOGIN}</Text>
       )}
 
       <Text style={styles.subtitle}>
-        {activeTab === "signup"
-          ? "Sign up to start shopping"
-          : "Login to continue"}
+        {activeTab === AUTH_TABS.SIGNUP
+          ? AUTH_MESSAGES.FORM_SIGNUP_TITLE
+          : AUTH_MESSAGES.FORM_LOGIN_TITLE}
       </Text>
 
-      {activeTab === "signup" && (
+      {activeTab === AUTH_TABS.SIGNUP && (
         <TextInput
-          placeholder="Full Name"
+          placeholder={AUTH_MESSAGES.PLACEHOLDER_FULL_NAME}
           style={styles.input}
           value={fullName}
           onChangeText={setFullName}
@@ -64,7 +65,7 @@ export default function Form({
       )}
 
       <TextInput
-        placeholder="Email"
+        placeholder={AUTH_MESSAGES.PLACEHOLDER_EMAIL}
         keyboardType="email-address"
         style={styles.input}
         value={email}
@@ -73,7 +74,7 @@ export default function Form({
       />
 
       <TextInput
-        placeholder="Password"
+        placeholder={AUTH_MESSAGES.PLACEHOLDER_PASSWORD}
         secureTextEntry
         style={styles.input}
         value={password}
@@ -85,14 +86,16 @@ export default function Form({
         <ActivityIndicator
           size="large"
           color={colors.primary}
-          style={{ marginTop: 15 }}
+          style={styles.loader}
         />
       ) : (
-        <Pressable style={styles.submitBtn} onPress={handleSubmit}>
+        <AppPressable style={styles.submitBtn} onPress={handleSubmit}>
           <Text style={styles.submitText}>
-            {activeTab === "signup" ? "Sign Up" : "Login"}
+            {activeTab === AUTH_TABS.SIGNUP
+              ? AUTH_MESSAGES.TAB_SIGNUP
+              : AUTH_MESSAGES.TAB_LOGIN}
           </Text>
-        </Pressable>
+        </AppPressable>
       )}
     </View>
   );

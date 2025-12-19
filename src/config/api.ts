@@ -1,9 +1,3 @@
-/**
- * API Configuration
- * Centralized location for all API endpoints and base URLs
- */
-
-
 export const API_BASE_URL = "https://dummyjson.com";
 
 export const API_ENDPOINTS = {

@@ -2,6 +2,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { BottomTabParamList } from "./types";
@@ -17,10 +18,13 @@ import { useLastTab } from "../persistence/tabPersistence";
 import { ROUTES, DEFAULTS } from "../constants/index";
 
 import { useNavigationLoader } from "../constants/navigationLoader";
+import { useLoadCart } from "../screens/cart/useLoadCart";
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabs() {
+  useLoadCart();
+
   const { show, hide } = useNavigationLoader();
 
   const insets = useSafeAreaInsets();
@@ -28,8 +32,11 @@ export default function BottomTabs() {
   const colors = getProfileTheme(mode);
 
   const cartCount = useAppSelector((state) =>
-    state.cart.items.reduce((sum, item) => sum + item.quantity, 0)
-  );
+  state.cart.items.reduce((sum, item) => {
+    if (!item) return sum;
+    return sum + (item.quantity ?? 0);
+  }, 0)
+);
 
   const { initialTab, ready, handleTabChange } = useLastTab(DEFAULTS.TAB);
 
@@ -52,7 +59,11 @@ export default function BottomTabs() {
         tabBarActiveTintColor: colors.tabActive,
         tabBarInactiveTintColor: colors.tabInactive,
         tabBarLabelStyle: { fontSize: 12 },
-        tabBarStyle: baseTabBarStyle,
+        tabBarStyle:
+          route.name === ROUTES.CART &&
+          getFocusedRouteNameFromRoute(route) === ROUTES.ORDER_CONFIRMATION
+            ? [baseTabBarStyle, { display: "none" }]
+            : baseTabBarStyle,
         tabBarIcon: ({ focused, color, size }) => {
           const iconName =
             route.name === ROUTES.CART
@@ -85,7 +96,11 @@ export default function BottomTabs() {
       })}
       screenListeners={({ route }) => ({
         tabPress: () => {
-  
+          if (route.name === ROUTES.PROFILE || route.name === ROUTES.ORDERS) {
+            handleTabChange(route.name as keyof BottomTabParamList);
+            return;
+          }
+
           show();
           setTimeout(() => hide(), 250);
 

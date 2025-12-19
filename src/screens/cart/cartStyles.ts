@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import type { AppTheme } from "../profile/profileTheme";
-import { makeCommonStyles } from "../../componets/commonStyles";
+import { makeCommonStyles } from "../../components/commonStyles";
 
 const makeCartStyles = (colors: AppTheme) => {
   const common = makeCommonStyles(colors);

@@ -25,8 +25,16 @@ const cartSlice = createSlice({
 
   reducers: {
 
-    setCart(state, action: PayloadAction<CartItem[]>) {
-      state.items = action.payload;
+    setCart(state, action: PayloadAction<CartItem[] | null | undefined>) {
+      state.items = Array.isArray(action.payload)
+        ? action.payload.filter(
+            (item): item is CartItem =>
+              item !== null &&
+              item !== undefined &&
+              typeof item.id === "number" &&
+              typeof item.quantity === "number"
+          )
+        : [];
     },
 
     addItem: (state, action: PayloadAction<Product>) => {
@@ -47,9 +55,10 @@ const cartSlice = createSlice({
     decreaseQty: (state, action: PayloadAction<number>) => {
       const item = state.items.find((i) => i.id === action.payload);
       if (!item) return;
+
       if (item.quantity > 1) {
         item.quantity--;
-      } else if (item.quantity === 1) {
+      } else {
         state.items = state.items.filter((i) => i.id !== action.payload);
       }
     },

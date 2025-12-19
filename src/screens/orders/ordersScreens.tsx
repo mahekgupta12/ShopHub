@@ -1,18 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, Image, FlatList } from "react-native";
+import React, { useState, useCallback } from "react";
+import {
+  View,
+  Text,
+  Image,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { collection, onSnapshot } from "firebase/firestore";
-
-import { auth, db } from "../../firebase/firebaseConfig";
+import { useFocusEffect } from "@react-navigation/native";
 import { useSelector } from "react-redux";
+
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme } from "../profile/profileTheme";
 import makeOrderStyles from "./orderStyles";
+
 import {
-  FIREBASE_COLLECTIONS,
   SCREEN_TITLES,
   EMPTY_STATE_MESSAGES,
 } from "../../constants/index";
+
+import { getAuthData } from "../../restapi/authHelpers";
+
+const FIREBASE_DB_URL =
+  "https://shophub-f4dfe-default-rtdb.firebaseio.com";
 
 type OrderItem = {
   id: string | number;
@@ -32,36 +42,59 @@ type Order = {
 
 export default function OrdersScreens() {
   const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const mode = useSelector((state: RootState) => state.theme.mode);
   const colors = getProfileTheme(mode);
   const styles = makeOrderStyles(colors);
 
-  const userId = auth.currentUser?.uid;
+  const fetchOrders = useCallback(async () => {
+    try {
+      setLoading(true);
 
-  useEffect(() => {
-    if (!userId) return;
+      const { userId, idToken } = await getAuthData();
 
-    const ordersRef = collection(db, FIREBASE_COLLECTIONS.ORDERS, userId, FIREBASE_COLLECTIONS.USER_ORDERS);
+      const res = await fetch(
+        `${FIREBASE_DB_URL}/orders/${userId}.json?auth=${idToken}`
+      );
 
-    const unsubscribe = onSnapshot(ordersRef, (snapshot) => {
-      const list: Order[] = snapshot.docs.map((docSnap) => {
-        const data = docSnap.data() as any;
+      if (!res.ok) {
+        throw new Error("Failed to fetch orders");
+      }
+
+      const data = await res.json();
+
+      if (!data) {
+        setOrders([]);
+        return;
+      }
+
+      const list: Order[] = Object.keys(data).map((key) => {
+        const order = data[key];
         return {
-          orderId: data.orderId ?? docSnap.id,
-          date: data.date ?? "",
-          total: data.total ?? "0.00",
-          items: data.items ?? [],
-          timestamp: data.timestamp,
+          orderId: order.orderId ?? key,
+          date: order.date ?? "",
+          total: order.total ?? "0.00",
+          items: order.items ?? [],
+          timestamp: order.timestamp,
         };
       });
 
       list.sort((a, b) => (b.timestamp ?? 0) - (a.timestamp ?? 0));
       setOrders(list);
-    });
+    } catch (e) {
+      console.warn("Failed to load orders", e);
+      setOrders([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-    return () => unsubscribe();
-  }, [userId]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchOrders();
+    }, [fetchOrders])
+  );
 
   const renderOrder = ({ item }: { item: Order }) => (
     <View style={styles.orderCard}>
@@ -103,6 +136,16 @@ export default function OrdersScreens() {
       </View>
     </View>
   );
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.safe}>
+        <View style={styles.container}>
+          <ActivityIndicator size="large" />
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   if (!orders || orders.length === 0) {
     return (

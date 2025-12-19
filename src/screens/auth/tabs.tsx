@@ -1,10 +1,11 @@
 import React from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text } from "react-native";
 
 import { useSelector } from "react-redux";
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme } from "../profile/profileTheme";
 import makeLoginStyles from "./loginStyles";
+import AppPressable from "../../components/appPressables";
 
 type Props = {
   activeTab: "login" | "signup";
@@ -21,8 +22,9 @@ export default function Tabs({ activeTab, setActiveTab }: Props) {
 
   return (
     <View style={styles.tabContainer}>
-      <Pressable
+      <AppPressable
         style={[styles.tabButton, isLogin && styles.activeTab]}
+        pressedStyle={styles.activeTab}
         onPress={() => setActiveTab("login")}
       >
         <Text
@@ -33,10 +35,11 @@ export default function Tabs({ activeTab, setActiveTab }: Props) {
         >
           Login
         </Text>
-      </Pressable>
+      </AppPressable>
 
-      <Pressable
+      <AppPressable
         style={[styles.tabButton, isSignup && styles.activeTab]}
+        pressedStyle={styles.activeTab}
         onPress={() => setActiveTab("signup")}
       >
         <Text
@@ -47,7 +50,7 @@ export default function Tabs({ activeTab, setActiveTab }: Props) {
         >
           Sign Up
         </Text>
-      </Pressable>
+      </AppPressable>
     </View>
   );
 }

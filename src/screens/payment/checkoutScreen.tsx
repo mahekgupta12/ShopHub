@@ -27,7 +27,18 @@ import {
 } from "../../persistence/checkoutPersistence";
 import { VALIDATION } from "../../constants/index";
 
-import { PaymentMethod, PAYMENT_METHODS, ROUTES, SCREEN_TITLES } from "../../constants/index";
+import {
+  PaymentMethod,
+  PAYMENT_METHODS,
+  ROUTES,
+  SCREEN_TITLES,
+} from "../../constants/index";
+
+/**
+ * 🔽 NEW IMPORT (REST order helper)
+ * NOTE: We DO NOT call it here yet
+ */
+//import { placeOrder } from "../../restapi/ordersRest";
 
 export default function CheckoutScreen() {
   const navigation = useNavigation<any>();
@@ -42,7 +53,8 @@ export default function CheckoutScreen() {
   const [street, setStreet] = useState("");
   const [city, setCity] = useState("");
   const [zip, setZip] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(PAYMENT_METHODS.CARD);
+  const [paymentMethod, setPaymentMethod] =
+    useState<PaymentMethod>(PAYMENT_METHODS.CARD);
 
   const total = items
     .reduce((sum, item) => sum + item.price * item.quantity, 0)
@@ -121,14 +133,36 @@ export default function CheckoutScreen() {
     if (!zip) errors.push("• ZIP Code is required");
 
     if (phone && phone.length !== VALIDATION.PHONE.LENGTH)
-      errors.push(`• Phone Number must be exactly ${VALIDATION.PHONE.LENGTH} digits`);
+      errors.push(
+        `• Phone Number must be exactly ${VALIDATION.PHONE.LENGTH} digits`
+      );
     if (zip && zip.length !== VALIDATION.ZIP.LENGTH)
-      errors.push(`• ZIP Code must be exactly ${VALIDATION.ZIP.LENGTH} digits`);
+      errors.push(
+        `• ZIP Code must be exactly ${VALIDATION.ZIP.LENGTH} digits`
+      );
 
     if (errors.length > 0) {
       Alert.alert("Fix these details", errors.join("\n"));
       return;
     }
+
+    /**
+     * 🔽 NEW: Prepare order payload
+     * (Order is NOT saved here yet)
+     */
+    const orderPayload = {
+      items,
+      total,
+      date: new Date().toISOString(),
+      address: {
+        fullName: fullNameTrim,
+        phone,
+        street: streetTrim,
+        city: cityTrim,
+        zip,
+      },
+      paymentMethod,
+    };
 
     navigation.navigate(ROUTES.PAYMENT, {
       fullName: fullNameTrim,
@@ -139,6 +173,7 @@ export default function CheckoutScreen() {
       paymentMethod,
       items,
       total,
+      orderPayload, // ✅ passed forward
     });
   };
 
@@ -147,14 +182,23 @@ export default function CheckoutScreen() {
       <View style={styles.container}>
         <View style={styles.headerRow}>
           <Pressable onPress={handleBack} style={styles.backBtn}>
-            <Ionicons name="chevron-back" size={22} color={colors.text} />
+            <Ionicons
+              name="chevron-back"
+              size={22}
+              color={colors.text}
+            />
           </Pressable>
 
-          <Text style={styles.headerTitle}>{SCREEN_TITLES.CHECKOUT}</Text>
+          <Text style={styles.headerTitle}>
+            {SCREEN_TITLES.CHECKOUT}
+          </Text>
           <View style={styles.headerRightSpacer} />
         </View>
 
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+        >
           <DeliveryAddressCard
             fullName={fullName}
             phone={phone}
@@ -168,17 +212,25 @@ export default function CheckoutScreen() {
             onChangeZip={onChangeZip}
           />
 
-          <PaymentMethodCard paymentMethod={paymentMethod} onChange={setPaymentMethod} />
+          <PaymentMethodCard
+            paymentMethod={paymentMethod}
+            onChange={setPaymentMethod}
+          />
+
           <OrderSummaryCard items={items} total={total} />
         </ScrollView>
 
         <View style={styles.footer}>
-          <Pressable style={styles.placeOrderBtn} onPress={handlePlaceOrder}>
-            <Text style={styles.placeOrderText}>Proceed to Payment</Text>
+          <Pressable
+            style={styles.placeOrderBtn}
+            onPress={handlePlaceOrder}
+          >
+            <Text style={styles.placeOrderText}>
+              Proceed to Payment
+            </Text>
           </Pressable>
         </View>
       </View>
     </SafeAreaView>
   );
 }
-

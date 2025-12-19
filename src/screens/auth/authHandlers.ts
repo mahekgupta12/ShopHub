@@ -1,102 +1,135 @@
 import { Alert } from "react-native";
 import Toast from "react-native-toast-message";
-import { auth } from "../../firebase/firebaseConfig";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  updateProfile,
-} from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-type Props = {
-  fullName?: string;
+import {
+  USER_ID_KEY,
+  ID_TOKEN_KEY,
+  EMAIL_KEY,
+  DISPLAY_NAME_KEY,
+} from "../../restapi/authKeys";
+
+import { FIREBASE_API_KEY, FIREBASE_AUTH_ENDPOINTS, HTTP_METHODS } from "../../constants/api";
+import { AUTH_MESSAGES, AUTH_TABS } from "../../constants/authMessages";
+
+type Params = {
+  fullName: string;
   email: string;
   password: string;
   activeTab: "login" | "signup";
   navigation: any;
-  setLoading: (value: boolean) => void;
+  setLoading: (v: boolean) => void;
 };
 
-export const handleSubmit = async ({
+export async function handleSubmit({
   fullName,
   email,
   password,
   activeTab,
   navigation,
   setLoading,
-}: Props) => {
-  if (!email || !password || (activeTab === "signup" && !fullName?.trim())) {
-    const msg =
-      activeTab === "signup"
-        ? "Full name, email and password are required."
-        : "Email and Password are required.";
-    Alert.alert("Missing Details", msg);
+}: Params) {
+  if (
+    !email ||
+    !password ||
+    (activeTab === "signup" && !fullName?.trim())
+  ) {
+    Alert.alert(
+      AUTH_MESSAGES.MISSING_DETAILS,
+      activeTab === AUTH_TABS.SIGNUP
+        ? AUTH_MESSAGES.SIGNUP_MISSING_DETAILS
+        : AUTH_MESSAGES.LOGIN_MISSING_DETAILS
+    );
     return;
   }
 
   try {
     setLoading(true);
 
-    if (activeTab === "signup") {
-      const cred = await createUserWithEmailAndPassword(auth, email, password);
+    const authEndpoint =
+      activeTab === "signup"
+        ? `${FIREBASE_AUTH_ENDPOINTS.SIGNUP}?key=${FIREBASE_API_KEY}`
+        : `${FIREBASE_AUTH_ENDPOINTS.LOGIN}?key=${FIREBASE_API_KEY}`;
 
-      await updateProfile(cred.user, {
-        displayName: fullName!.trim(),
-      });
+    const authRes = await fetch(authEndpoint, {
+      method: HTTP_METHODS.POST,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        password,
+        returnSecureToken: true,
+      }),
+    });
 
-      Toast.show({
-        type: "success",
-        text1: "Account Created 🎉",
-        text2: "Your account has been created successfully",
-        position: "bottom",
-        visibilityTime: 2500,
-        autoHide: true,
-      });
-    } else {
-      await signInWithEmailAndPassword(auth, email, password);
+    const authData = await authRes.json();
 
-      Toast.show({
-        type: "success",
-        text1: "Welcome Back 👋",
-        text2: "Logged in successfully",
-        position: "bottom",
-        visibilityTime: 2000,
-        autoHide: true,
-      });
+    if (!authRes.ok) {
+      throw new Error(authData.error?.message || AUTH_MESSAGES.AUTHENTICATION_FAILED);
     }
 
-    setLoading(false);
-    navigation.navigate("MainTabs");
+    const { idToken, localId } = authData;
+
+    if (activeTab === "signup") {
+      await fetch(
+        `${FIREBASE_AUTH_ENDPOINTS.UPDATE_PROFILE}?key=${FIREBASE_API_KEY}`,
+        {
+          method: HTTP_METHODS.POST,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            idToken,
+            displayName: fullName.trim(),
+            returnSecureToken: true,
+          }),
+        }
+      );
+    }
+
+    const lookupRes = await fetch(
+      `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${FIREBASE_API_KEY}`,
+      {
+        method: HTTP_METHODS.POST,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idToken }),
+      }
+    );
+
+    const lookupData = await lookupRes.json();
+
+    let displayName =
+      lookupData?.users?.[0]?.displayName?.trim() ||
+      email.split("@")[0];
+
+    await AsyncStorage.multiSet([
+      [USER_ID_KEY, localId],
+      [ID_TOKEN_KEY, idToken],
+      [EMAIL_KEY, email],
+      [DISPLAY_NAME_KEY, displayName],
+    ]);
+
+    Toast.show({
+      type: "success",
+      text1:
+        activeTab === AUTH_TABS.SIGNUP
+          ? "Account Created 🎉"
+          : "Welcome Back 👋",
+      text2:
+        activeTab === AUTH_TABS.SIGNUP
+          ? AUTH_MESSAGES.SIGNUP_SUCCESS
+          : AUTH_MESSAGES.LOGIN_SUCCESS,
+      position: "bottom",
+      visibilityTime: 2500,
+    });
+
+    navigation.reset({
+      index: 0,
+      routes: [{ name: AUTH_MESSAGES.NAVIGATE_TO_MAIN_TABS }],
+    });
   } catch (error: any) {
+    Alert.alert(
+      activeTab === AUTH_TABS.SIGNUP ? AUTH_MESSAGES.SIGNUP_FAILED : AUTH_MESSAGES.LOGIN_FAILED,
+      error.message || AUTH_MESSAGES.SOMETHING_WENT_WRONG
+    );
+  } finally {
     setLoading(false);
-
-    let message = "Something went wrong. Please try again.";
-
-    if (activeTab === "login") {
-      switch (error.code) {
-        case "auth/invalid-email":
-          message = "Please enter a valid email address.";
-          break;
-        case "auth/invalid-credential":
-          message = "Incorrect email or password.";
-          break;
-        default:
-          message = error.message;
-      }
-      Alert.alert("Login Failed", message);
-    }
-
-    if (activeTab === "signup") {
-      switch (error.code) {
-        case "auth/email-already-in-use":
-          message = "This email is already registered.";
-          break;
-        case "auth/weak-password":
-          message = "Password must be at least 6 characters long.";
-          break;
-        default:
-          message = error.message;
-      }
-      Alert.alert("Signup Failed", message);
-    }
   }
-};
+}

@@ -1,25 +1,29 @@
 import { useEffect, useState } from "react";
-import { onAuthStateChanged, type User } from "firebase/auth";
-import { auth } from "../firebase/firebaseConfig";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { RootStackParamList } from "../navigation/types";
 import { clearLastTab } from "./tabPersistence";
+import { USER_ID_KEY, ID_TOKEN_KEY } from "../restapi/authKeys";
 
 type RouteName = keyof RootStackParamList;
 
 export function useInitialRoute() {
-  const [initialRoute, setInitialRoute] = useState<RouteName | null>(null);
+  const [initialRoute, setInitialRoute] =
+    useState<RouteName | null>(null);
 
   useEffect(() => {
-    const sub = onAuthStateChanged(auth, (user: User | null) => {
-      if (user) {
+    const check = async () => {
+      const userId = await AsyncStorage.getItem(USER_ID_KEY);
+      const token = await AsyncStorage.getItem(ID_TOKEN_KEY);
+
+      if (userId && token) {
         clearLastTab();
         setInitialRoute("MainTabs");
       } else {
         setInitialRoute("Login");
       }
-    });
+    };
 
-    return () => sub();
+    check();
   }, []);
 
   return initialRoute;

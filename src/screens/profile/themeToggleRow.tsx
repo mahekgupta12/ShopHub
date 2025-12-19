@@ -1,6 +1,7 @@
 import React from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import AppPressable from "../../components/appPressables";
 import type { ProfileStyles } from "./profileStyles";
 import type { AppTheme } from "./profileTheme";
 import { THEME_LABELS } from "../../constants/index";
@@ -19,7 +20,7 @@ export default function ThemeToggleRow({
   onToggle,
 }: Props) {
   return (
-    <Pressable
+    <AppPressable
       style={styles.actionCard}
       onPress={onToggle}
     >
@@ -39,6 +40,6 @@ export default function ThemeToggleRow({
       <Text style={styles.modeTag}>
         {isDark ? THEME_LABELS.MODE_DARK : THEME_LABELS.MODE_LIGHT}
       </Text>
-    </Pressable>
+    </AppPressable>
   );
 }

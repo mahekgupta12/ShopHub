@@ -18,10 +18,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme } from "../profile/profileTheme";
 
-import { auth, db } from "../../firebase/firebaseConfig";
-import { doc, setDoc } from "firebase/firestore";
 import { clearCart } from "../cart/cartSlice";
 import { clearCheckoutForm } from "../../persistence/checkoutPersistence";
+
+import { getAuthData } from "../../restapi/authHelpers";
+
 import {
   PAYMENT_METHODS,
   ROUTES,
@@ -29,14 +30,17 @@ import {
   VALIDATION,
   ORDER,
   SCREEN_TITLES,
-  FIREBASE_COLLECTIONS,
   PAYMENT_TEXT,
   type PaymentMethod,
 } from "../../constants/index";
+
 import { OrderSummarySection } from "./paymentMethodForm";
 import { CardDetailsSection, isValidExpiry } from "./cardDetailsSection";
 import { UpiDetailsSection, validateUpiId } from "./upiDetailsSection";
 import { CodDetailsSection } from "./codDetailsSection";
+
+const FIREBASE_DB_URL =
+  "https://shophub-f4dfe-default-rtdb.firebaseio.com";
 
 type RouteParams = {
   fullName: string;
@@ -60,22 +64,20 @@ export default function PaymentScreen() {
 
   const [loading, setLoading] = useState(false);
 
-  
   const [cardName, setCardName] = useState("");
-  const [cardNumber, setCardNumber] = useState(""); 
-  const [expiry, setExpiry] = useState(""); 
-  const [cvv, setCvv] = useState(""); 
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiry, setExpiry] = useState("");
+  const [cvv, setCvv] = useState("");
 
-  
   const [upiId, setUpiId] = useState("");
-
   const normalizedUpi = useMemo(() => upiId.trim().toLowerCase(), [upiId]);
 
   const isCardValid =
     cardName.trim().length >= VALIDATION.CARD.NAME_MIN_LENGTH &&
     cardNumber.length === VALIDATION.CARD.NUMBER_LENGTH &&
     isValidExpiry(expiry) &&
-    (cvv.length === VALIDATION.CARD.CVV_MIN_LENGTH || cvv.length === VALIDATION.CARD.CVV_MAX_LENGTH);
+    (cvv.length === VALIDATION.CARD.CVV_MIN_LENGTH ||
+      cvv.length === VALIDATION.CARD.CVV_MAX_LENGTH);
 
   const isUpiValid = useMemo(
     () => validateUpiId(normalizedUpi),
@@ -97,8 +99,7 @@ export default function PaymentScreen() {
         return PAYMENT_TEXT.DISABLE_NAME_ON_CARD;
       if (cardNumber.length !== VALIDATION.CARD.NUMBER_LENGTH)
         return PAYMENT_TEXT.DISABLE_CARD_NUMBER;
-      if (!isValidExpiry(expiry))
-        return PAYMENT_TEXT.DISABLE_EXPIRY;
+      if (!isValidExpiry(expiry)) return PAYMENT_TEXT.DISABLE_EXPIRY;
       if (
         !(
           cvv.length === VALIDATION.CARD.CVV_MIN_LENGTH ||
@@ -116,7 +117,15 @@ export default function PaymentScreen() {
     }
 
     return "";
-  }, [params.paymentMethod, cardName, cardNumber, expiry, cvv, normalizedUpi, isUpiValid]);
+  }, [
+    params.paymentMethod,
+    cardName,
+    cardNumber,
+    expiry,
+    cvv,
+    normalizedUpi,
+    isUpiValid,
+  ]);
 
   const handleBack = () => navigation.goBack();
 
@@ -126,63 +135,63 @@ export default function PaymentScreen() {
     try {
       setLoading(true);
 
-      const user = auth.currentUser;
-      if (!user) {
-        Alert.alert(ERROR_MESSAGES.LOGIN_REQUIRED, ERROR_MESSAGES.PLEASE_LOG_IN);
-        return;
-      }
+      const { userId, idToken } = await getAuthData();
 
       const now = new Date();
       const orderId = `${ORDER.ID_PREFIX}${now.getTime()}`;
-
       const date = now.toLocaleDateString();
       const timestamp = now.getTime();
 
-      await setDoc(
-        doc(
-          db,
-          FIREBASE_COLLECTIONS.ORDERS,
-          user.uid,
-          FIREBASE_COLLECTIONS.USER_ORDERS,
-          orderId
-        ),
+      await fetch(
+        `${FIREBASE_DB_URL}/orders/${userId}/${orderId}.json?auth=${idToken}`,
         {
-          orderId,
-          userId: user.uid,
-          total: params.total,
-          date,
-          items: params.items,
-          timestamp,
-          paymentMethod: params.paymentMethod,
-          address: {
-            fullName: params.fullName,
-            phone: params.phone,
-            street: params.street,
-            city: params.city,
-            zip: params.zip,
-          },
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId,
+            userId,
+            total: params.total,
+            date,
+            items: params.items,
+            timestamp,
+            paymentMethod: params.paymentMethod,
+            address: {
+              fullName: params.fullName,
+              phone: params.phone,
+              street: params.street,
+              city: params.city,
+              zip: params.zip,
+            },
+          }),
         }
+      );
+
+
+      await fetch(
+        `${FIREBASE_DB_URL}/carts/${userId}.json?auth=${idToken}`,
+        { method: "DELETE" }
       );
 
       dispatch(clearCart());
       clearCheckoutForm();
 
-      navigation.navigate(ROUTES.ORDER_CONFIRMATION, {
-        orderId,
-        total: params.total,
-        date,
+      navigation.reset({
+        index: 1,
+        routes: [
+          { name: ROUTES.CART_MAIN },
+          {
+            name: ROUTES.ORDER_CONFIRMATION,
+            params: { orderId, total: params.total, date },
+          },
+        ],
       });
     } catch (e) {
       console.warn(e);
-      const now = new Date();
-      const fallbackOrderId = `${ORDER.ID_PREFIX}${now.getTime()}`;
-      const date = now.toLocaleDateString();
 
-      navigation.navigate(ROUTES.ORDER_CONFIRMATION, {
-        orderId: fallbackOrderId,
-        total: params.total,
-        date,
-      });
+      Alert.alert(
+        ERROR_MESSAGES.LOGIN_REQUIRED,
+        ERROR_MESSAGES.PLEASE_LOG_IN
+      );
     } finally {
       setLoading(false);
     }
@@ -195,7 +204,6 @@ export default function PaymentScreen() {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <View style={{ flex: 1, padding: 16 }}>
-          
           <View style={styles.headerRow}>
             <Pressable
               onPress={handleBack}
@@ -219,7 +227,11 @@ export default function PaymentScreen() {
             keyboardShouldPersistTaps="always"
             showsVerticalScrollIndicator={false}
           >
-            <OrderSummarySection colors={colors} items={params.items} total={params.total} />
+            <OrderSummarySection
+              colors={colors}
+              items={params.items}
+              total={params.total}
+            />
 
             {params.paymentMethod === PAYMENT_METHODS.CARD && (
               <CardDetailsSection
@@ -250,7 +262,6 @@ export default function PaymentScreen() {
             )}
           </ScrollView>
 
-          
           <View style={{ paddingTop: 12 }}>
             <Pressable
               disabled={!canProceed || loading}
@@ -274,8 +285,14 @@ export default function PaymentScreen() {
               )}
             </Pressable>
 
-            {!canProceed && !loading ? (
-              <Text style={{ marginTop: 10, color: colors.textSecondary, textAlign: "center" }}>
+            {!canProceed && !loading && disableReason ? (
+              <Text
+                style={{
+                  marginTop: 10,
+                  color: colors.textSecondary,
+                  textAlign: "center",
+                }}
+              >
                 {disableReason}
               </Text>
             ) : null}

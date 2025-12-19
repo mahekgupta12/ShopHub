@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import type { ProfileStyles } from "./profileStyles";
 import type { AppTheme } from "./profileTheme";
+import AppPressable from "../../components/appPressables";
 
 type Props = {
   icon: string;
@@ -20,12 +21,12 @@ export default function ProfileActionRow({
   onPress,
 }: Props) {
   return (
-    <Pressable style={styles.actionCard} onPress={onPress}>
+    <AppPressable style={styles.actionCard} onPress={onPress}>
       <View style={styles.actionLeft}>
         <Ionicons name={icon as any} size={22} color={colors.primary} />
         <Text style={styles.actionLabel}>{label}</Text>
       </View>
       <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
-    </Pressable>
+    </AppPressable>
   );
 }
