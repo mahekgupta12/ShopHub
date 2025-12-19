@@ -10,8 +10,10 @@ import { getProfileTheme } from "../profile/profileTheme";
 import {
   CATEGORY_OPTIONS,
   DEFAULTS,
+  FILTER_DRAWER,
   type Category,
 } from "../../constants/index";
+import { ICON_NAMES, ICON_SIZES } from "../../constants/ui";
 import { makeStyles } from "./filterStyles";
 
 type Props = {
@@ -54,20 +56,20 @@ export default function FilterDrawer({
       >
 
         <View style={styles.headerRow}>
-          <Text style={styles.title}>Filters</Text>
+          <Text style={styles.title}>{FILTER_DRAWER.TITLE}</Text>
           <AppPressable onPress={onClose}>
             <Ionicons
-              name="close-circle-outline"
-              size={26}
+              name={ICON_NAMES.CLOSE_CIRCLE}
+              size={ICON_SIZES.CLOSE}
               color={colors.textSecondary}
             />
           </AppPressable>
         </View>
 
-        <Text style={styles.subHeader}>Refine your product search</Text>
+        <Text style={styles.subHeader}>{FILTER_DRAWER.SUBTITLE}</Text>
 
 
-        <Text style={styles.sectionTitle}>Category</Text>
+        <Text style={styles.sectionTitle}>{FILTER_DRAWER.SECTION_CATEGORY}</Text>
 
         <View style={styles.categoriesContainer}>
           {categoriesList.map((cat) => (
@@ -90,16 +92,20 @@ export default function FilterDrawer({
         </View>
 
 
-        <Text style={styles.sectionTitle}>Price Range</Text>
+        <Text style={styles.sectionTitle}>{FILTER_DRAWER.SECTION_PRICE_RANGE}</Text>
 
         <View style={styles.priceContainer}>
 
           <View style={styles.priceRow}>
             <AppPressable
-              onPress={() => setMinPrice(Math.max(minPrice - 50, 0))}
+              onPress={() =>
+                setMinPrice(
+                  Math.max(minPrice - FILTER_DRAWER.PRICE_STEP, DEFAULTS.PRICE_RANGE.min)
+                )
+              }
               style={styles.priceButton}
             >
-              <Text style={styles.priceButtonText}>−</Text>
+              <Text style={styles.priceButtonText}>{FILTER_DRAWER.SYMBOL_DECREMENT}</Text>
             </AppPressable>
 
             <View style={styles.priceValueBox}>
@@ -107,20 +113,24 @@ export default function FilterDrawer({
             </View>
 
             <AppPressable
-              onPress={() => setMinPrice(minPrice + 50)}
+              onPress={() => setMinPrice(minPrice + FILTER_DRAWER.PRICE_STEP)}
               style={styles.priceButton}
             >
-              <Text style={styles.priceButtonText}>+</Text>
+              <Text style={styles.priceButtonText}>{FILTER_DRAWER.SYMBOL_INCREMENT}</Text>
             </AppPressable>
           </View>
 
 
           <View style={styles.priceRow}>
             <AppPressable
-              onPress={() => setMaxPrice(Math.max(maxPrice - 50, minPrice))}
+              onPress={() =>
+                setMaxPrice(
+                  Math.max(maxPrice - FILTER_DRAWER.PRICE_STEP, minPrice)
+                )
+              }
               style={styles.priceButton}
             >
-              <Text style={styles.priceButtonText}>−</Text>
+              <Text style={styles.priceButtonText}>{FILTER_DRAWER.SYMBOL_DECREMENT}</Text>
             </AppPressable>
 
             <View style={styles.priceValueBox}>
@@ -128,10 +138,10 @@ export default function FilterDrawer({
             </View>
 
             <AppPressable
-              onPress={() => setMaxPrice(maxPrice + 50)}
+              onPress={() => setMaxPrice(maxPrice + FILTER_DRAWER.PRICE_STEP)}
               style={styles.priceButton}
             >
-              <Text style={styles.priceButtonText}>+</Text>
+              <Text style={styles.priceButtonText}>{FILTER_DRAWER.SYMBOL_INCREMENT}</Text>
             </AppPressable>
           </View>
         </View>
@@ -139,14 +149,14 @@ export default function FilterDrawer({
 
         <View style={styles.footer}>
           <AppPressable onPress={onClose}>
-            <Text style={styles.closeText}>Close</Text>
+            <Text style={styles.closeText}>{FILTER_DRAWER.ACTION_CLOSE}</Text>
           </AppPressable>
 
           <AppPressable
             onPress={() => onApply(category, minPrice, maxPrice)}
             style={styles.applyBtn}
           >
-            <Text style={styles.applyText}>Apply</Text>
+            <Text style={styles.applyText}>{FILTER_DRAWER.ACTION_APPLY}</Text>
           </AppPressable>
         </View>
       </View>

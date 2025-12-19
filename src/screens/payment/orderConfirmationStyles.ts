@@ -5,7 +5,7 @@ const makeOrderConfirmationStyles = (colors: AppTheme) =>
   StyleSheet.create({
     safe: {
       flex: 1,
-      backgroundColor: colors.background,
+      backgroundColor: "rgba(0,0,0,0.45)",
     },
     outer: {
       flex: 1,
@@ -110,4 +110,3 @@ const makeOrderConfirmationStyles = (colors: AppTheme) =>
   });
 
 export default makeOrderConfirmationStyles;
-

@@ -24,6 +24,8 @@ export const AUTH_MESSAGES = {
   TAB_SIGNUP: "Sign Up",
 
   // Form Labels
+  FORM_HEADER_SIGNUP: "Create Account",
+  FORM_HEADER_LOGIN: "Welcome Back! We missed you.",
   FORM_SIGNUP_TITLE: "Sign up to start shopping",
   FORM_LOGIN_TITLE: "Login to continue",
 

@@ -13,13 +13,22 @@ import {
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme, type AppTheme } from "../profile/profileTheme";
 import AppPressable from "../../componets/appPressables";
+import {
+  COLORS,
+  ICON_NAMES,
+  ICON_SIZES,
+  MONEY,
+  PRODUCT_MESSAGES,
+  VIEW_TYPES,
+  type ViewType,
+} from "../../constants/index";
 
 export default function ProductView({
   item,
   viewType,
 }: {
   item: Product;
-  viewType: "list" | "grid";
+  viewType: ViewType;
 }) {
   const dispatch = useDispatch();
 
@@ -35,10 +44,10 @@ export default function ProductView({
   const styles = makeStyles(colors);
 
   return (
-    <View style={viewType === "grid" ? styles.gridCard : styles.listCard}>
+    <View style={viewType === VIEW_TYPES.GRID ? styles.gridCard : styles.listCard}>
       <Image
         source={{ uri: item.thumbnail }}
-        style={viewType === "grid" ? styles.gridImage : styles.listImage}
+        style={viewType === VIEW_TYPES.GRID ? styles.gridImage : styles.listImage}
       />
 
       <View style={styles.cardBody}>
@@ -47,21 +56,30 @@ export default function ProductView({
         </Text>
 
         <View style={styles.ratingRow}>
-          <Ionicons name="star" size={14} color="#FBBF24" />
+          <Ionicons
+            name={ICON_NAMES.STAR}
+            size={ICON_SIZES.SMALL}
+            color={COLORS.STAR_YELLOW}
+          />
           <Text style={styles.ratingText}>
-            {item.rating ? item.rating.toFixed(1) : "-"}
+            {item.rating
+              ? item.rating.toFixed(MONEY.RATING_DECIMALS)
+              : PRODUCT_MESSAGES.RATING_FALLBACK}
           </Text>
         </View>
 
         <View style={styles.footerRow}>
-          <Text style={styles.price}>${item.price.toFixed(2)}</Text>
+          <Text style={styles.price}>
+            {MONEY.CURRENCY_SYMBOL}
+            {item.price.toFixed(MONEY.PRICE_DECIMALS)}
+          </Text>
 
           {quantity === 0 ? (
             <AppPressable
               style={styles.addButton}
               onPress={() => dispatch(addItem(item))}
             >
-              <Text style={styles.addButtonText}>Add</Text>
+              <Text style={styles.addButtonText}>{PRODUCT_MESSAGES.ADD_BUTTON}</Text>
             </AppPressable>
           ) : (
             <View style={styles.qtyContainer}>
@@ -69,7 +87,7 @@ export default function ProductView({
                 style={styles.qtyBtn}
                 onPress={() => dispatch(decreaseQty(item.id))}
               >
-                <Ionicons name="remove" size={16} color={colors.text} />
+                <Ionicons name={ICON_NAMES.REMOVE} size={ICON_SIZES.MEDIUM} color={colors.text} />
               </AppPressable>
 
               <Text style={styles.qtyText}>{quantity}</Text>
@@ -78,7 +96,7 @@ export default function ProductView({
                 style={styles.qtyBtn}
                 onPress={() => dispatch(increaseQty(item.id))}
               >
-                <Ionicons name="add" size={16} color={colors.text} />
+                <Ionicons name={ICON_NAMES.ADD} size={ICON_SIZES.MEDIUM} color={colors.text} />
               </AppPressable>
             </View>
           )}
@@ -150,7 +168,7 @@ const makeStyles = (colors: AppTheme) =>
       borderRadius: 20,
     },
     addButtonText: {
-      color: "#fff",
+      color: COLORS.WHITE,
       fontWeight: "600",
     },
 

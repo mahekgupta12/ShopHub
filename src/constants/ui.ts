@@ -41,6 +41,7 @@ export const ICON_SIZES = {
   SMALL: 14,
   MEDIUM: 16,
   LARGE: 18,
+  CLOSE: 26,
   EXTRA_LARGE: 22,
   HUGE: 30,
   TITLE: 35,

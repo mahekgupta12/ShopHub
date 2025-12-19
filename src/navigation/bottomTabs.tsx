@@ -2,6 +2,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { BottomTabParamList } from "./types";
@@ -58,7 +59,11 @@ export default function BottomTabs() {
         tabBarActiveTintColor: colors.tabActive,
         tabBarInactiveTintColor: colors.tabInactive,
         tabBarLabelStyle: { fontSize: 12 },
-        tabBarStyle: baseTabBarStyle,
+        tabBarStyle:
+          route.name === ROUTES.CART &&
+          getFocusedRouteNameFromRoute(route) === ROUTES.ORDER_CONFIRMATION
+            ? [baseTabBarStyle, { display: "none" }]
+            : baseTabBarStyle,
         tabBarIcon: ({ focused, color, size }) => {
           const iconName =
             route.name === ROUTES.CART

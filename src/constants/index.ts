@@ -24,6 +24,11 @@ export * from "./colors";
 export * from "./authMessages";
 export * from "./checkoutMessages";
 export * from "./ui";
+export * from "./app";
+export * from "./filterMessages";
+export * from "./homeMessages";
+export * from "./productMessages";
+export * from "./money";
 
 export const CATEGORIES = {
   ALL: "All",

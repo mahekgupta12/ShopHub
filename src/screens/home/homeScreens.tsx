@@ -19,15 +19,22 @@ import { useSelector } from "react-redux";
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme, type AppTheme } from "../profile/profileTheme";
 import {
+  APP_BRAND,
   CATEGORIES,
+  COLORS,
   DEFAULTS,
+  HOME_MESSAGES,
+  ICON_NAMES,
+  ICON_SIZES,
+  VIEW_TYPES,
   type Category,
   type PriceRange,
+  type ViewType,
 } from "../../constants/index";
 
 export default function HomeScreens() {
   const [query, setQuery] = useState("");
-  const [viewType, setViewType] = useState<"list" | "grid">("list");
+  const [viewType, setViewType] = useState<ViewType>(VIEW_TYPES.LIST);
 
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Category>(
@@ -68,34 +75,34 @@ export default function HomeScreens() {
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
-        <Text style={styles.brand}>ShopHub</Text>
+        <Text style={styles.brand}>{APP_BRAND.NAME}</Text>
 
         <View style={styles.headerActions}>
           <Pressable
             style={[
               styles.iconChip,
-              viewType === "list" && styles.activeChip,
+              viewType === VIEW_TYPES.LIST && styles.activeChip,
             ]}
-            onPress={() => setViewType("list")}
+            onPress={() => setViewType(VIEW_TYPES.LIST)}
           >
             <Ionicons
-              name="list"
-              size={18}
-              color={viewType === "list" ? "#FFFFFF" : colors.textSecondary}
+              name={ICON_NAMES.LIST}
+              size={ICON_SIZES.LARGE}
+              color={viewType === VIEW_TYPES.LIST ? COLORS.WHITE : colors.textSecondary}
             />
           </Pressable>
 
           <Pressable
             style={[
               styles.iconChip,
-              viewType === "grid" && styles.activeChip,
+              viewType === VIEW_TYPES.GRID && styles.activeChip,
             ]}
-            onPress={() => setViewType("grid")}
+            onPress={() => setViewType(VIEW_TYPES.GRID)}
           >
             <Ionicons
-              name="grid"
-              size={18}
-              color={viewType === "grid" ? "#FFFFFF" : colors.textSecondary}
+              name={ICON_NAMES.GRID}
+              size={ICON_SIZES.LARGE}
+              color={viewType === VIEW_TYPES.GRID ? COLORS.WHITE : colors.textSecondary}
             />
           </Pressable>
         </View>
@@ -119,19 +126,19 @@ export default function HomeScreens() {
         </View>
       ) : showEmpty ? (
         <View style={styles.stateWrapper}>
-          <Text style={styles.emptyText}>No products found.</Text>
+          <Text style={styles.emptyText}>{HOME_MESSAGES.NO_PRODUCTS_FOUND}</Text>
         </View>
       ) : (
         <FlatList
           data={filteredProducts}
           key={viewType}
-          numColumns={viewType === "grid" ? 2 : 1}
+          numColumns={viewType === VIEW_TYPES.GRID ? 2 : 1}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <ProductView item={item} viewType={viewType} />
           )}
           columnWrapperStyle={
-            viewType === "grid" ? styles.gridColumnWrapper : undefined
+            viewType === VIEW_TYPES.GRID ? styles.gridColumnWrapper : undefined
           }
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.listContent}

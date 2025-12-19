@@ -40,7 +40,13 @@ export default function CartStack() {
       <Stack.Screen
         name={ROUTES.ORDER_CONFIRMATION}
         component={OrderConfirmationScreen}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false,
+          presentation: "transparentModal",
+          animation: "fade",
+          gestureEnabled: false,
+          contentStyle: { backgroundColor: "transparent" },
+        }}
       />
     </Stack.Navigator>
   );

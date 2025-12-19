@@ -175,10 +175,15 @@ export default function PaymentScreen() {
       dispatch(clearCart());
       clearCheckoutForm();
 
-      navigation.navigate(ROUTES.ORDER_CONFIRMATION, {
-        orderId,
-        total: params.total,
-        date,
+      navigation.reset({
+        index: 1,
+        routes: [
+          { name: ROUTES.CART_MAIN },
+          {
+            name: ROUTES.ORDER_CONFIRMATION,
+            params: { orderId, total: params.total, date },
+          },
+        ],
       });
     } catch (e) {
       console.warn(e);
