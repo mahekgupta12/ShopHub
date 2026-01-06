@@ -21,6 +21,7 @@ import ThemeToggleRow from "./themeToggleRow";
 import ProfileActionRow from "./profileActionRow";
 
 import { clearLastTab } from "../../persistence/tabPersistence";
+import { clearWishlist } from "../wishlist/wishlistSlice";
 import {
   ROUTES,
   SCREEN_TITLES,
@@ -77,6 +78,8 @@ export default function ProfileScreen() {
   const initial = name.charAt(0).toUpperCase();
 
   const handleLogout = async () => {
+    // Clear wishlist from Redux store
+    dispatch(clearWishlist());
 
     await AsyncStorage.multiRemove([
       USER_ID_KEY,
@@ -146,7 +149,7 @@ export default function ProfileScreen() {
               name="log-out-outline"
               size={20}
               color="#ffffff"
-              style={{ marginRight: 8 }}
+              style={styles.logoutIcon}
             />
             <Text style={styles.logoutText}>{PROFILE_LABELS.LOGOUT}</Text>
           </Pressable>

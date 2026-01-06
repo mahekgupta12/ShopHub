@@ -105,6 +105,9 @@ export const makeProfileStyles = (colors: AppTheme) => {
       paddingVertical: 14,
       backgroundColor: colors.danger,
     },
+    logoutIcon: {
+      marginRight: 8,
+    },
     logoutText: {
       color: "#FFFFFF",
       fontSize: 16,

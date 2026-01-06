@@ -9,6 +9,7 @@ import type { BottomTabParamList } from "./types";
 
 import HomeScreens from "../screens/home/homeScreens";
 import CartStack from "./cartStack";
+import WishlistStack from "./wishlistStack";
 import OrdersScreens from "../screens/orders/ordersScreens";
 import ProfileScreens from "../screens/profile/profileScreens";
 
@@ -19,11 +20,13 @@ import { ROUTES, DEFAULTS } from "../constants/index";
 
 import { useNavigationLoader } from "../constants/navigationLoader";
 import { useLoadCart } from "../screens/cart/useLoadCart";
+import { useLoadWishlist } from "../screens/wishlist/useLoadWishlist";
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabs() {
   useLoadCart();
+  useLoadWishlist();
 
   const { show, hide } = useNavigationLoader();
 
@@ -37,6 +40,8 @@ export default function BottomTabs() {
     return sum + (item.quantity ?? 0);
   }, 0)
 );
+
+  const wishlistCount = useAppSelector((state) => state.wishlist.items.length);
 
   const { initialTab, ready, handleTabChange } = useLastTab(DEFAULTS.TAB);
 
@@ -74,6 +79,10 @@ export default function BottomTabs() {
               ? focused
                 ? "home"
                 : "home-outline"
+              : route.name === ROUTES.WISHLIST
+              ? focused
+                ? "heart"
+                : "heart-outline"
               : route.name === ROUTES.ORDERS
               ? focused
                 ? "cube"
@@ -88,6 +97,11 @@ export default function BottomTabs() {
               {route.name === ROUTES.CART && cartCount > 0 && (
                 <View style={styles.badge}>
                   <Text style={styles.badgeText}>{cartCount}</Text>
+                </View>
+              )}
+              {route.name === ROUTES.WISHLIST && wishlistCount > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{wishlistCount}</Text>
                 </View>
               )}
             </View>
@@ -110,6 +124,7 @@ export default function BottomTabs() {
     >
       <Tab.Screen name={ROUTES.HOME} component={HomeScreens} />
       <Tab.Screen name={ROUTES.CART} component={CartStack} />
+      <Tab.Screen name={ROUTES.WISHLIST} component={WishlistStack} />
       <Tab.Screen name={ROUTES.ORDERS} component={OrdersScreens} />
       <Tab.Screen name={ROUTES.PROFILE} component={ProfileScreens} />
     </Tab.Navigator>

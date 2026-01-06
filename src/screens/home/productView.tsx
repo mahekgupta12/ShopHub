@@ -9,6 +9,10 @@ import {
   increaseQty,
   decreaseQty,
 } from "../cart/cartSlice";
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from "../wishlist/wishlistSlice";
 
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme, type AppTheme } from "../profile/profileTheme";
@@ -34,14 +38,23 @@ export default function ProductView({
 
   const mode = useSelector((state: RootState) => state.theme.mode);
   const cartItems = useSelector((state: RootState) => state.cart.items);
-
+  const wishlistItems = useSelector((state: RootState) => state.wishlist.items);
 
   const cartItem = cartItems.find((i) => i && i.id === item.id);
+  const isInWishlist = wishlistItems.find((i) => i && i.id === item.id);
 
   const quantity = cartItem?.quantity ?? 0;
 
   const colors = getProfileTheme(mode);
   const styles = makeStyles(colors);
+
+  const handleWishlistToggle = () => {
+    if (isInWishlist) {
+      dispatch(removeFromWishlist(item.id));
+    } else {
+      dispatch(addToWishlist(item));
+    }
+  };
 
   return (
     <View style={viewType === VIEW_TYPES.GRID ? styles.gridCard : styles.listCard}>
@@ -51,9 +64,18 @@ export default function ProductView({
       />
 
       <View style={styles.cardBody}>
-        <Text style={styles.title} numberOfLines={1}>
-          {item.title}
-        </Text>
+        <View style={styles.headerWithWishlist}>
+          <Text style={styles.title} numberOfLines={1}>
+            {item.title}
+          </Text>
+          <AppPressable onPress={handleWishlistToggle} style={styles.wishlistBtn}>
+            <Ionicons
+              name={isInWishlist ? "heart" : "heart-outline"}
+              size={ICON_SIZES.MEDIUM}
+              color={isInWishlist ? COLORS.HEART_RED : colors.textSecondary}
+            />
+          </AppPressable>
+        </View>
 
         <View style={styles.ratingRow}>
           <Ionicons
@@ -135,11 +157,21 @@ const makeStyles = (colors: AppTheme) =>
       marginBottom: 10,
     },
     cardBody: { flex: 1 },
+    headerWithWishlist: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginBottom: 6,
+    },
     title: {
       fontSize: 15,
       fontWeight: "600",
       color: colors.text,
-      marginBottom: 6,
+      flex: 1,
+    },
+    wishlistBtn: {
+      marginLeft: 8,
+      padding: 4,
     },
     ratingRow: {
       flexDirection: "row",

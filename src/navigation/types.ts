@@ -10,6 +10,7 @@ export type BottomTabParamList = {
   Cart: undefined;
   Orders: undefined;
   Profile: undefined;
+  Wishlist: undefined;
 };
 
 export type CartStackParamList = {
@@ -32,4 +33,8 @@ export type CartStackParamList = {
     total: string;
     date: string;
   };
+};
+
+export type WishlistStackParamList = {
+  WishlistMain: undefined;
 };
