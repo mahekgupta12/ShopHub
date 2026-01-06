@@ -3,6 +3,7 @@ import { PaymentMethod } from "../constants/index";
 export type RootStackParamList = {
   Login: undefined;
   MainTabs: undefined;
+  Wishlist: undefined;
 };
 
 export type BottomTabParamList = {
@@ -10,7 +11,6 @@ export type BottomTabParamList = {
   Cart: undefined;
   Orders: undefined;
   Profile: undefined;
-  Wishlist: undefined;
 };
 
 export type CartStackParamList = {

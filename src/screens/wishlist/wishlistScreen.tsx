@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, ActivityIndicator } from "react-native";
+import { View, Text, FlatList, ActivityIndicator, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
 
 import WishlistItem from "./wishlistItem";
 import { RootState } from "../cart/cartStore";
@@ -16,6 +18,7 @@ import {
 import EmptyState from "../../components/emptyState";
 
 export default function WishlistScreen() {
+  const navigation = useNavigation();
   useLoadWishlist();
 
   const { items } = useSelector((state: RootState) => state.wishlist);
@@ -44,6 +47,16 @@ export default function WishlistScreen() {
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
         <View style={styles.headerRow}>
+          <Pressable
+            style={styles.backBtn}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons
+              name="chevron-back"
+              size={22}
+              color={colors.text}
+            />
+          </Pressable>
           <Text style={styles.headerTitle}>{SCREEN_TITLES.WISHLIST}</Text>
           <Text style={styles.headerCount}>({items.length})</Text>
         </View>

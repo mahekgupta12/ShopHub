@@ -23,6 +23,20 @@ const makeWishlistStyles = (colors: AppTheme) => {
       flexDirection: "row",
       alignItems: "center",
       marginBottom: DIMENSIONS.MARGIN_2XL,
+      paddingTop: DIMENSIONS.PADDING_SM,
+      paddingBottom: DIMENSIONS.PADDING_MD,
+    },
+
+    backBtn: {
+      height: 36,
+      width: 36,
+      borderRadius: 18,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: colors.card,
+      borderWidth: 1,
+      borderColor: colors.border,
+      marginRight: DIMENSIONS.MARGIN_MD,
     },
 
     headerTitle: {
