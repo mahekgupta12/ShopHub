@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
 import SearchBar from "./searchBar";
 import FilterIcon from "../../navigation/filter";
 import { useProducts, type Product } from "./api";
@@ -27,12 +28,14 @@ import {
   ICON_NAMES,
   ICON_SIZES,
   VIEW_TYPES,
+  ROUTES,
   type Category,
   type PriceRange,
   type ViewType,
 } from "../../constants/index";
 
 export default function HomeScreens() {
+  const navigation = useNavigation();
   const [query, setQuery] = useState("");
   const [viewType, setViewType] = useState<ViewType>(VIEW_TYPES.LIST);
 
@@ -49,6 +52,8 @@ export default function HomeScreens() {
   const mode = useSelector((state: RootState) => state.theme.mode);
   const colors = getProfileTheme(mode);
   const styles = makeStyles(colors);
+
+  const wishlistCount = useSelector((state: RootState) => state.wishlist.items.length);
 
   let filteredProducts: Product[] = products;
 
@@ -104,6 +109,22 @@ export default function HomeScreens() {
               size={ICON_SIZES.LARGE}
               color={viewType === VIEW_TYPES.GRID ? COLORS.WHITE : colors.textSecondary}
             />
+          </Pressable>
+
+          <Pressable
+            style={styles.iconChip}
+            onPress={() => navigation.navigate(ROUTES.WISHLIST as never)}
+          >
+            <Ionicons
+              name="heart-outline"
+              size={ICON_SIZES.LARGE}
+              color={colors.textSecondary}
+            />
+            {wishlistCount > 0 && (
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>{wishlistCount}</Text>
+              </View>
+            )}
           </Pressable>
         </View>
       </View>
@@ -191,6 +212,21 @@ const makeStyles = (colors: AppTheme) =>
       borderColor: colors.border,
     },
     activeChip: { backgroundColor: colors.primary },
+    badge: {
+      position: "absolute",
+      right: -6,
+      top: -4,
+      backgroundColor: "#EF4444",
+      borderRadius: 10,
+      paddingHorizontal: 5,
+      minWidth: 16,
+      alignItems: "center",
+    },
+    badgeText: {
+      color: "#fff",
+      fontSize: 10,
+      fontWeight: "700",
+    },
     listContent: { paddingBottom: 20 },
     gridColumnWrapper: { justifyContent: "space-between" },
     stateWrapper: {

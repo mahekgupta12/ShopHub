@@ -19,11 +19,13 @@ import { ROUTES, DEFAULTS } from "../constants/index";
 
 import { useNavigationLoader } from "../constants/navigationLoader";
 import { useLoadCart } from "../screens/cart/useLoadCart";
+import { useLoadWishlist } from "../screens/wishlist/useLoadWishlist";
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabs() {
   useLoadCart();
+  useLoadWishlist();
 
   const { show, hide } = useNavigationLoader();
 

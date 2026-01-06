@@ -106,12 +106,16 @@ export const ROUTES = {
   CART: "Cart",
   ORDERS: "Orders",
   PROFILE: "Profile",
+  WISHLIST: "Wishlist",
 
   // Cart Stack
   CART_MAIN: "CartMain",
   CHECKOUT: "Checkout",
   PAYMENT: "Payment",
   ORDER_CONFIRMATION: "OrderConfirmation",
+
+  // Wishlist Stack
+  WISHLIST_MAIN: "WishlistMain",
 } as const;
 
 
@@ -175,6 +179,7 @@ export const SCREEN_TITLES = {
   CART: "Cart",
   ORDERS: "Orders",
   PROFILE: "Profile",
+  WISHLIST: "Wishlist",
 } as const;
 
 
@@ -184,6 +189,9 @@ export const EMPTY_STATE_MESSAGES = {
   ORDERS_TITLE: "No Orders Yet! 🙁",
   ORDERS_SUBTITLE:
     "Your past orders will appear here.\nStart shopping now!",
+  WISHLIST_TITLE: "Your Wishlist is Empty! 💔",
+  WISHLIST_SUBTITLE:
+    "Add items to your wishlist.\nCome back later to checkout!",
 } as const;
 
 

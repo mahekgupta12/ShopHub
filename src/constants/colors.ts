@@ -12,6 +12,7 @@ export const COLORS = {
   DANGER_RED: "#DC2626",
   DANGER_LIGHT_RED: "#F97373",
   DELETE_RED: "#EF4444",
+  HEART_RED: "#EF4444",
 
   // Success Colors
   SUCCESS_GREEN: "#16A34A",

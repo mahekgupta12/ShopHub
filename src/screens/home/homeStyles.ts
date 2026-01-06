@@ -36,6 +36,22 @@ export const makeStyles = (colors: AppTheme) =>
       backgroundColor: colors.primary,
     },
 
+    badge: {
+      position: "absolute",
+      right: -6,
+      top: -4,
+      backgroundColor: "#EF4444",
+      borderRadius: 10,
+      paddingHorizontal: 5,
+      minWidth: 16,
+      alignItems: "center",
+    },
+    badgeText: {
+      color: "#fff",
+      fontSize: 10,
+      fontWeight: "700",
+    },
+
     listContent: { paddingBottom: 20 },
 
     stateWrapper: {
