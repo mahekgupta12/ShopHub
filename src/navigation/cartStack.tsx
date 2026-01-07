@@ -42,10 +42,8 @@ export default function CartStack() {
         component={OrderConfirmationScreen}
         options={{
           headerShown: false,
-          presentation: "transparentModal",
-          animation: "fade",
-          gestureEnabled: false,
-          contentStyle: { backgroundColor: "transparent" },
+          // Present as a normal stack screen so it behaves like a separate route
+          // (previously it was presented as a transparent modal which overlaid the cart)
         }}
       />
     </Stack.Navigator>
