@@ -1,4 +1,4 @@
-import { firebaseRest } from "./firebaseRest";
+import { firebaseRest, FirebaseError } from "./firebaseRest";
 import type { WishlistItem } from "../screens/wishlist/wishlistSlice";
 
 /**
@@ -18,6 +18,14 @@ export async function saveWishlistToFirebase(
       idToken
     );
   } catch (error) {
+    if (error instanceof FirebaseError && error.code === "PERMISSION_DENIED") {
+      console.warn(
+        "Permission denied when saving wishlist to Firebase; skipping sync:",
+        error.details || error.message
+      );
+      return;
+    }
+
     console.error("Error saving wishlist to Firebase:", error);
     throw error;
   }
@@ -85,6 +93,14 @@ export async function addItemToFirebaseWishlist(
       idToken
     );
   } catch (error) {
+    if (error instanceof FirebaseError && error.code === "PERMISSION_DENIED") {
+      console.warn(
+        "Permission denied when adding item to Firebase wishlist; skipping:",
+        error.details || error.message
+      );
+      return;
+    }
+
     console.error("Error adding item to Firebase wishlist:", error);
     throw error;
   }
@@ -106,6 +122,14 @@ export async function removeItemFromFirebaseWishlist(
       idToken
     );
   } catch (error) {
+    if (error instanceof FirebaseError && error.code === "PERMISSION_DENIED") {
+      console.warn(
+        "Permission denied when removing item from Firebase wishlist; skipping:",
+        error.details || error.message
+      );
+      return;
+    }
+
     console.error("Error removing item from Firebase wishlist:", error);
     throw error;
   }

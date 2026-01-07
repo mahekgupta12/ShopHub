@@ -1,35 +1,19 @@
 import { getAuthData } from "../../restapi/authHelpers";
-import { FIREBASE_DB_URL } from "../../constants/api";
- 
-export async function loadCartFromApi(userId: string) {
-  const { idToken } = await getAuthData();
- 
-  const res = await fetch(
-    `${FIREBASE_DB_URL}/carts/${userId}.json?auth=${idToken}`
-  );
- 
-  if (!res.ok) {
-    throw new Error("Failed to load cart");
-  }
- 
-  const data = await res.json();
-  return data ? Object.values(data) : [];
-}
- 
+import { firebaseRest } from "../../restapi/firebaseRest";
 
-export async function saveCartToApi(
-  userId: string,
-  items: any[]
-) {
+export async function loadCartFromApi(userId: string) {
+  try {
+    const { idToken } = await getAuthData();
+    const data = await firebaseRest(`carts/${userId}`, "GET", undefined, idToken);
+    return data ? Object.values(data) : [];
+  } catch (err) {
+    console.warn("Failed to load cart from API:", err);
+    return [];
+  }
+}
+
+export async function saveCartToApi(userId: string, items: any[]) {
   const { idToken } = await getAuthData();
- 
-  await fetch(
-    `${FIREBASE_DB_URL}/carts/${userId}.json?auth=${idToken}`,
-    {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(items),
-    }
-  );
+  await firebaseRest(`carts/${userId}`, "PUT", items, idToken);
 }
  

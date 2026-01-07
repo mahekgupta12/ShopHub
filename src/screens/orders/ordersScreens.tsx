@@ -20,7 +20,8 @@ import {
 } from "../../constants/index";
 
 import { getAuthData } from "../../restapi/authHelpers";
-import { FIREBASE_DB_URL } from "../../constants/api";
+import { firebaseRest } from "../../restapi/firebaseRest";
+import { loadOrders as loadOrdersCache } from "../../persistence/ordersPersistence";
 import EmptyState from "../../components/emptyState";
 
 type OrderItem = {
@@ -53,34 +54,50 @@ export default function OrdersScreens() {
 
       const { userId, idToken } = await getAuthData();
 
-      const res = await fetch(
-        `${FIREBASE_DB_URL}/orders/${userId}.json?auth=${idToken}`
-      );
+      try {
+        const data = await firebaseRest(`orders/${userId}`, "GET", undefined, idToken);
 
-      if (!res.ok) {
-        throw new Error("Failed to fetch orders");
-      }
+        if (!data) {
+          setOrders([]);
+          return;
+        }
 
-      const data = await res.json();
+        const list: Order[] = Object.keys(data).map((key) => {
+          const order = data[key];
+          return {
+            orderId: order.orderId ?? key,
+            date: order.date ?? "",
+            total: order.total ?? "0.00",
+            items: order.items ?? [],
+            timestamp: order.timestamp,
+          };
+        });
 
-      if (!data) {
+        list.sort((a, b) => (b.timestamp ?? 0) - (a.timestamp ?? 0));
+        setOrders(list);
+
+        // persist fetched orders for offline access
+        try {
+          // persistence import is asynchronous/fast; ignore errors
+          const cache = list as any;
+          await (await import("../../persistence/ordersPersistence")).saveOrders(cache);
+        } catch (e) {
+          console.warn("Failed to cache orders locally:", e);
+        }
+      } catch (err) {
+        console.warn("Failed to load orders from network, loading cached orders:", err);
+        try {
+          const cached = await loadOrdersCache();
+          if (cached && cached.length) {
+            setOrders(cached as any);
+            return;
+          }
+        } catch (e) {
+          console.warn("Failed to load cached orders:", e);
+        }
+
         setOrders([]);
-        return;
       }
-
-      const list: Order[] = Object.keys(data).map((key) => {
-        const order = data[key];
-        return {
-          orderId: order.orderId ?? key,
-          date: order.date ?? "",
-          total: order.total ?? "0.00",
-          items: order.items ?? [],
-          timestamp: order.timestamp,
-        };
-      });
-
-      list.sort((a, b) => (b.timestamp ?? 0) - (a.timestamp ?? 0));
-      setOrders(list);
     } catch (e) {
       console.warn("Failed to load orders", e);
       setOrders([]);

@@ -22,6 +22,7 @@ import { clearCart } from "../cart/cartSlice";
 import { clearCheckoutForm } from "../../persistence/checkoutPersistence";
 
 import { getAuthData } from "../../restapi/authHelpers";
+import { safeFetch } from "../../utils/safeFetch";
 
 import {
   PAYMENT_METHODS,
@@ -39,6 +40,9 @@ import { CardDetailsSection, isValidExpiry } from "./cardDetailsSection";
 import { UpiDetailsSection, validateUpiId } from "./upiDetailsSection";
 import { CodDetailsSection } from "./codDetailsSection";
 import { FIREBASE_DB_URL } from "../../constants/api";
+import { enqueueRequest } from "../../persistence/offlineQueue";
+import { loadOrders, saveOrders } from "../../persistence/ordersPersistence.ts";
+import { addOrder } from "../orders/ordersSlice";
 
 type RouteParams = {
   fullName: string;
@@ -133,43 +137,118 @@ export default function PaymentScreen() {
     try {
       setLoading(true);
 
-      const { userId, idToken } = await getAuthData();
+      // Ensure we have auth data up-front and handle missing auth separately
+      let userId: string | undefined;
+      let idToken: string | undefined;
+      try {
+        const auth = await getAuthData();
+        userId = auth.userId;
+        idToken = auth.idToken;
+      } catch (authErr) {
+        console.warn("Auth required for placing order:", authErr);
+        Alert.alert(ERROR_MESSAGES.LOGIN_REQUIRED, ERROR_MESSAGES.PLEASE_LOG_IN);
+        return;
+      }
 
       const now = new Date();
       const orderId = `${ORDER.ID_PREFIX}${now.getTime()}`;
       const date = now.toLocaleDateString();
       const timestamp = now.getTime();
 
-      await fetch(
-        `${FIREBASE_DB_URL}/orders/${userId}/${orderId}.json?auth=${idToken}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            orderId,
-            userId,
-            total: params.total,
-            date,
-            items: params.items,
-            timestamp,
-            paymentMethod: params.paymentMethod,
-            address: {
-              fullName: params.fullName,
-              phone: params.phone,
-              street: params.street,
-              city: params.city,
-              zip: params.zip,
-            },
-          }),
+      // build order payload
+      const orderPayload = {
+        orderId,
+        userId,
+        total: params.total,
+        date,
+        items: params.items,
+        timestamp,
+        paymentMethod: params.paymentMethod,
+        address: {
+          fullName: params.fullName,
+          phone: params.phone,
+          street: params.street,
+          city: params.city,
+          zip: params.zip,
+        },
+      };
+
+      // Attempt online write with safeFetch to detect network errors explicitly
+      const putUrl = `${FIREBASE_DB_URL}/orders/${userId}/${orderId}.json?auth=${idToken}`;
+      const putResult = await safeFetch(putUrl, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderPayload),
+      });
+
+      // If online write succeeded, try to delete remote cart and finish
+      if (!putResult.networkError && putResult.response && putResult.response.ok) {
+        const deleteUrl = `${FIREBASE_DB_URL}/carts/${userId}.json?auth=${idToken}`;
+        const delResult = await safeFetch(deleteUrl, { method: "DELETE" });
+
+        if (!delResult.networkError && delResult.response && delResult.response.ok) {
+          // fully successful online path
+          dispatch(clearCart());
+          clearCheckoutForm();
+
+          navigation.reset({
+            index: 1,
+            routes: [
+              { name: ROUTES.CART_MAIN },
+              {
+                name: ROUTES.ORDER_CONFIRMATION,
+                params: { orderId, total: params.total, date },
+              },
+            ],
+          });
+
+          return;
         }
+      }
+
+      // If we reach here, either network error or non-OK response: fallback to offline behavior
+      console.warn("Order network write failed or returned non-ok, falling back to offline flow");
+
+      // 1) add order locally to Redux so UI shows it immediately
+      dispatch(
+        addOrder({
+          orderId,
+          userId,
+          items: params.items,
+          total: params.total,
+          date,
+          paymentMethod: params.paymentMethod,
+        } as any)
       );
 
+      // 2) persist locally to orders cache
+      try {
+        const cached = (await loadOrders()) || [];
+        cached.unshift({ ...orderPayload });
+        await saveOrders(cached as any);
+      } catch (e) {
+        console.warn("Failed to persist order locally:", e);
+      }
 
-      await fetch(
-        `${FIREBASE_DB_URL}/carts/${userId}.json?auth=${idToken}`,
-        { method: "DELETE" }
-      );
+      // 3) enqueue remote writes for later processing (requires auth at processing time)
+      try {
+        await enqueueRequest({
+          url: `${FIREBASE_DB_URL}/orders/${userId}/${orderId}.json`,
+          method: "PUT",
+          body: orderPayload,
+          needsAuth: true,
+        });
 
+        await enqueueRequest({
+          url: `${FIREBASE_DB_URL}/carts/${userId}.json`,
+          method: "DELETE",
+          needsAuth: true,
+        });
+      } catch (e) {
+        console.warn("Failed to enqueue order requests:", e);
+      }
+
+      // clear local cart, navigate to confirmation screen and inform user
       dispatch(clearCart());
       clearCheckoutForm();
 
