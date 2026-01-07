@@ -18,6 +18,10 @@ import {
   bootstrapWishlist,
   watchWishlistChanges,
 } from "../../persistence/wishlistPersistence";
+import {
+  bootstrapCart,
+  watchCartChanges,
+} from "../../persistence/cartPersistence";
 
 export const cartStore = configureStore({
   reducer: {
@@ -32,6 +36,8 @@ watchThemeChanges(cartStore);
 bootstrapTheme(cartStore);
 watchWishlistChanges(cartStore);
 bootstrapWishlist(cartStore.dispatch);
+watchCartChanges(cartStore);
+bootstrapCart(cartStore.dispatch);
 
 export type RootState = ReturnType<typeof cartStore.getState>;
 export type AppDispatch = typeof cartStore.dispatch;

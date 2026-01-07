@@ -1,6 +1,9 @@
 import { useAppDispatch, useAppSelector, RootState } from "../cart/cartStore";
 import { addToWishlist, removeFromWishlist, increaseWishlistQty, decreaseWishlistQty } from "./wishlistSlice";
 import { addItem } from "../cart/cartSlice";
+import { safeFetch } from "../../utils/safeFetch";
+import { API_BASE_URL } from "../../config/api";
+import { Alert } from "react-native";
 import type { Product } from "../home/api";
 
 export function useWishlist() {
@@ -21,11 +24,35 @@ export function useWishlist() {
     }
   };
 
-  const addToCart = (product: Product) => {
+  const addToCart = async (product: Product) => {
+    try {
+      const healthUrl = `${API_BASE_URL}/products/1`;
+      const result = await safeFetch(healthUrl, { method: "GET" });
+      if (result.networkError || !result.response || !result.response.ok) {
+        Alert.alert("Network unavailable", "Cannot move item to cart while offline. Please try again when network is connected.");
+        return;
+      }
+    } catch {
+      Alert.alert("Network unavailable", "Cannot move item to cart while offline. Please try again when network is connected.");
+      return;
+    }
+
     dispatch(addItem(product));
   };
 
-  const removeFromWishlistList = (productId: number) => {
+  const removeFromWishlistList = async (productId: number) => {
+    try {
+      const healthUrl = `${API_BASE_URL}/products/1`;
+      const result = await safeFetch(healthUrl, { method: "GET" });
+      if (result.networkError || !result.response || !result.response.ok) {
+        Alert.alert("Network unavailable", "Cannot remove item from wishlist while offline. Please try again when network is connected.");
+        return;
+      }
+    } catch {
+      Alert.alert("Network unavailable", "Cannot remove item from wishlist while offline. Please try again when network is connected.");
+      return;
+    }
+
     dispatch(removeFromWishlist(productId));
   };
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, Alert } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import AppPressable from "../../components/appPressables";
@@ -9,6 +9,8 @@ import {
   type WishlistItem as WishlistItemType,
 } from "./wishlistSlice";
 import { addItem } from "../cart/cartSlice";
+import { safeFetch } from "../../utils/safeFetch";
+import { API_BASE_URL } from "../../config/api";
 import makeWishlistStyles from "./wishlistStyles";
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme } from "../profile/profileTheme";
@@ -28,7 +30,21 @@ export default function WishlistItem({ item }: WishlistItemProps) {
 
   const price = item.price ?? 0;
 
-  const handleMoveToCart = () => {
+  const handleMoveToCart = async () => {
+    // Quick network check before moving wishlist item into cart.
+    // If offline or network fails, show alert and do not move the item.
+    try {
+      const healthUrl = `${API_BASE_URL}/products/1`;
+      const result = await safeFetch(healthUrl, { method: "GET" });
+      if (result.networkError || !result.response || !result.response.ok) {
+        Alert.alert("Network unavailable", "Cannot move item to cart while offline. Please try again when network is connected.");
+        return;
+      }
+    } catch {
+      Alert.alert("Network unavailable", "Cannot move item to cart while offline. Please try again when network is connected.");
+      return;
+    }
+
     // Add product to cart (just 1 unit)
     dispatch(addItem(item));
     // Remove from wishlist after moving to cart
@@ -58,7 +74,22 @@ export default function WishlistItem({ item }: WishlistItemProps) {
 
         <AppPressable
           style={styles.deleteBtn}
-          onPress={() => dispatch(removeFromWishlist(item.id))}
+          onPress={async () => {
+            // Prevent deleting wishlist items when offline
+            try {
+              const healthUrl = `${API_BASE_URL}/products/1`;
+              const result = await safeFetch(healthUrl, { method: "GET" });
+              if (result.networkError || !result.response || !result.response.ok) {
+                Alert.alert("Network unavailable", "Cannot remove item from wishlist while offline. Please try again when network is connected.");
+                return;
+              }
+            } catch {
+              Alert.alert("Network unavailable", "Cannot remove item from wishlist while offline. Please try again when network is connected.");
+              return;
+            }
+
+            dispatch(removeFromWishlist(item.id));
+          }}
         >
           <Ionicons name="trash-outline" size={ICON_SIZES.EXTRA_LARGE} color={COLORS.DELETE_RED} />
         </AppPressable>

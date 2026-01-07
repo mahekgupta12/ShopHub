@@ -6,6 +6,8 @@ import {
   loadWishlistFromApi,
   saveWishlistToApi,
 } from "./wishlistApi";
+import { enqueueRequest } from "../../persistence/offlineQueue";
+import { FIREBASE_DB_URL } from "../../constants/api";
 
 import { setWishlist } from "./wishlistSlice";
 import type { RootState } from "../cart/cartStore";
@@ -32,9 +34,8 @@ export const useLoadWishlist = () => {
         dispatch(setWishlist(savedItems));
         initialLoadDone.current = true;
       } catch (error) {
-        console.warn("Failed to load wishlist from Firebase:", error);
-        // Fail gracefully - use empty wishlist
-        dispatch(setWishlist([]));
+        console.warn("Failed to load wishlist from Firebase, keeping local cache:", error);
+        // Fail gracefully - keep existing (possibly persisted) wishlist in Redux
         initialLoadDone.current = true;
       }
     };
@@ -51,8 +52,19 @@ export const useLoadWishlist = () => {
       try {
         await saveWishlistToApi(userId, items);
       } catch (error) {
-        console.warn("Failed to save wishlist to Firebase:", error);
-        // Don't throw - let app continue even if sync fails
+          console.warn("Failed to save wishlist to Firebase:", error);
+          // If saving fails (likely offline), enqueue the request so it will be retried later
+          try {
+            await enqueueRequest({
+              url: `${FIREBASE_DB_URL}/wishlists/${userId}.json`,
+              method: "PUT",
+              body: items,
+              needsAuth: true,
+            });
+          } catch (e) {
+            console.warn("Failed to enqueue wishlist save request:", e);
+          }
+          // Don't throw - let app continue even if sync fails
       }
     };
 

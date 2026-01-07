@@ -5,7 +5,7 @@
  */
 
 import { getAuthData } from "../../restapi/authHelpers";
-import { FIREBASE_DB_URL } from "../../constants/api";
+import { firebaseRest } from "../../restapi/firebaseRest";
 import type { WishlistItem } from "./wishlistSlice";
 
 /**
@@ -14,16 +14,7 @@ import type { WishlistItem } from "./wishlistSlice";
  */
 export async function loadWishlistFromApi(userId: string): Promise<WishlistItem[]> {
   const { idToken } = await getAuthData();
-
-  const res = await fetch(
-    `${FIREBASE_DB_URL}/wishlists/${userId}.json?auth=${idToken}`
-  );
-
-  if (!res.ok) {
-    throw new Error("Failed to load wishlist");
-  }
-
-  const data = await res.json();
+  const data = await firebaseRest(`wishlists/${userId}`, "GET", undefined, idToken);
   return data ? Object.values(data) : [];
 }
 
@@ -36,13 +27,5 @@ export async function saveWishlistToApi(
   items: WishlistItem[]
 ): Promise<void> {
   const { idToken } = await getAuthData();
-
-  await fetch(
-    `${FIREBASE_DB_URL}/wishlists/${userId}.json?auth=${idToken}`,
-    {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(items),
-    }
-  );
+  await firebaseRest(`wishlists/${userId}`, "PUT", items, idToken);
 }
