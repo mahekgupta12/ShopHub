@@ -52,19 +52,19 @@ export const useLoadWishlist = () => {
       try {
         await saveWishlistToApi(userId, items);
       } catch (error) {
-          console.warn("Failed to save wishlist to Firebase:", error);
-          // If saving fails (likely offline), enqueue the request so it will be retried later
-          try {
-            await enqueueRequest({
-              url: `${FIREBASE_DB_URL}/wishlists/${userId}.json`,
-              method: "PUT",
-              body: items,
-              needsAuth: true,
-            });
-          } catch (e) {
-            console.warn("Failed to enqueue wishlist save request:", e);
-          }
-          // Don't throw - let app continue even if sync fails
+        console.warn("Failed to save wishlist to Firebase:", error);
+        // If saving fails (likely offline), enqueue the request so it will be retried later
+        try {
+          await enqueueRequest({
+            url: `${FIREBASE_DB_URL}/wishlists/${userId}.json`,
+            method: "PUT",
+            body: items,
+            needsAuth: true,
+          });
+        } catch (e) {
+          console.warn("Failed to enqueue wishlist save request:", e);
+        }
+        // Don't throw - let app continue even if sync fails
       }
     };
 

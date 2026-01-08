@@ -7,6 +7,8 @@ import {
   ID_TOKEN_KEY,
   EMAIL_KEY,
   DISPLAY_NAME_KEY,
+  REFRESH_TOKEN_KEY,
+  ID_TOKEN_EXP_KEY,
 } from "../../restapi/authKeys";
 
 import { FIREBASE_API_KEY, FIREBASE_AUTH_ENDPOINTS, HTTP_METHODS } from "../../constants/api";
@@ -67,7 +69,7 @@ export async function handleSubmit({
       throw new Error(authData.error?.message || AUTH_MESSAGES.AUTHENTICATION_FAILED);
     }
 
-    const { idToken, localId } = authData;
+  const { idToken, localId, refreshToken, expiresIn } = authData;
 
     if (activeTab === "signup") {
       await fetch(
@@ -99,11 +101,15 @@ export async function handleSubmit({
       lookupData?.users?.[0]?.displayName?.trim() ||
       email.split("@")[0];
 
+    const expTs = Date.now() + (Number(expiresIn) || 3600) * 1000 - 60000; // refresh 60s early
+
     await AsyncStorage.multiSet([
       [USER_ID_KEY, localId],
       [ID_TOKEN_KEY, idToken],
       [EMAIL_KEY, email],
       [DISPLAY_NAME_KEY, displayName],
+      [REFRESH_TOKEN_KEY, refreshToken || ""],
+      [ID_TOKEN_EXP_KEY, expTs.toString()],
     ]);
 
     Toast.show({
