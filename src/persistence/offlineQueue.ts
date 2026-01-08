@@ -6,7 +6,7 @@ const OFFLINE_QUEUE_KEY = "shophub_offline_queue";
 
 export type QueuedRequest = {
   id: string;
-  url: string; // base url without auth param
+  url: string; 
   method: string;
   body?: any;
   headers?: Record<string, string>;
@@ -97,7 +97,7 @@ export async function processQueue(options?: { onProgress?: (processed: number, 
           if (req.retryCount <= maxRetries) remaining.push(req);
         }
       }
-  } catch {
+    } catch {
       // network error - increment retry count and keep in queue until maxRetries
       req.retryCount = (req.retryCount || 0) + 1;
       if (req.retryCount <= maxRetries) remaining.push(req);

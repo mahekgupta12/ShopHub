@@ -9,7 +9,7 @@ import {
 import { loadCart as loadPersistedCart } from "../../persistence/cartPersistence";
 import { enqueueRequest } from "../../persistence/offlineQueue";
 import { FIREBASE_DB_URL } from "../../constants/api";
- 
+
 import { setCart } from "./cartSlice";
 import type { RootState } from "./cartStore";
 import { USER_ID_KEY } from "../../restapi/authKeys";
