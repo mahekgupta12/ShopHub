@@ -6,10 +6,9 @@ import {
   loadCartFromApi,
   saveCartToApi,
 } from "./cartApi";
-import { loadCart as loadPersistedCart } from "../../persistence/cartPersistence";
-import { enqueueRequest } from "../../persistence/offlineQueue";
-import { FIREBASE_DB_URL } from "../../constants/api";
- 
+import { loadCart as loadPersistedCart, saveCart as savePersistedCart } from "../../persistence/cartPersistence";
+import { subscribeNetworkStatus } from "../../utils/networkStatus";
+
 import { setCart } from "./cartSlice";
 import type { RootState } from "./cartStore";
 import { USER_ID_KEY } from "../../restapi/authKeys";
@@ -27,8 +26,6 @@ export const useLoadCart = () => {
       try {
         const savedItems = await loadCartFromApi(userId);
 
-        // If there is a locally persisted cart, prefer local entries (user actions while offline)
-        // Merge server and local by keeping local quantities when conflicts occur.
         const persisted = await loadPersistedCart();
 
         let finalItems: any[] = [];
@@ -36,12 +33,10 @@ export const useLoadCart = () => {
         if ((persisted && persisted.length) || (savedItems && savedItems.length)) {
           const map = new Map<number, any>();
 
-          // Put persisted items first (take precedence)
           if (persisted && persisted.length) {
             persisted.forEach((it: any) => map.set(it.id, it));
           }
 
-          // Add server items only if not present locally
           if (savedItems && savedItems.length) {
             savedItems.forEach((it: any) => {
               if (!map.has(it.id)) map.set(it.id, it);
@@ -61,6 +56,16 @@ export const useLoadCart = () => {
     };
  
     load();
+    const unsubNet = subscribeNetworkStatus((isOnline) => {
+      if (isOnline) {
+        load().catch(() => {});
+      }
+    });
+
+    return () => {
+      initialLoadDone.current = true;
+      try { unsubNet(); } catch {}
+    };
   }, [dispatch]);
  
   // Sync cart on change
@@ -72,16 +77,11 @@ export const useLoadCart = () => {
       try {
         await saveCartToApi(userId, items);
       } catch (error) {
-        console.warn("Failed to save cart to API, enqueueing for retry:", error);
+        console.warn("Failed to save cart to API, persisting locally for offline:", error);
         try {
-          await enqueueRequest({
-            url: `${FIREBASE_DB_URL}/carts/${userId}.json`,
-            method: "PUT",
-            body: items,
-            needsAuth: true,
-          });
+          await savePersistedCart(items);
         } catch (e) {
-          console.warn("Failed to enqueue cart save request:", e);
+          console.warn("Failed to persist cart locally:", e);
         }
       }
     };

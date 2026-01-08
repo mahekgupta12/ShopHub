@@ -6,14 +6,12 @@ import RootStack from "./src/navigation/rootStack";
 import Toast from "react-native-toast-message";
 
 import { NavigationLoaderProvider } from "./src/constants/navigationLoader";
-import { processQueue } from "./src/persistence/offlineQueue";
+import { startNetworkMonitoring } from "./src/utils/networkStatus";
 
 export default function App() {
   useEffect(() => {
-    // Attempt to process any queued offline requests on app start
-    processQueue().catch(() => {
-      // ignore errors - they'll remain in queue
-    });
+    // Start network monitoring for the whole app lifecycle so status updates are immediate
+    startNetworkMonitoring();
   }, []);
   return (
     <Provider store={cartStore}>

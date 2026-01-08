@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, Image, Alert } from "react-native";
+import { View, Text, Alert } from "react-native";
+import ImageWithPlaceholder from "../../components/ImageWithPlaceholder";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import AppPressable from "../../components/appPressables";
@@ -53,9 +54,7 @@ export default function WishlistItem({ item }: WishlistItemProps) {
 
   return (
     <View style={styles.card}>
-      {item.thumbnail ? (
-        <Image source={{ uri: item.thumbnail }} style={styles.image} />
-      ) : null}
+      <ImageWithPlaceholder uri={item.thumbnail} style={styles.image} />
 
       <View style={styles.info}>
         <Text style={styles.title} numberOfLines={2}>

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, Alert } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { Product } from "./api";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +13,7 @@ import {
   addToWishlist,
   removeFromWishlist,
 } from "../wishlist/wishlistSlice";
+import { getNetworkStatus } from "../../utils/networkStatus";
 
 import { RootState } from "../cart/cartStore";
 import { getProfileTheme, type AppTheme } from "../profile/profileTheme";
@@ -49,6 +50,12 @@ export default function ProductView({
   const styles = makeStyles(colors);
 
   const handleWishlistToggle = () => {
+    const online = getNetworkStatus() ?? true;
+    if (!online) {
+      Alert.alert("Network unavailable", "Cannot modify wishlist while offline. Please try again when network is connected.");
+      return;
+    }
+
     if (isInWishlist) {
       dispatch(removeFromWishlist(item.id));
     } else {
@@ -99,7 +106,15 @@ export default function ProductView({
           {quantity === 0 ? (
             <AppPressable
               style={styles.addButton}
-              onPress={() => dispatch(addItem(item))}
+              onPress={() => {
+                const online = getNetworkStatus() ?? true;
+                if (!online) {
+                  Alert.alert("Network unavailable", "Cannot add to cart while offline. Please try again when network is connected.");
+                  return;
+                }
+
+                dispatch(addItem(item));
+              }}
             >
               <Text style={styles.addButtonText}>{PRODUCT_MESSAGES.ADD_BUTTON}</Text>
             </AppPressable>
@@ -116,7 +131,15 @@ export default function ProductView({
 
               <AppPressable
                 style={styles.qtyBtn}
-                onPress={() => dispatch(increaseQty(item.id))}
+                onPress={() => {
+                  const online = getNetworkStatus() ?? true;
+                  if (!online) {
+                    Alert.alert("Network unavailable", "Cannot change cart quantity while offline.");
+                    return;
+                  }
+
+                  dispatch(increaseQty(item.id));
+                }}
               >
                 <Ionicons name={ICON_NAMES.ADD} size={ICON_SIZES.MEDIUM} color={colors.text} />
               </AppPressable>

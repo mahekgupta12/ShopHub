@@ -2,10 +2,10 @@ import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
-  Image,
   FlatList,
   ActivityIndicator,
 } from "react-native";
+import ImageWithPlaceholder from "../../components/ImageWithPlaceholder";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import { useSelector } from "react-redux";
@@ -23,6 +23,7 @@ import { getAuthData } from "../../restapi/authHelpers";
 import { firebaseRest } from "../../restapi/firebaseRest";
 import { loadOrders as loadOrdersCache } from "../../persistence/ordersPersistence";
 import EmptyState from "../../components/emptyState";
+import { subscribeNetworkStatus } from "../../utils/networkStatus";
 
 type OrderItem = {
   id: string | number;
@@ -112,6 +113,17 @@ export default function OrdersScreens() {
     }, [fetchOrders])
   );
 
+  // Reload orders immediately when connectivity returns
+  React.useEffect(() => {
+    const unsub = subscribeNetworkStatus((isOnline) => {
+      if (isOnline) fetchOrders().catch(() => {});
+    });
+
+    return () => {
+      try { unsub(); } catch {}
+    };
+  }, [fetchOrders]);
+
   const renderOrder = ({ item }: { item: Order }) => (
     <View style={styles.orderCard}>
       <View style={styles.headerRow}>
@@ -126,12 +138,7 @@ export default function OrdersScreens() {
 
       {item.items?.map((prod) => (
         <View key={prod.id} style={styles.productRow}>
-          {prod.thumbnail ? (
-            <Image
-              source={{ uri: prod.thumbnail }}
-              style={styles.productImage}
-            />
-          ) : null}
+          <ImageWithPlaceholder uri={prod.thumbnail} style={styles.productImage} />
 
           <View style={styles.productInfo}>
             <Text style={styles.productName}>{prod.title}</Text>
@@ -189,6 +196,7 @@ export default function OrdersScreens() {
           keyExtractor={(item) => item.orderId}
           renderItem={renderOrder}
           showsVerticalScrollIndicator={false}
+          // eslint-disable-next-line react-native/no-inline-styles
           contentContainerStyle={{ paddingBottom: 16 }}
         />
       </View>

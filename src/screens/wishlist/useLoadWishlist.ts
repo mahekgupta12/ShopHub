@@ -6,18 +6,13 @@ import {
   loadWishlistFromApi,
   saveWishlistToApi,
 } from "./wishlistApi";
-import { enqueueRequest } from "../../persistence/offlineQueue";
-import { FIREBASE_DB_URL } from "../../constants/api";
+import { saveWishlist } from "../../persistence/wishlistPersistence";
+import { subscribeNetworkStatus } from "../../utils/networkStatus";
 
 import { setWishlist } from "./wishlistSlice";
 import type { RootState } from "../cart/cartStore";
 import { USER_ID_KEY } from "../../restapi/authKeys";
 
-/**
- * Hook to load wishlist from Firebase on app start/login
- * and sync changes automatically
- * Same pattern as useLoadCart
- */
 export const useLoadWishlist = () => {
   const dispatch = useDispatch();
   const items = useSelector((state: RootState) => state.wishlist.items);
@@ -41,6 +36,15 @@ export const useLoadWishlist = () => {
     };
 
     load();
+    const unsubNet = subscribeNetworkStatus((isOnline) => {
+      if (isOnline) {
+        load().catch(() => {});
+      }
+    });
+
+    return () => {
+      try { unsubNet(); } catch {}
+    };
   }, [dispatch]);
 
   // Sync wishlist changes to Firebase
@@ -52,19 +56,12 @@ export const useLoadWishlist = () => {
       try {
         await saveWishlistToApi(userId, items);
       } catch (error) {
-          console.warn("Failed to save wishlist to Firebase:", error);
-          // If saving fails (likely offline), enqueue the request so it will be retried later
+          console.warn("Failed to save wishlist to Firebase, persisting locally:", error);
           try {
-            await enqueueRequest({
-              url: `${FIREBASE_DB_URL}/wishlists/${userId}.json`,
-              method: "PUT",
-              body: items,
-              needsAuth: true,
-            });
+            await saveWishlist(items);
           } catch (e) {
-            console.warn("Failed to enqueue wishlist save request:", e);
+            console.warn("Failed to persist wishlist locally:", e);
           }
-          // Don't throw - let app continue even if sync fails
       }
     };
 

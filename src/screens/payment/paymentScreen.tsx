@@ -40,7 +40,6 @@ import { CardDetailsSection, isValidExpiry } from "./cardDetailsSection";
 import { UpiDetailsSection, validateUpiId } from "./upiDetailsSection";
 import { CodDetailsSection } from "./codDetailsSection";
 import { FIREBASE_DB_URL } from "../../constants/api";
-import { enqueueRequest } from "../../persistence/offlineQueue";
 import { loadOrders, saveOrders } from "../../persistence/ordersPersistence.ts";
 import { addOrder } from "../orders/ordersSlice";
 
@@ -137,7 +136,6 @@ export default function PaymentScreen() {
     try {
       setLoading(true);
 
-      // Ensure we have auth data up-front and handle missing auth separately
       let userId: string | undefined;
       let idToken: string | undefined;
       try {
@@ -155,7 +153,6 @@ export default function PaymentScreen() {
       const date = now.toLocaleDateString();
       const timestamp = now.getTime();
 
-      // build order payload
       const orderPayload = {
         orderId,
         userId,
@@ -173,7 +170,6 @@ export default function PaymentScreen() {
         },
       };
 
-      // Attempt online write with safeFetch to detect network errors explicitly
       const putUrl = `${FIREBASE_DB_URL}/orders/${userId}/${orderId}.json?auth=${idToken}`;
       const putResult = await safeFetch(putUrl, {
         method: "PUT",
@@ -181,13 +177,11 @@ export default function PaymentScreen() {
         body: JSON.stringify(orderPayload),
       });
 
-      // If online write succeeded, try to delete remote cart and finish
       if (!putResult.networkError && putResult.response && putResult.response.ok) {
         const deleteUrl = `${FIREBASE_DB_URL}/carts/${userId}.json?auth=${idToken}`;
         const delResult = await safeFetch(deleteUrl, { method: "DELETE" });
 
         if (!delResult.networkError && delResult.response && delResult.response.ok) {
-          // fully successful online path
           dispatch(clearCart());
           clearCheckoutForm();
 
@@ -209,7 +203,6 @@ export default function PaymentScreen() {
       // If we reach here, either network error or non-OK response: fallback to offline behavior
       console.warn("Order network write failed or returned non-ok, falling back to offline flow");
 
-      // 1) add order locally to Redux so UI shows it immediately
       dispatch(
         addOrder({
           orderId,
@@ -221,7 +214,7 @@ export default function PaymentScreen() {
         } as any)
       );
 
-      // 2) persist locally to orders cache
+      // persist locally to orders cache
       try {
         const cached = (await loadOrders()) || [];
         cached.unshift({ ...orderPayload });
@@ -230,25 +223,6 @@ export default function PaymentScreen() {
         console.warn("Failed to persist order locally:", e);
       }
 
-      // 3) enqueue remote writes for later processing (requires auth at processing time)
-      try {
-        await enqueueRequest({
-          url: `${FIREBASE_DB_URL}/orders/${userId}/${orderId}.json`,
-          method: "PUT",
-          body: orderPayload,
-          needsAuth: true,
-        });
-
-        await enqueueRequest({
-          url: `${FIREBASE_DB_URL}/carts/${userId}.json`,
-          method: "DELETE",
-          needsAuth: true,
-        });
-      } catch (e) {
-        console.warn("Failed to enqueue order requests:", e);
-      }
-
-      // clear local cart, navigate to confirmation screen and inform user
       dispatch(clearCart());
       clearCheckoutForm();
 

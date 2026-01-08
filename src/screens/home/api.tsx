@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { API_URLS } from "../../config/api";
 import { ERROR_MESSAGES } from "../../constants/index";
 import { safeFetch } from "../../utils/safeFetch";
+import { subscribeNetworkStatus } from "../../utils/networkStatus";
 
 export type Product = {
   category: any;
@@ -63,8 +64,24 @@ export function useProducts() {
 
     loadProducts();
 
+    // Subscribe to network status changes so we reload products immediately when online
+    const unsub = subscribeNetworkStatus((isOnline) => {
+      if (isMounted) {
+        if (isOnline) {
+          // when back online, reload products
+          loadProducts();
+        } else {
+          // when offline, clear products and show offline error
+          setProducts([]);
+          setError(ERROR_MESSAGES.FAILED_TO_LOAD_PRODUCTS);
+          setLoading(false);
+        }
+      }
+    });
+
     return () => {
       isMounted = false;
+      unsub();
     };
   }, []);
 
