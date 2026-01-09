@@ -33,7 +33,6 @@ async function check() {
 
 function startPolling(intervalMs = 1000) {
   if (timer) return;
-  // immediate check
   check();
   timer = setInterval(check, intervalMs);
 }
@@ -46,7 +45,6 @@ function stopPolling() {
 }
 
 function tryUseNetInfo() {
-  // Try to use @react-native-community/netinfo if available for instant events.
   try {
   const NetInfo = require("@react-native-community/netinfo");
     if (!NetInfo || !NetInfo.addEventListener) return false;
@@ -56,7 +54,7 @@ function tryUseNetInfo() {
         // we see a connected event so the UI can react instantly, then verify
         // backend reachability in background and correct the status if needed.
         if (state.isConnected) {
-          // optimistic: immediately report online so UI becomes responsive
+          // immediately report online so UI becomes responsive
           updateStatus(true);
           // verify backend reachability and correct if it's actually unreachable
           checkServerReachable().then((reachable) => {
@@ -103,7 +101,6 @@ export function subscribeNetworkStatus(listener: Listener) {
   // immediately call with last known status if available
   if (lastStatus !== null) listener(lastStatus);
   else {
-    // trigger immediate check for newcomers
     check();
   }
 

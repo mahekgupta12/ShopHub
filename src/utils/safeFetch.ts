@@ -9,7 +9,6 @@ export async function safeFetch(input: RequestInfo, init?: RequestInit): Promise
     const response = await fetch(input, init);
     return { response, networkError: false };
   } catch (err) {
-    // fetch throws a TypeError on network failure in RN
     return { response: null, networkError: true, error: err };
   }
 }
