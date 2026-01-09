@@ -19,6 +19,7 @@ const wishlistSlice = createSlice({
 
   reducers: {
     setWishlist(state, action: PayloadAction<WishlistItem[] | null | undefined>) {
+      // Normalize incoming data and drop invalid entries.
       state.items = Array.isArray(action.payload)
         ? action.payload.filter(
             (item): item is WishlistItem =>
@@ -30,6 +31,7 @@ const wishlistSlice = createSlice({
     },
 
     addToWishlist: (state, action: PayloadAction<Product>) => {
+      // Prevent duplicates by product id.
       const existing = state.items.find((i) => i.id === action.payload.id);
 
       if (!existing) {
@@ -38,6 +40,7 @@ const wishlistSlice = createSlice({
     },
 
     increaseWishlistQty: (state, action: PayloadAction<number>) => {
+      // Increment quantity for a specific item.
       const item = state.items.find((i) => i.id === action.payload);
       if (item) {
         item.quantity = (item.quantity ?? 1) + 1;
@@ -48,16 +51,19 @@ const wishlistSlice = createSlice({
       const item = state.items.find((i) => i.id === action.payload);
       if (!item) return;
 
+      // Don't allow quantity to drop below 1.
       if ((item.quantity ?? 1) > 1) {
         item.quantity = (item.quantity ?? 1) - 1;
       }
     },
 
     removeFromWishlist: (state, action: PayloadAction<number>) => {
+      // Remove the item by id.
       state.items = state.items.filter((i) => i.id !== action.payload);
     },
 
     clearWishlist: (state) => {
+      // Empty the entire wishlist.
       state.items = [];
     },
   },
