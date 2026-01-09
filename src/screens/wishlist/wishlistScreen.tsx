@@ -19,17 +19,20 @@ import EmptyState from "../../components/emptyState";
 
 export default function WishlistScreen() {
   const navigation = useNavigation();
+  // Load wishlist data when the screen mounts.
   useLoadWishlist();
 
   const { items } = useSelector((state: RootState) => state.wishlist);
 
   const mode = useSelector((state: RootState) => state.theme.mode);
   const colors = getProfileTheme(mode);
+  // Build theme-aware styles for this screen.
   const styles = makeWishlistStyles(colors);
 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Hide the spinner once items are available or updated.
     setLoading(false);
   }, [items]);
 
@@ -46,6 +49,7 @@ export default function WishlistScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
+        {/* Header with back button, title, and item count */}
         <View style={styles.headerRow}>
           <Pressable
             style={styles.backBtn}
@@ -61,6 +65,7 @@ export default function WishlistScreen() {
           <Text style={styles.headerCount}>({items.length})</Text>
         </View>
 
+        {/* Show empty state when there are no wishlist items */}
         {items.length === 0 ? (
           <EmptyState
             title={EMPTY_STATE_MESSAGES.WISHLIST_TITLE}
@@ -68,6 +73,7 @@ export default function WishlistScreen() {
             colors={colors}
           />
         ) : (
+          // Render wishlist items in a scrollable list.
           <FlatList
             data={items}
             keyExtractor={(item) => item.id.toString()}
